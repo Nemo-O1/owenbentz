@@ -760,7 +760,7 @@
                                 <img src="images/setup4.jpeg" alt="PC Image 4" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                                 <img src="images/setup3.jpeg" alt="PC Image 3" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                                 <img src="images/setup2.jpeg" alt="PC Image 2" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup1.jpeg" alt="PC Image 1" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup1.jpeg" alt="PC Image 1" onerror="this.onerror=null;this.src='https://placehold.co/150x50/222/FFF?text=Image+Error';">
                             </div>
                         </div>
                     </div>
@@ -868,7 +868,7 @@
         let startX; // Stores initial X position for touch drag calculation
         let currentRotateY = 0; // Current Y rotation of the entire prism (continuous value)
         let targetRotateY = 0;  // Target Y rotation for smooth animation (snaps to nearest face)
-        const dragRotationSpeed = 0.3; // Sensitivity for touch drag
+        const dragRotationSpeed = 0.4; // Increased sensitivity for touch drag for smoother feel
         const transitionInterpolation = 0.1; // Smoothness of interpolation for cube rotation
         let hasDragged = false; // Flag to distinguish a tap from a drag/swipe
 
@@ -1180,7 +1180,7 @@
             if (objectiveCharIndex < objectiveFullText.length) {
                 objectiveTextElement.textContent += objectiveFullText.charAt(objectiveCharIndex); // Add next character
                 objectiveCharIndex++;
-                setTimeout(typeObjectiveText, 30); /* Adjust typing speed here (milliseconds per character) */
+                setTimeout(typeObjectiveText, 15); /* Adjusted typing speed to 15ms for quicker appearance */
             }
         }
 
