@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Owen Bentz - Cybersecurity Student</title>
+    <meta name="description" content="Owen Bentz is a highly motivated cybersecurity student seeking real-world experience. Explore his resume, projects, and interests in IT and network security.">
+    <meta name="keywords" content="Owen Bentz, cybersecurity, student, resume, IT, network security, computer science, ethical hacking, certifications, C++, Visual Basic, Python, Linux, Windows, macOS, Three.js, web development, Cloudflare Pages">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -11,13 +15,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js?v=1.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js?v=1.1"></script>
     <style>
+        :root {
+            --primary-color: #FF5722; /* Bright orange accent */
+            --secondary-color: #FF8A65; /* Light orange icon color */
+            --background-dark: #1a1a1a; /* Darker background for contrast */
+            --background-content: rgba(26, 26, 26, 0.9); /* Darker, more consistent background for content */
+            --section-bg: rgba(35, 35, 35, 0.8); /* Slightly lighter dark background for sections */
+            --text-color: #eee;
+            --light-text-color: #ddd;
+            --hover-orange: #E64A19; /* Darker orange on link hover */
+            --hobby-bg: #444; /* Darker grey for hobby items */
+            --modal-bg: rgba(0,0,0,0.9);
+            --modal-close-color: #f1f1f1;
+            --modal-close-hover: #bbb;
+        }
+
+        html {
+            scroll-behavior: smooth; /* Smooth scrolling for anchor links */
+        }
+
         /* Base styles for the body */
         body {
             font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #1a1a1a; /* Darker background for contrast */
-            color: #eee;
+            background-color: var(--background-dark);
+            color: var(--text-color);
             overflow-x: hidden; /* Prevent horizontal scrollbar */
         }
 
@@ -36,14 +59,14 @@
             max-width: 960px;
             margin: 60px auto;
             padding: 30px;
-            background-color: rgba(26, 26, 26, 0.9); /* Darker, more consistent background for content */
+            background-color: var(--background-content);
             border-radius: 12px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
         }
 
         /* Heading styles */
         h1, h2, h3 {
-            color: #FF5722; /* Bright orange accent */
+            color: var(--primary-color);
             text-align: center;
             font-weight: 600;
             margin-bottom: 20px;
@@ -63,7 +86,7 @@
             margin-bottom: 40px;
             padding: 25px;
             border-radius: 8px;
-            background-color: rgba(35, 35, 35, 0.8); /* Slightly lighter dark background */
+            background-color: var(--section-bg);
             border: 1px solid rgba(255, 255, 255, 0.05);
             opacity: 0; /* Initial state for animation */
             transform: translateY(20px); /* Initial state for animation */
@@ -84,10 +107,10 @@
             font-family: 'Roboto Mono', monospace; /* Monospaced font for contact info */
             line-height: 1.7; /* Ensures readability */
             margin-bottom: 15px;
-            color: #ddd;
+            color: var(--light-text-color);
         }
         .contact-info p i {
-            color: #FF8A65; /* Light orange icon color */
+            color: var(--secondary-color);
             font-size: 20px;
         }
 
@@ -98,14 +121,14 @@
 
         /* Experience item styling */
         .experience-item h4 {
-            color: #FF8A65; /* Light orange for h4 */
+            color: var(--secondary-color);
             margin-bottom: 10px;
             font-weight: 500;
             font-size: 20px;
         }
 
         .experience-item p {
-            color: #eee;
+            color: var(--text-color);
             font-size: 18px;
         }
 
@@ -120,7 +143,7 @@
         }
 
         .hobbies-list li {
-            background-color: #444; /* Darker grey for hobby items */
+            background-color: var(--hobby-bg);
             color: #fff;
             padding: 12px 20px;
             border-radius: 25px;
@@ -133,13 +156,13 @@
         }
 
         .hobbies-list li:hover {
-            background-color: #FF5722; /* Bright orange on hover */
+            background-color: var(--primary-color);
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 4px 8px rgba(255, 87, 34, 0.4); /* Orange glow effect */
+            box-shadow: 0 4px 8px rgba(255, 87, 34, 0.4);
         }
 
         .hobbies-list li i {
-            color: #FF8A65; /* Light orange icon color */
+            color: var(--secondary-color);
         }
 
         /* PC Evolution Images Grid styling */
@@ -197,13 +220,13 @@
 
         /* Link styling */
         a {
-            color: #FF5722; /* Bright orange for links */
+            color: var(--primary-color);
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         a:hover {
-            color: #E64A19; /* Darker orange on hover */
+            color: var(--hover-orange);
         }
 
         /* Logo image styling */
@@ -224,7 +247,7 @@
             width: 100%; /* Full width */
             height: 100%; /* Full height */
             overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+            background-color: var(--modal-bg);
             align-items: center; /* Center vertically */
             justify-content: center; /* Center horizontally */
         }
@@ -251,7 +274,7 @@
             position: absolute;
             top: 15px;
             right: 35px;
-            color: #f1f1f1;
+            color: var(--modal-close-color);
             font-size: 40px;
             font-weight: bold;
             transition: 0.3s;
@@ -260,9 +283,33 @@
 
         .close-button:hover,
         .close-button:focus {
-            color: #bbb;
+            color: var(--modal-close-hover);
             text-decoration: none;
             cursor: pointer;
+        }
+
+        /* Back to Top Button Styling */
+        #back-to-top {
+            display: none; /* Hidden by default */
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99; /* High z-index to be on top of other content */
+            border: none;
+            outline: none;
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 50%; /* Make it round */
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #back-to-top:hover {
+            background-color: var(--hover-orange);
+            transform: translateY(-2px);
         }
     </style>
 </head>
@@ -281,7 +328,7 @@
 
         <section class="objective section">
             <h2>Objective</h2>
-            <p id="objective-text">Highly motivated aspiring cybersecurity expert seeking to leverage my skills and passion in a real-world, relevant job setting.</p>
+            <p id="objective-text">Highly motivated aspiring cybersecurity student seeking to leverage my skills and passion in a real-world, relevant job setting.</p>
         </section>
 
         <section class="experience section">
@@ -371,7 +418,8 @@
                     <li><i class="fas fa-podcast"></i> Podcasts</li>
                     <li><i class="fas fa-cube"></i> Rubik's Cubes</li>
                     <li><i class="fas fa-puzzle-piece"></i> Puzzles</li>
-                    <li><i class="fas fa-motorcycle"></i> Dirt Bikes & Racing</li>
+                    <li><i class="fas fa-car"></i> Cars</li>
+                    <li><i class="fas fa-motorcycle"></i> Dirt Bikes</li>
                     <li><i class="fas fa-paint-brush"></i> Art</li>
                     <li><i class="fas fa-film"></i> Movies</li>
                 </ul>
@@ -398,6 +446,10 @@
         <span class="close-button">&times;</span>
         <img class="modal-content" id="modalImage">
     </div>
+
+    <button onclick="topFunction()" id="back-to-top" title="Go to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
     <script>
         // --- Three.js Background Animation Setup ---
@@ -552,6 +604,28 @@
             if (event.target == modal) {
                 modal.style.display = "none";
             }
+        }
+
+        // --- Back to Top Button Logic ---
+        const backToTopButton = document.getElementById("back-to-top");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function() {
+            scrollFunction();
+        };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                backToTopButton.style.display = "block";
+            } else {
+                backToTopButton.style.display = "none";
+            }
+        }
+
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         }
     </script>
 </body>
