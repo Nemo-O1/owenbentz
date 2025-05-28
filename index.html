@@ -1019,6 +1019,9 @@
             updateActiveDot();
         }
 
+        // Mouse Events for Dragging (DISABLED for PC)
+        // Removed mousedown, mousemove, mouseup, mouseleave listeners for PC drag
+
         // Touch events for mobile (on the cube itself) - Handles both drag and swipe
         resumeCube.addEventListener('touchstart', (e) => {
             isDragging = true; // Indicates a touch interaction has started
@@ -1134,7 +1137,8 @@
 
         // Navigation dots functionality to jump to a specific face
         dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
+            dot.addEventListener('click', (e) => { // Passed event 'e'
+                e.stopPropagation(); // Prevent the click from bubbling up to document.body and causing double rotation
                 goToFace(index);
             });
         });
