@@ -14,84 +14,91 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css?v=1.1">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js?v=1.1"></script>
     <style>
+        /* Root CSS variables for consistent theming and easy adjustments */
         :root {
-            --primary-color: #FF5722;
-            --secondary-color: #FF8A65;
-            --background-dark: #1a1a1a;
-            --background-content: rgba(26, 26, 26, 0.9);
-            --section-bg: rgba(35, 35, 35, 0.8);
-            --text-color: #eee;
-            --light-text-color: #ddd;
-            --hover-orange: #E64A19;
-            --hobby-bg: #444;
-            --modal-bg: rgba(0,0,0,0.9);
-            --modal-close-color: #f1f1f1;
-            --modal-close-hover: #bbb;
+            --primary-color: #FF5722; /* Main accent color */
+            --secondary-color: #FF8A65; /* Secondary accent color */
+            --background-dark: #1a1a1a; /* Dark background for the body */
+            --background-content: rgba(26, 26, 26, 0.9); /* Slightly transparent dark background for content faces */
+            --section-bg: rgba(35, 35, 35, 0.8); /* Background for collapsible sections (currently unused directly) */
+            --text-color: #eee; /* Light text color for general content */
+            --light-text-color: #ddd; /* Slightly lighter text color for subtle elements */
+            --hover-orange: #E64A19; /* Darker orange for hover effects */
+            --hobby-bg: #444; /* Background for individual hobby tags */
+            --modal-bg: rgba(0,0,0,0.9); /* Dark, semi-transparent background for modals */
+            --modal-close-color: #f1f1f1; /* Color for modal close button */
+            --modal-close-hover: #bbb; /* Hover color for modal close button */
             
-            /* Optimized sizing variables for responsiveness */
+            /* Responsive sizing variables for the cube container */
             --cube-width: min(85vw, 750px);
             --cube-height: min(85vh, 750px);
-            --transition-duration: 0.5s;
+            --transition-duration: 0.5s; /* Standard transition duration for cube rotation */
 
-            /* NEW: Explicit heights/paddings for absolute positioning */
-            /* Header height will now be dynamic, but these are for calculation reference */
-            --header-min-height-desktop: 200px; /* Adjusted from 180px */
-            --header-min-height-mobile: 100px; /* Adjusted from 90px */
-            --face-side-padding-desktop: 35px;
-            --face-side-padding-mobile: 20px;
-            --face-top-padding-desktop: 50px; /* Adjusted to clear top dots */
-            --face-top-padding-mobile: 50px; /* Adjusted to clear top dots */
-            --face-bottom-padding-desktop: 80px; 
-            --face-bottom-padding-mobile: 80px; 
+            /* Padding variables for absolute positioning of elements within faces */
+            --face-side-padding-desktop: 35px; /* Horizontal padding for desktop */
+            --face-side-padding-mobile: 20px; /* Horizontal padding for mobile */
+            --face-top-padding-desktop: 80px; /* Controls header's top position from face edge (to clear dots) */
+            --face-top-padding-mobile: 80px; /* Controls header's top position from face edge (to clear dots) */
+            --face-bottom-padding-desktop: 80px; /* Space at the bottom of the face, below content */
+            --face-bottom-padding-mobile: 80px; /* Space at the bottom of the face, below content */
+            
+            /* Specific gap between the bottom of the header and the top of the content area */
+            --content-gap-desktop: 10px; 
+            --content-gap-mobile: 10px; 
         }
 
+        /* Universal box-sizing for consistent layout */
         * {
             box-sizing: border-box;
         }
 
+        /* Full height for html and body, centered content, no scrollbars */
         html, body {
             height: 100%;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Inter', sans-serif; /* Primary font */
             background-color: var(--background-dark);
             color: var(--text-color);
-            overflow: hidden; /* Prevent body scrollbars */
+            overflow: hidden; /* Prevent body scrollbars, as content has custom scrolling */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
 
+        /* Three.js scene container for background animation */
         #scene-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: -1; /* Place behind other content */
         }
 
+        /* Main container for the 3D cube */
         .cube-container {
             width: var(--cube-width);
             height: var(--cube-height);
-            perspective: 2200px;
+            perspective: 2200px; /* Creates the 3D depth effect */
             position: relative;
-            z-index: 1;
+            z-index: 1; /* Place above Three.js background */
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            margin: auto;
+            overflow: hidden; /* Hide any overflow from the cube */
+            margin: auto; /* Center the container */
         }
 
+        /* The 3D cube element itself */
         .cube {
             width: 100%;
             height: 100%;
             position: relative;
-            transform-style: preserve-3d;
-            transition: transform var(--transition-duration) ease-out;
-            will-change: transform;
+            transform-style: preserve-3d; /* Enables 3D transformations for children */
+            transition: transform var(--transition-duration) ease-out; /* Smooth rotation transition */
+            will-change: transform; /* Optimize for animation */
         }
 
         /* Individual faces of the cube */
@@ -100,45 +107,52 @@
             width: 100%;
             height: 100%;
             background-color: var(--background-content);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-            -webkit-overflow-scrolling: touch;
-            overflow: hidden; /* Ensure content stays within bounds */
-            will-change: transform;
+            border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border */
+            border-radius: 12px; /* Rounded corners */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Soft shadow */
+            -webkit-overflow-scrolling: touch; /* Improves scrolling on iOS */
+            overflow: hidden; /* Ensure content within face stays contained */
+            will-change: transform; /* Optimize for animation */
         }
 
-        /* Optimized face positioning (calculated apothem for 4 sides) */
+        /* Positioning for each face to form an octagonal prism (4 sides visible) */
         .face:nth-child(1) { transform: rotateY(0deg) translateZ(calc(var(--cube-width) * 0.85)); }
         .face:nth-child(2) { transform: rotateY(90deg) translateZ(calc(var(--cube-width) * 0.85)); }
         .face:nth-child(3) { transform: rotateY(180deg) translateZ(calc(var(--cube-width) * 0.85)); }
         .face:nth-child(4) { transform: rotateY(270deg) translateZ(calc(var(--cube-width) * 0.85)); }
 
-        /* NEW: Absolute positioned header */
+        /* Absolute positioned header within each face */
         .face-header {
             position: absolute;
-            top: var(--face-top-padding-desktop);
+            top: var(--face-top-padding-desktop); /* Position from the top edge of the face */
             left: var(--face-side-padding-desktop);
-            width: calc(100% - (2 * var(--face-side-padding-desktop)));
-            height: auto;
-            min-height: var(--header-min-height-desktop);
+            width: calc(100% - (2 * var(--face-side-padding-desktop))); /* Full width minus side padding */
+            height: auto; /* Height determined by content */
+            min-height: 0; /* Override default min-height to allow content to dictate height */
             text-align: center;
-            padding-top: 60px;
-            z-index: 2;
+            padding-top: 0; /* Removed internal padding to reduce gap below titles */
+            z-index: 2; /* Ensure header is above scrollable content */
             box-sizing: border-box;
-            will-change: height, top;
+            will-change: height, top; /* Optimize for animation */
         }
 
-        /* NEW: Absolute positioned scrollable content area */
+        /* Ensure no margin below headings within the header to control spacing precisely */
+        .face-header h1,
+        .face-header h2,
+        .face-header h3 {
+            margin-bottom: 0; 
+        }
+
+        /* Absolute positioned scrollable content area within each face */
         .section-content {
             position: absolute;
-            /* Top will be calculated dynamically in JS based on header's actual height */
+            /* Top will be calculated dynamically in JS based on header's actual height + content-gap */
             left: var(--face-side-padding-desktop);
             right: var(--face-side-padding-desktop);
-            bottom: var(--face-bottom-padding-desktop); /* Adjusted to clear dots */
+            bottom: var(--face-bottom-padding-desktop); /* Position from the bottom edge of the face */
             
             width: auto;
-            height: auto;
+            height: auto; /* Height determined by available space */
 
             display: flex;
             flex-direction: column;
@@ -147,38 +161,35 @@
 
             overflow-y: hidden; /* Set to hidden as we're using custom JS scrolling */
             box-sizing: border-box;
-            will-change: transform, scroll-position;
+            will-change: transform, scroll-position; /* Optimize for animation */
             
-            /* Added padding-bottom to ensure content pushes scrollHeight correctly */
-            padding-bottom: 100px; /* Increased to ensure ample scroll space */
-
-            /* Removed all custom scrollbar styling */
+            padding-bottom: 100px; /* Added padding-bottom to ensure content pushes scrollHeight correctly */
         }
 
-        /* Typography optimization */
+        /* General typography styles */
         h1, h2, h3 {
             color: var(--primary-color);
             text-align: center;
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 5px; /* Default margin for headings outside .face-header */
             width: 100%;
-            flex-shrink: 0;
+            flex-shrink: 0; /* Prevent shrinking in flex containers */
         }
 
-        /* Increased font sizes for better readability */
+        /* Increased font sizes for better readability across devices */
         h1 { font-size: clamp(14px, 4vw, 22px); }
         h2 { font-size: clamp(12px, 3.5vw, 18px); }
         h3 { font-size: clamp(10px, 2.8vw, 14px); margin-top: 5px; }
 
         p, li {
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            white-space: normal;
+            word-wrap: break-word; /* Break long words */
+            overflow-wrap: break-word; /* Break long words */
+            white-space: normal; /* Allow normal text wrapping */
             width: 100%;
             display: block;
         }
 
-        /* Component-specific styles with more aggressive max-widths */
+        /* Specific styles for contact information */
         .contact-info p {
             font-size: clamp(9px, 2.5vw, 12px); 
             display: flex;
@@ -196,7 +207,7 @@
             font-size: clamp(11px, 3vw, 14px); 
         }
 
-        /* Combined intro/objective face */
+        /* Styles for the intro/objective face */
         .intro-objective .section-content {
             padding-top: 8px;
             display: flex;
@@ -212,6 +223,7 @@
             margin-bottom: 5px;
         }
         .intro-objective .objective-text-container p {
+            font-family: 'Roboto Mono', monospace; /* Distinct font for objective text */
             font-size: clamp(8px, 2.2vw, 11px); 
             line-height: 1.3; 
             text-align: center;
@@ -219,6 +231,7 @@
             margin: 0 auto;
         }
 
+        /* Styles for the About Me face */
         .about-me .section-content {
             padding-top: 5px;
         }
@@ -239,6 +252,7 @@
             margin-bottom: 1px; 
         }
 
+        /* Styles for the Experience face */
         .experience .section-content {
             padding-top: 5px;
         }
@@ -275,7 +289,7 @@
             color: var(--text-color);
         }
 
-        /* Combined Hobbies and PC Evolution Face */
+        /* Styles for the Hobbies and PC Evolution Face */
         .hobbies-pc-evolution .section-content {
             padding-top: 5px;
         }
@@ -312,7 +326,7 @@
             color: var(--secondary-color);
         }
 
-        /* Collapsible Styles */
+        /* Styles for collapsible containers */
         .collapsible-container {
             width: 100%; 
             margin-top: 15px; 
@@ -367,9 +381,10 @@
         }
 
         .collapsible-content.active {
-            max-height: 2000px; 
+            max-height: 2000px; /* Sufficiently large value for smooth transition */
         }
 
+        /* Styles for PC evolution images grid */
         .pc-evolution-images-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); 
@@ -393,6 +408,7 @@
             transform: scale(1.05);
         }
 
+        /* Link styling */
         a {
             color: var(--primary-color);
             text-decoration: none;
@@ -402,6 +418,7 @@
             color: var(--hover-orange);
         }
 
+        /* Logo image styling */
         #logo-image {
             display: block;
             margin: 0 auto 10px auto; 
@@ -410,8 +427,9 @@
             flex-shrink: 0;
         }
 
+        /* Modal overlay for image display */
         .modal {
-            display: none;
+            display: none; /* Hidden by default */
             position: fixed;
             z-index: 1000;
             left: 0;
@@ -430,7 +448,7 @@
             max-height: 90%;
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.7);
-            animation: zoom 0.6s;
+            animation: zoom 0.6s; /* Zoom in animation */
         }
         @keyframes zoom {
             from { transform: scale(0.1); }
@@ -450,14 +468,15 @@
             color: var(--modal-close-hover);
         }
 
+        /* Navigation dots at the top of the screen */
         .nav-dots {
             position: fixed;
-            top: 20px; /* Moved to top */
+            top: 20px; 
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             gap: 10px;
-            z-index: 101;
+            z-index: 101; /* Ensure dots are above the cube */
         }
         .dot {
             width: 12px;
@@ -472,11 +491,12 @@
             background-color: var(--primary-color);
             transform: scale(1.2);
         }
-        .dot:hover { /* Added hover effect for dots */
+        .dot:hover { 
             background-color: var(--hover-orange);
             transform: scale(1.3);
         }
 
+        /* Disclaimer text at the bottom */
         .disclaimer {
             position: fixed;
             bottom: 10px;
@@ -488,20 +508,20 @@
             z-index: 100;
         }
 
-        /* Mobile optimization */
+        /* Mobile optimization for smaller screens */
         @media (max-width: 768px) {
             :root {
                 --cube-width: 95vw;
                 --cube-height: 95vh;
                 --face-side-padding-mobile: 20px;
-                --face-top-padding-mobile: 50px; /* Adjusted to clear top dots */
+                --face-top-padding-mobile: 80px; 
                 --face-bottom-padding-mobile: 80px; 
-                --header-min-height-mobile: 100px; 
+                --content-gap-mobile: 10px; 
             }
 
             .face-header {
-                min-height: var(--header-min-height-mobile);
-                padding-top: 40px;
+                min-height: 0; 
+                padding-top: 0; 
                 left: var(--face-side-padding-mobile);
                 width: calc(100% - (2 * var(--face-side-padding-mobile)));
             }
@@ -772,35 +792,35 @@
         const sceneContainer = document.getElementById('scene-container');
         sceneContainer.appendChild(renderer.domElement);
 
-        // Add lights to the scene
+        // Add lights to the scene for visual effect
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
         scene.add(ambientLight);
 
-        const pointLight1 = new THREE.PointLight(0xFF5722, 0.7); // Orange light
+        const pointLight1 = new THREE.PointLight(0xFF5722, 0.7); // Orange light source
         pointLight1.position.set(5, 5, 5);
         scene.add(pointLight1);
 
-        const pointLight2 = new THREE.PointLight(0xFF8A65, 0.5); // Light orange light
+        const pointLight2 = new THREE.PointLight(0xFF8A65, 0.5); // Lighter orange light source
         pointLight2.position.set(-5, -5, -5);
         scene.add(pointLight2);
 
-        // Particle System for Glowing Data Points
+        // Particle System for Glowing Data Points (background effect)
         const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 2000; // Number of particles
+        const particlesCount = 2000; // Number of particles in the system
 
-        const posArray = new Float32Array(particlesCount * 3);
-        const colorArray = new Float32Array(particlesCount * 3);
+        const posArray = new Float32Array(particlesCount * 3); // XYZ coordinates for each particle
+        const colorArray = new Float32Array(particlesCount * 3); // RGB colors for each particle
 
-        // Populate particle positions and colors randomly
+        // Populate particle positions and colors randomly within a cube
         for (let i = 0; i < particlesCount * 3; i += 3) {
             posArray[i] = (Math.random() - 0.5) * 50; // x-coordinate
             posArray[i + 1] = (Math.random() - 0.5) * 50; // y-coordinate
             posArray[i + 2] = (Math.random() - 0.5) * 50; // z-coordinate
 
-            // Random colors for particles (shades of orange/red)
-            colorArray[i] = 0.8 + Math.random() * 0.2; // Red component
-            colorArray[i + 1] = 0.3 + Math.random() * 0.3; // Green component
-            colorArray[i + 2] = 0.1 + Math.random() * 0.2; // Blue component
+            // Random colors for particles (shades of orange/red for thematic consistency)
+            colorArray[i] = 0.8 + Math.random() * 0.2; // Red component (0.8 to 1.0)
+            colorArray[i + 1] = 0.3 + Math.random() * 0.3; // Green component (0.3 to 0.6)
+            colorArray[i + 2] = 0.1 + Math.random() * 0.2; // Blue component (0.1 to 0.3)
         }
 
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
@@ -808,32 +828,32 @@
 
         const particlesMaterial = new THREE.PointsMaterial({
             size: 0.1,
-            vertexColors: true,
-            blending: THREE.AdditiveBlending, /* For glowing effect */
+            vertexColors: true, // Enable per-vertex colors
+            blending: THREE.AdditiveBlending, /* Use additive blending for glowing effect */
             transparent: true,
-            sizeAttenuation: true
+            sizeAttenuation: true // Particles closer to camera appear larger
         });
 
         const particles = new THREE.Points(particlesGeometry, particlesMaterial);
         scene.add(particles);
 
-        camera.position.z = 10;
+        camera.position.z = 10; // Position the camera back to view the particles
 
-        // Animation loop for Three.js scene
+        // Animation loop for Three.js scene (renders frame by frame)
         function animate() {
-            requestAnimationFrame(animate);
-            particles.rotation.y += 0.0005;
-            particles.rotation.x += 0.0002;
-            renderer.render(scene, camera);
+            requestAnimationFrame(animate); // Request next frame
+            particles.rotation.y += 0.0005; // Rotate particles slowly on Y-axis
+            particles.rotation.x += 0.0002; // Rotate particles even slower on X-axis
+            renderer.render(scene, camera); // Render the scene from the camera's perspective
         }
 
         // Handle window resizing to keep Three.js scene responsive
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            setFacePositions(); // Recalculate face positions on resize
-            updateSectionContentTop(); // Recalculate content top on resize
+            camera.aspect = window.innerWidth / window.innerHeight; // Update camera aspect ratio
+            camera.updateProjectionMatrix(); // Recalculate projection matrix
+            renderer.setSize(window.innerWidth, window.innerHeight); // Resize renderer output
+            setFacePositions(); // Recalculate CSS 3D face positions on resize
+            updateSectionContentTop(); // Recalculate content top positions on resize
         });
 
         // --- CSS 3D Octagonal Prism Rotation Logic ---
@@ -843,33 +863,33 @@
         const sectionContents = document.querySelectorAll('.section-content'); /* Get all scrollable content areas */
         const faceHeaders = document.querySelectorAll('.face-header'); /* Get all face headers */
 
-
-        // Declare variables at a higher scope to ensure they are defined when used
-        let isDragging = false; // Used for touch-based drag/swipe detection
-        let startX; // Used for touch-based drag calculation
-        let currentRotateY = 0; // Current Y rotation of the entire prism
-        let targetRotateY = 0;  // Target Y rotation for smooth animation
-        const dragRotationSpeed = 0.3; // Sensitivity for mouse/touch drag
-        const transitionInterpolation = 0.1; // Smoothness of interpolation
-        let hasDragged = false; // Flag to distinguish click from drag/swipe
+        // Variables for cube rotation and interaction
+        let isDragging = false; // Flag to track if touch-based drag/swipe is active
+        let startX; // Stores initial X position for touch drag calculation
+        let currentRotateY = 0; // Current Y rotation of the entire prism (continuous value)
+        let targetRotateY = 0;  // Target Y rotation for smooth animation (snaps to nearest face)
+        const dragRotationSpeed = 0.3; // Sensitivity for touch drag
+        const transitionInterpolation = 0.1; // Smoothness of interpolation for cube rotation
+        let hasDragged = false; // Flag to distinguish a tap from a drag/swipe
 
         // Keyboard control variables
-        let keysPressed = {};
-        const scrollAmount = 50; // Amount to scroll content by with arrow keys
+        let keysPressed = {}; // Stores currently pressed keys for continuous input
+        const scrollAmount = 50; // Amount to scroll content by with arrow keys/W/S
 
         // Touch variables for swipe detection on the cube
-        let initialTouchX = 0;
-        let initialTouchY = 0;
-        const swipeThreshold = 50; // Minimum horizontal distance for a swipe
+        let initialTouchX = 0; // Initial X touch position for swipe direction
+        let initialTouchY = 0; // Initial Y touch position for swipe direction
+        const swipeThreshold = 50; // Minimum horizontal distance for a recognized swipe
         const swipeVerticalTolerance = 30; // Maximum vertical deviation for a horizontal swipe
 
-        // Function to detect if the device is mobile
+        // Function to detect if the device is mobile based on user agent
         function isMobileDevice() {
             return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
 
-        // Define the order of faces for cycling and their corresponding target Y rotations
-        const faceYOffsets = { // Initial Y rotation for each face to form the octagon (360 / 4 = 90 degrees)
+        // Define the initial Y rotation offset for each face to form the octagonal prism
+        // Each face is rotated 90 degrees relative to the previous one
+        const faceYOffsets = {
             'face-0': 0,
             'face-1': 90,
             'face-2': 180,
@@ -879,18 +899,20 @@
         // This array stores the target Y rotations for the *entire cube*
         // to bring each specific face to the front.
         const cubeTargetRotations = [
-            { y: 0 },     // 0: face-0
-            { y: -90 },   // 1: face-1
-            { y: -180 },  // 2: face-2
-            { y: -270 }    // 3: face-3
+            { y: 0 },     // 0: face-0 (Intro/Objective)
+            { y: -90 },   // 1: face-1 (Experience)
+            { y: -180 },  // 2: face-2 (About Me)
+            { y: -270 }    // 3: face-3 (Hobbies & PC Evolution)
         ];
 
-        let activeFaceIndex = 0; // Start at the 'face-0' face (index 0)
+        let activeFaceIndex = 0; // Keep track of the currently active face (starts at 0)
 
-        // Function to set positions of each face to form the octagonal prism
+        // Function to set the initial 3D positions of each face to form the octagonal prism
         function setFacePositions() {
             const cubeWidth = resumeCube.offsetWidth;
-            // The multiplier 0.85 is chosen to bring faces closer and reduce clipping on sides
+            // The apothem is the distance from the center to the midpoint of a side.
+            // For a regular octagon, apothem = side / (2 * tan(PI/8)). Here, 0.85 is an approximation
+            // to visually position the faces correctly for a 4-sided prism within the cube container.
             const apothem = cubeWidth * 0.85; 
 
             faces.forEach(face => {
@@ -903,39 +925,46 @@
             });
         }
 
-        // Function to dynamically update the top position of .section-content based on header height
+        // Function to dynamically update the top position of .section-content
+        // This ensures content starts below the header, adapting to header height changes.
         function updateSectionContentTop() {
             faceHeaders.forEach((header, index) => {
-                const faceTopPadding = window.innerWidth <= 768 ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--face-top-padding-mobile')) : parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--face-top-padding-desktop'));
-                const headerActualHeight = header.offsetHeight; // Get the actual rendered height of the header
-                const sectionContent = sectionContents[index];
+                // Get the appropriate content gap based on device type
+                const contentGap = window.innerWidth <= 768 ? 
+                                   parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--content-gap-mobile')) : 
+                                   parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--content-gap-desktop'));
+                
+                const headerBottom = header.offsetTop + header.offsetHeight; // Calculate the bottom edge of the header
+                const sectionContent = sectionContents[index]; // Get the corresponding content area
+                
                 if (sectionContent) {
-                    sectionContent.style.top = `${headerActualHeight + faceTopPadding}px`;
+                    // Set the top of the content area to be below the header, plus the defined content gap
+                    sectionContent.style.top = `${headerBottom + contentGap}px`;
                 }
             });
         }
 
-        // Applies the current rotation to the cube element
+        // Applies the current rotation value to the cube element's transform property
         function applyCubeRotation() {
             resumeCube.style.transform = `rotateY(${currentRotateY}deg)`;
         }
 
-        // Navigates to a specific face by index
+        // Navigates the cube to display a specific face by its index
         function goToFace(index) {
-            // Calculate the target index considering infinite looping (wraps around)
+            // Calculate the new index, ensuring it wraps around for infinite rotation
             const newIndex = (index + cubeTargetRotations.length * 100) % cubeTargetRotations.length;
-            activeFaceIndex = newIndex;
+            activeFaceIndex = newIndex; // Update the active face index
 
-            // Calculate the desired Y rotation for the target face
+            // Get the desired Y rotation for the target face
             const desiredFaceRotation = cubeTargetRotations[activeFaceIndex].y;
 
-            // Calculate the current Y rotation normalized to the 0 to 359 range
+            // Normalize the current Y rotation to a 0-359 degree range
             let normalizedCurrentY = currentRotateY % 360;
             if (normalizedCurrentY < 0) {
                 normalizedCurrentY += 360;
             }
 
-            // Calculate the difference to find the shortest path (clockwise or counter-clockwise)
+            // Calculate the shortest difference to rotate (clockwise or counter-clockwise)
             let diff = desiredFaceRotation - normalizedCurrentY;
             if (diff > 180) {
                 diff -= 360;
@@ -943,60 +972,61 @@
                 diff += 360;
             }
 
-            // Add this shortest difference to the actual currentRotateY to get the new target
+            // Add this shortest difference to the actual currentRotateY to set the new target
             targetRotateY = currentRotateY + diff;
-            updateActiveDot();
+            updateActiveDot(); // Update the active navigation dot
         }
 
-        // Updates the active navigation dot
+        // Updates the visual state of the navigation dots to reflect the active face
         function updateActiveDot() {
             dots.forEach((dot, index) => {
-                dot.classList.remove('active');
+                dot.classList.remove('active'); // Remove 'active' class from all dots
                 if (index < cubeTargetRotations.length) {
-                    dot.style.display = 'block'; // Ensure dot is visible
+                    dot.style.display = 'block'; // Ensure dot is visible if it corresponds to a face
                     if (index === activeFaceIndex) {
-                        dot.classList.add('active');
+                        dot.classList.add('active'); // Add 'active' class to the current face's dot
                     }
                 } else {
-                    dot.style.display = 'none'; // Hide unused dots
+                    dot.style.display = 'none'; // Hide any unused dots (if more dots than faces)
                 }
             });
         }
 
-        // Smoothly interpolates the cube's rotation towards the target
+        // Smoothly interpolates the cube's rotation towards the target rotation
         function animateRotation() {
-            requestAnimationFrame(animateRotation);
+            requestAnimationFrame(animateRotation); // Request the next animation frame
 
             // Handle keyboard input for direct face transitions (A/D or Left/Right Arrows)
             if (keysPressed['arrowleft'] || keysPressed['a']) {
-                goToFace(activeFaceIndex - 1);
-                delete keysPressed['arrowleft'];
+                goToFace(activeFaceIndex - 1); // Go to previous face
+                delete keysPressed['arrowleft']; // Clear key state to prevent continuous rotation
                 delete keysPressed['a'];
             } else if (keysPressed['arrowright'] || keysPressed['d']) {
-                goToFace(activeFaceIndex + 1);
-                delete keysPressed['arrowright'];
+                goToFace(activeFaceIndex + 1); // Go to next face
+                delete keysPressed['arrowright']; // Clear key state
                 delete keysPressed['d'];
             }
 
-            // Interpolate current rotation towards target
+            // Interpolate current rotation towards target rotation for smooth animation
             currentRotateY += (targetRotateY - currentRotateY) * transitionInterpolation;
 
-            // Apply rotation only if there's a significant difference to avoid jitter
+            // Apply rotation only if there's a significant difference to avoid jittering
             if (Math.abs(targetRotateY - currentRotateY) > 0.01) {
                 applyCubeRotation();
             }
         }
 
-        // Snaps the cube to the nearest face based on its current rotation
+        // Snaps the cube to the nearest face based on its current continuous rotation
         function snapCubeToNearestFace() {
             let closestTargetY = 0;
             let minAbsDiff = Infinity;
             let bestIndex = 0;
 
+            // Iterate through all possible target rotations to find the closest one
             for (let i = 0; i < cubeTargetRotations.length; i++) {
                 let baseTarget = cubeTargetRotations[i].y;
-                // Calculate potential targets by adding multiples of 360 to the base target
-                // to find the closest one to the current continuous rotation.
+                // Calculate potential targets by adding multiples of 360 degrees
+                // to account for continuous rotation beyond a single 360-degree cycle.
                 let potentialTarget1 = baseTarget + Math.floor(currentRotateY / 360) * 360;
                 let potentialTarget2 = baseTarget + Math.ceil(currentRotateY / 360) * 360;
 
@@ -1014,27 +1044,24 @@
                     bestIndex = i;
                 }
             }
-            targetRotateY = closestTargetY;
-            activeFaceIndex = bestIndex;
-            updateActiveDot();
+            targetRotateY = closestTargetY; // Set the target to the closest snap point
+            activeFaceIndex = bestIndex; // Update the active face index
+            updateActiveDot(); // Update the navigation dots
         }
 
-        // Mouse Events for Dragging (DISABLED for PC)
-        // Removed mousedown, mousemove, mouseup, mouseleave listeners for PC drag
-
-        // Touch events for mobile (on the cube itself) - Handles both drag and swipe
+        // Touch events for mobile devices (on the cube itself) - Handles both drag and swipe
         resumeCube.addEventListener('touchstart', (e) => {
-            isDragging = true; // Indicates a touch interaction has started
-            startX = e.touches[0].clientX; // For continuous drag calculation
-            initialTouchX = e.touches[0].clientX; // For swipe detection
-            initialTouchY = e.touches[0].clientY; // For swipe detection
-            hasDragged = false; // Reset for new interaction (to differentiate from a pure click)
-            resumeCube.style.transition = 'none'; // Disable CSS transition during drag/swipe for immediate response
-        }, { passive: false }); // passive: false is crucial here to allow preventDefault for scrolling
+            isDragging = true; // Indicate a touch interaction has started
+            startX = e.touches[0].clientX; // Store initial X for continuous drag calculation
+            initialTouchX = e.touches[0].clientX; // Store initial X for swipe direction detection
+            initialTouchY = e.touches[0].clientY; // Store initial Y for swipe direction detection
+            hasDragged = false; // Reset flag to differentiate between tap and drag/swipe
+            resumeCube.style.transition = 'none'; // Disable CSS transition for immediate response during drag
+        }, { passive: false }); // passive: false is crucial to allow preventDefault for scrolling
 
         resumeCube.addEventListener('touchmove', (e) => {
             if (!isDragging) return; // Only proceed if a touch interaction is active
-            hasDragged = true; // Flag indicates movement occurred (not just a tap)
+            hasDragged = true; // Set flag to indicate movement occurred (not just a tap)
 
             const currentTouchX = e.touches[0].clientX;
             const currentTouchY = e.touches[0].clientY;
@@ -1042,7 +1069,7 @@
             const diffX = currentTouchX - initialTouchX; // Total horizontal movement from start
             const diffY = currentTouchY - initialTouchY; // Total vertical movement from start
 
-            // Prioritize horizontal movement for cube rotation (and prevent vertical page scroll)
+            // Prioritize horizontal movement for cube rotation and prevent vertical page scroll
             if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 5) { // Small threshold to start preventing default
                 const dragAngle = (currentTouchX - startX) * dragRotationSpeed;
                 currentRotateY = targetRotateY + dragAngle;
@@ -1050,11 +1077,11 @@
                 e.preventDefault(); // Prevent default page scrolling/swiping
             }
             startX = currentTouchX; // Update startX for the next drag calculation step
-        }, { passive: false }); // passive: false is crucial here to allow preventDefault
+        }, { passive: false }); // passive: false is crucial to allow preventDefault
 
         resumeCube.addEventListener('touchend', (e) => {
             isDragging = false; // End of touch interaction
-            resumeCube.style.transition = 'transform 0.5s ease-out'; // Re-enable CSS transition
+            resumeCube.style.transition = 'transform 0.5s ease-out'; // Re-enable CSS transition for smooth snap
 
             const finalTouchX = e.changedTouches[0].clientX; // Get final touch position
             const finalTouchY = e.changedTouches[0].clientY; // Get final touch position
@@ -1065,9 +1092,9 @@
             // Check if it was a distinct horizontal swipe (significant horizontal movement, minimal vertical)
             if (Math.abs(diffX) > swipeThreshold && Math.abs(diffY) < swipeVerticalTolerance) {
                 if (diffX > 0) { // Swiped right (finger moved right)
-                    goToFace(activeFaceIndex - 1); // Rotate cube left
+                    goToFace(activeFaceIndex - 1); // Rotate cube left (to show previous face)
                 } else { // Swiped left (finger moved left)
-                    goToFace(activeFaceIndex + 1); // Rotate cube right
+                    goToFace(activeFaceIndex + 1); // Rotate cube right (to show next face)
                 }
             } else {
                 // If not a distinct swipe, snap to the nearest face (this handles regular drags/taps)
@@ -1088,7 +1115,7 @@
             }
 
             // Check if the click target is inside the cube container or any interactive element within it
-            // This prevents cube rotation when clicking on content/links inside the cube
+            // This prevents cube rotation when clicking on content/links inside the cube itself
             if (e.target.closest('#resume-cube')) {
                 return; // Do not rotate if clicked inside the cube
             }
@@ -1104,26 +1131,26 @@
             }
         });
 
-        // Keyboard event listeners for navigation (A/D/Arrows) and scrolling (W/S/Arrows)
+        // Keyboard event listeners for navigation (A/D/Arrows) and content scrolling (W/S/Arrows)
         document.addEventListener('keydown', (e) => {
             const key = e.key.toLowerCase();
             const activeContentArea = sectionContents[activeFaceIndex];
 
-            // Cube rotation keys
+            // Cube rotation keys (Left Arrow, Right Arrow, A, D)
             if (['arrowleft', 'arrowright', 'a', 'd'].includes(key)) {
-                keysPressed[key] = true;
+                keysPressed[key] = true; // Mark key as pressed
                 e.preventDefault(); // Prevent default browser scroll behavior for arrow keys
             } 
-            // Content scrolling keys
+            // Content scrolling keys (Down Arrow, S, Up Arrow, W)
             else if (key === 'arrowdown' || key === 's') {
                 e.preventDefault(); // Prevent default page scroll
                 if (activeContentArea) {
-                    activeContentArea.scrollTop += scrollAmount;
+                    activeContentArea.scrollTop += scrollAmount; // Scroll content down
                 }
             } else if (key === 'arrowup' || key === 'w') {
                 e.preventDefault(); // Prevent default page scroll
                 if (activeContentArea) {
-                    activeContentArea.scrollTop -= scrollAmount;
+                    activeContentArea.scrollTop -= scrollAmount; // Scroll content up
                 }
             }
         });
@@ -1131,7 +1158,7 @@
         document.addEventListener('keyup', (e) => {
             const key = e.key.toLowerCase();
             if (['arrowleft', 'arrowright', 'a', 'd'].includes(key)) {
-                delete keysPressed[key];
+                delete keysPressed[key]; // Release key state
             }
         });
 
@@ -1139,53 +1166,53 @@
         dots.forEach((dot, index) => {
             dot.addEventListener('click', (e) => { // Passed event 'e'
                 e.stopPropagation(); // Prevent the click from bubbling up to document.body and causing double rotation
-                goToFace(index);
+                goToFace(index); // Navigate to the corresponding face
             });
         });
 
         // --- Typing Text Effect for Objective Section ---
         const objectiveTextElement = document.getElementById('objective-text');
-        const objectiveFullText = objectiveTextElement.textContent; // Capture original text
-        objectiveTextElement.textContent = ''; // Clear for typing effect
-        let objectiveCharIndex = 0;
+        const objectiveFullText = objectiveTextElement.textContent; // Capture original text content
+        objectiveTextElement.textContent = ''; // Clear the text for typing effect
+        let objectiveCharIndex = 0; // Index to track current character being typed
 
         function typeObjectiveText() {
             if (objectiveCharIndex < objectiveFullText.length) {
-                objectiveTextElement.textContent += objectiveFullText.charAt(objectiveCharIndex);
+                objectiveTextElement.textContent += objectiveFullText.charAt(objectiveCharIndex); // Add next character
                 objectiveCharIndex++;
-                setTimeout(typeObjectiveText, 30); /* Adjust typing speed here */
+                setTimeout(typeObjectiveText, 30); /* Adjust typing speed here (milliseconds per character) */
             }
         }
 
         // --- Manual Scrolling Logic for .section-content (Mouse Wheel & Touch) ---
         sectionContents.forEach(contentArea => {
             let isScrolling = false; // Flag for touch scrolling
-            let startScrollY = 0; // Initial scroll position for touch
-            let startClientY = 0; // Initial touch Y position
+            let startScrollY = 0; // Stores initial scroll position for touch interaction
+            let startClientY = 0; // Stores initial touch Y position
 
-            // Mouse wheel scrolling
+            // Mouse wheel scrolling for content areas
             contentArea.addEventListener('wheel', (e) => {
                 e.preventDefault(); // Prevent default page scrolling
-                // Ensure scrollTop doesn't go below 0 or above scrollHeight - clientHeight
+                // Calculate new scroll position, clamping it between 0 and max scroll height
                 const newScrollTop = contentArea.scrollTop + e.deltaY;
                 contentArea.scrollTop = Math.max(0, Math.min(newScrollTop, contentArea.scrollHeight - contentArea.clientHeight));
             });
 
             // Touch scrolling specific to content areas (vertical drag)
             contentArea.addEventListener('touchstart', (e) => {
-                // Only initiate content scrolling if not a multi-touch (pinch-zoom etc.)
+                // Only initiate content scrolling if it's a single touch (to avoid interfering with pinch-zoom)
                 if (e.touches.length === 1) {
                     isScrolling = true;
-                    startClientY = e.touches[0].clientY;
-                    startScrollY = contentArea.scrollTop;
+                    startClientY = e.touches[0].clientY; // Record initial touch Y
+                    startScrollY = contentArea.scrollTop; // Record initial scroll position
                 }
             }, { passive: false }); // passive: false allows preventDefault
 
             contentArea.addEventListener('touchmove', (e) => {
-                if (!isScrolling) return;
-                // Only prevent default if it's primarily a vertical scroll gesture
-                const deltaY = e.touches[0].clientY - startClientY;
-                const newScrollTop = startScrollY - deltaY;
+                if (!isScrolling) return; // Only proceed if a touch scroll is active
+                
+                const deltaY = e.touches[0].clientY - startClientY; // Calculate vertical touch movement
+                const newScrollTop = startScrollY - deltaY; // Calculate new potential scroll position
                 
                 // Check if the scroll is within bounds before preventing default
                 const willScroll = (newScrollTop >= 0 && newScrollTop <= (contentArea.scrollHeight - contentArea.clientHeight));
@@ -1195,10 +1222,10 @@
                 if (willScroll) {
                     e.preventDefault(); // Prevent default page scrolling if content can scroll
                 }
-            }, { passive: false });
+            }, { passive: false }); // passive: false allows preventDefault
 
             contentArea.addEventListener('touchend', () => {
-                isScrolling = false;
+                isScrolling = false; // End of touch scroll interaction
             });
         });
 
@@ -1208,22 +1235,22 @@
         const mainHobbiesIcon = document.getElementById('mainHobbiesIcon');
 
         mainHobbiesHeader.addEventListener('click', () => {
-            mainHobbiesContent.classList.toggle('active');
-            mainHobbiesIcon.classList.toggle('rotated');
+            mainHobbiesContent.classList.toggle('active'); // Toggle 'active' class for content visibility
+            mainHobbiesIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
         });
 
-        // --- Collapsible PC Evolution Images Logic (Existing) ---
+        // --- Collapsible PC Evolution Images Logic ---
         const pcEvolutionHeader = document.getElementById('pcEvolutionHeader');
         const pcEvolutionContent = document.getElementById('pcEvolutionContent');
         const pcEvolutionIcon = document.getElementById('pcEvolutionIcon');
 
         pcEvolutionHeader.addEventListener('click', () => {
-            pcEvolutionContent.classList.toggle('active');
-            pcEvolutionIcon.classList.toggle('rotated');
+            pcEvolutionContent.classList.toggle('active'); // Toggle 'active' class for content visibility
+            pcEvolutionIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
         });
 
 
-        // --- Event Listeners and Initializations ---
+        // --- Event Listeners and Initializations (runs once when the window loads) ---
         window.onload = function () {
             setFacePositions(); // Initialize face positions for the octagonal prism
             animate(); // Start the Three.js background animation
@@ -1239,20 +1266,23 @@
         const closeButton = document.getElementsByClassName("close-button")[0];
         const pcImages = document.querySelectorAll(".pc-evolution-images-grid img");
 
+        // Add click listener to each PC evolution image to open the modal
         pcImages.forEach(img => {
             img.onclick = function() {
-                modal.style.display = "flex";
-                modalImage.src = this.src;
+                modal.style.display = "flex"; // Show the modal
+                modalImage.src = this.src; // Set modal image source to clicked image
             }
         });
 
+        // Close the modal when the close button is clicked
         closeButton.onclick = function() {
-            modal.style.display = "none";
+            modal.style.display = "none"; // Hide the modal
         }
 
+        // Close the modal when clicking outside the image content (on the modal overlay)
         modal.onclick = function(event) {
             if (event.target == modal) {
-                modal.style.display = "none";
+                modal.style.display = "none"; // Hide the modal
             }
         }
     </script>
