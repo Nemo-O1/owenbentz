@@ -39,10 +39,10 @@
             --header-min-height-mobile: 100px; /* Adjusted from 90px */
             --face-side-padding-desktop: 35px;
             --face-side-padding-mobile: 20px;
-            --face-top-padding-desktop: 40px; /* Adjusted from 25px */
-            --face-top-padding-mobile: 25px; /* Adjusted from 15px */
-            --face-bottom-padding-desktop: 20px; 
-            --face-bottom-padding-mobile: 20px; 
+            --face-top-padding-desktop: 50px; /* Adjusted to clear top dots */
+            --face-top-padding-mobile: 50px; /* Adjusted to clear top dots */
+            --face-bottom-padding-desktop: 80px; 
+            --face-bottom-padding-mobile: 80px; 
         }
 
         * {
@@ -104,7 +104,7 @@
             border-radius: 12px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
             -webkit-overflow-scrolling: touch;
-            overflow: hidden;
+            overflow: hidden; /* Ensure content stays within bounds */
             will-change: transform;
         }
 
@@ -135,7 +135,7 @@
             /* Top will be calculated dynamically in JS based on header's actual height */
             left: var(--face-side-padding-desktop);
             right: var(--face-side-padding-desktop);
-            bottom: var(--face-bottom-padding-desktop);
+            bottom: var(--face-bottom-padding-desktop); /* Adjusted to clear dots */
             
             width: auto;
             height: auto;
@@ -152,25 +152,7 @@
             /* Added padding-bottom to ensure content pushes scrollHeight correctly */
             padding-bottom: 100px; /* Increased to ensure ample scroll space */
 
-            /* Scrollbar styling (these styles will apply to the content area itself, not a custom scrollbar) */
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 87, 34, 0.4) rgba(255, 255, 255, 0.05);
-        }
-
-        /* Webkit specific scrollbar styles (for browsers like Chrome, Safari) */
-        .section-content::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .section-content::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-
-        .section-content::-webkit-scrollbar-thumb {
-            background-color: rgba(255, 87, 34, 0.4);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            /* Removed all custom scrollbar styling */
         }
 
         /* Typography optimization */
@@ -470,7 +452,7 @@
 
         .nav-dots {
             position: fixed;
-            bottom: 60px; 
+            top: 20px; /* Moved to top */
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -490,6 +472,10 @@
             background-color: var(--primary-color);
             transform: scale(1.2);
         }
+        .dot:hover { /* Added hover effect for dots */
+            background-color: var(--hover-orange);
+            transform: scale(1.3);
+        }
 
         .disclaimer {
             position: fixed;
@@ -508,8 +494,8 @@
                 --cube-width: 95vw;
                 --cube-height: 95vh;
                 --face-side-padding-mobile: 20px;
-                --face-top-padding-mobile: 25px; 
-                --face-bottom-padding-mobile: 20px; 
+                --face-top-padding-mobile: 50px; /* Adjusted to clear top dots */
+                --face-bottom-padding-mobile: 80px; 
                 --header-min-height-mobile: 100px; 
             }
 
@@ -749,7 +735,7 @@
                                 <img src="images/setup9.jpeg" alt="PC Image 9" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                                 <img src="images/setup8.jpeg" alt="PC Image 8" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                                 <img src="images/setup7.jpeg" alt="PC Image 7" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/images/setup6.jpeg" alt="PC Image 6" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup6.jpeg" alt="PC Image 6" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                                 <img src="images/setup5.jpeg" alt="PC Image 5" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                                 <img src="images/setup4.jpeg" alt="PC Image 4" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                                 <img src="images/setup3.jpeg" alt="PC Image 3" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
@@ -859,15 +845,28 @@
 
 
         // Declare variables at a higher scope to ensure they are defined when used
-        let isDragging = false;
-        let startX;
+        let isDragging = false; // Used for touch-based drag/swipe detection
+        let startX; // Used for touch-based drag calculation
         let currentRotateY = 0; // Current Y rotation of the entire prism
         let targetRotateY = 0;  // Target Y rotation for smooth animation
         const dragRotationSpeed = 0.3; // Sensitivity for mouse/touch drag
         const transitionInterpolation = 0.1; // Smoothness of interpolation
+        let hasDragged = false; // Flag to distinguish click from drag/swipe
 
         // Keyboard control variables
         let keysPressed = {};
+        const scrollAmount = 50; // Amount to scroll content by with arrow keys
+
+        // Touch variables for swipe detection on the cube
+        let initialTouchX = 0;
+        let initialTouchY = 0;
+        const swipeThreshold = 50; // Minimum horizontal distance for a swipe
+        const swipeVerticalTolerance = 30; // Maximum vertical deviation for a horizontal swipe
+
+        // Function to detect if the device is mobile
+        function isMobileDevice() {
+            return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
 
         // Define the order of faces for cycling and their corresponding target Y rotations
         const faceYOffsets = { // Initial Y rotation for each face to form the octagon (360 / 4 = 90 degrees)
@@ -968,7 +967,7 @@
         function animateRotation() {
             requestAnimationFrame(animateRotation);
 
-            // Handle keyboard input for direct face transitions
+            // Handle keyboard input for direct face transitions (A/D or Left/Right Arrows)
             if (keysPressed['arrowleft'] || keysPressed['a']) {
                 goToFace(activeFaceIndex - 1);
                 delete keysPressed['arrowleft'];
@@ -1020,60 +1019,109 @@
             updateActiveDot();
         }
 
-        // Mouse Events for Dragging
-        resumeCube.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startX = e.clientX;
-            resumeCube.style.transition = 'none'; // Disable transition during drag
-        });
+        // Touch events for mobile (on the cube itself) - Handles both drag and swipe
+        resumeCube.addEventListener('touchstart', (e) => {
+            isDragging = true; // Indicates a touch interaction has started
+            startX = e.touches[0].clientX; // For continuous drag calculation
+            initialTouchX = e.touches[0].clientX; // For swipe detection
+            initialTouchY = e.touches[0].clientY; // For swipe detection
+            hasDragged = false; // Reset for new interaction (to differentiate from a pure click)
+            resumeCube.style.transition = 'none'; // Disable CSS transition during drag/swipe for immediate response
+        }, { passive: false }); // passive: false is crucial here to allow preventDefault for scrolling
 
-        resumeCube.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            const dx = e.clientX - startX;
-            const dragAngle = dx * dragRotationSpeed;
-            currentRotateY = targetRotateY + dragAngle; // Apply drag directly to currentRotateY
-            applyCubeRotation();
-        });
+        resumeCube.addEventListener('touchmove', (e) => {
+            if (!isDragging) return; // Only proceed if a touch interaction is active
+            hasDragged = true; // Flag indicates movement occurred (not just a tap)
 
-        resumeCube.addEventListener('mouseup', () => {
-            isDragging = false;
-            resumeCube.style.transition = 'transform 0.5s ease-out'; // Re-enable transition
-            snapCubeToNearestFace();
-        });
+            const currentTouchX = e.touches[0].clientX;
+            const currentTouchY = e.touches[0].clientY;
 
-        resumeCube.addEventListener('mouseleave', () => {
-            if (isDragging) { // If mouse leaves while dragging, snap
-                isDragging = false;
-                resumeCube.style.transition = 'transform 0.5s ease-out';
+            const diffX = currentTouchX - initialTouchX; // Total horizontal movement from start
+            const diffY = currentTouchY - initialTouchY; // Total vertical movement from start
+
+            // Prioritize horizontal movement for cube rotation (and prevent vertical page scroll)
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 5) { // Small threshold to start preventing default
+                const dragAngle = (currentTouchX - startX) * dragRotationSpeed;
+                currentRotateY = targetRotateY + dragAngle;
+                applyCubeRotation();
+                e.preventDefault(); // Prevent default page scrolling/swiping
+            }
+            startX = currentTouchX; // Update startX for the next drag calculation step
+        }, { passive: false }); // passive: false is crucial here to allow preventDefault
+
+        resumeCube.addEventListener('touchend', (e) => {
+            isDragging = false; // End of touch interaction
+            resumeCube.style.transition = 'transform 0.5s ease-out'; // Re-enable CSS transition
+
+            const finalTouchX = e.changedTouches[0].clientX; // Get final touch position
+            const finalTouchY = e.changedTouches[0].clientY; // Get final touch position
+
+            const diffX = finalTouchX - initialTouchX; // Total X movement from touchstart to touchend
+            const diffY = finalTouchY - initialTouchY; // Total Y movement from touchstart to touchend
+
+            // Check if it was a distinct horizontal swipe (significant horizontal movement, minimal vertical)
+            if (Math.abs(diffX) > swipeThreshold && Math.abs(diffY) < swipeVerticalTolerance) {
+                if (diffX > 0) { // Swiped right (finger moved right)
+                    goToFace(activeFaceIndex - 1); // Rotate cube left
+                } else { // Swiped left (finger moved left)
+                    goToFace(activeFaceIndex + 1); // Rotate cube right
+                }
+            } else {
+                // If not a distinct swipe, snap to the nearest face (this handles regular drags/taps)
                 snapCubeToNearestFace();
+            }
+            hasDragged = false; // Reset hasDragged when touch ends
+            // Reset initial touch coordinates for next interaction
+            initialTouchX = 0;
+            initialTouchY = 0;
+        }, { passive: true }); // passive: true as we don't need to preventDefault in touchend itself
+
+        // Click event for left/right navigation on the document body (for clicks outside the cube)
+        document.body.addEventListener('click', (e) => {
+            // If a drag/swipe just occurred on the cube, ignore this click to prevent double-triggering
+            if (hasDragged) {
+                hasDragged = false; // Reset the flag
+                return;
+            }
+
+            // Check if the click target is inside the cube container or any interactive element within it
+            // This prevents cube rotation when clicking on content/links inside the cube
+            if (e.target.closest('#resume-cube')) {
+                return; // Do not rotate if clicked inside the cube
+            }
+
+            const clickX = e.clientX; // X position relative to the viewport
+
+            if (clickX < window.innerWidth / 2) {
+                // Click on the left half of the window (outside the cube)
+                goToFace(activeFaceIndex - 1);
+            } else {
+                // Click on the right half of the window (outside the cube)
+                goToFace(activeFaceIndex + 1);
             }
         });
 
-        // Touch events for mobile
-        resumeCube.addEventListener('touchstart', (e) => {
-            isDragging = true;
-            startX = e.touches[0].clientX;
-            resumeCube.style.transition = 'none';
-        }, { passive: false }); // Use passive: false to allow preventDefault
-
-        resumeCube.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            const deltaY = e.touches[0].clientY - startClientY;
-            const newScrollTop = startScrollY - deltaY;
-            contentArea.scrollTop = Math.max(0, Math.min(newScrollTop, contentArea.scrollHeight - contentArea.clientHeight));
-            e.preventDefault(); // Prevent default page scrolling/swiping
-        }, { passive: false });
-
-        resumeCube.addEventListener('touchend', () => {
-            isDragging = false;
-        });
-
-        // Keyboard event listeners
+        // Keyboard event listeners for navigation (A/D/Arrows) and scrolling (W/S/Arrows)
         document.addEventListener('keydown', (e) => {
             const key = e.key.toLowerCase();
+            const activeContentArea = sectionContents[activeFaceIndex];
+
+            // Cube rotation keys
             if (['arrowleft', 'arrowright', 'a', 'd'].includes(key)) {
                 keysPressed[key] = true;
-                e.preventDefault(); // Prevent default browser scroll behavior
+                e.preventDefault(); // Prevent default browser scroll behavior for arrow keys
+            } 
+            // Content scrolling keys
+            else if (key === 'arrowdown' || key === 's') {
+                e.preventDefault(); // Prevent default page scroll
+                if (activeContentArea) {
+                    activeContentArea.scrollTop += scrollAmount;
+                }
+            } else if (key === 'arrowup' || key === 'w') {
+                e.preventDefault(); // Prevent default page scroll
+                if (activeContentArea) {
+                    activeContentArea.scrollTop -= scrollAmount;
+                }
             }
         });
 
@@ -1084,7 +1132,7 @@
             }
         });
 
-        // Navigation dots functionality
+        // Navigation dots functionality to jump to a specific face
         dots.forEach((dot, index) => {
             dot.addEventListener('click', () => {
                 goToFace(index);
@@ -1105,11 +1153,11 @@
             }
         }
 
-        // --- Manual Scrolling Logic for .section-content ---
+        // --- Manual Scrolling Logic for .section-content (Mouse Wheel & Touch) ---
         sectionContents.forEach(contentArea => {
-            let isScrolling = false;
-            let startScrollY = 0;
-            let startClientY = 0;
+            let isScrolling = false; // Flag for touch scrolling
+            let startScrollY = 0; // Initial scroll position for touch
+            let startClientY = 0; // Initial touch Y position
 
             // Mouse wheel scrolling
             contentArea.addEventListener('wheel', (e) => {
@@ -1119,19 +1167,30 @@
                 contentArea.scrollTop = Math.max(0, Math.min(newScrollTop, contentArea.scrollHeight - contentArea.clientHeight));
             });
 
-            // Touch scrolling specific to content areas
+            // Touch scrolling specific to content areas (vertical drag)
             contentArea.addEventListener('touchstart', (e) => {
-                isScrolling = true;
-                startClientY = e.touches[0].clientY;
-                startScrollY = contentArea.scrollTop;
+                // Only initiate content scrolling if not a multi-touch (pinch-zoom etc.)
+                if (e.touches.length === 1) {
+                    isScrolling = true;
+                    startClientY = e.touches[0].clientY;
+                    startScrollY = contentArea.scrollTop;
+                }
             }, { passive: false }); // passive: false allows preventDefault
 
             contentArea.addEventListener('touchmove', (e) => {
                 if (!isScrolling) return;
+                // Only prevent default if it's primarily a vertical scroll gesture
                 const deltaY = e.touches[0].clientY - startClientY;
                 const newScrollTop = startScrollY - deltaY;
+                
+                // Check if the scroll is within bounds before preventing default
+                const willScroll = (newScrollTop >= 0 && newScrollTop <= (contentArea.scrollHeight - contentArea.clientHeight));
+
                 contentArea.scrollTop = Math.max(0, Math.min(newScrollTop, contentArea.scrollHeight - contentArea.clientHeight));
-                e.preventDefault(); // Prevent default page scrolling
+                
+                if (willScroll) {
+                    e.preventDefault(); // Prevent default page scrolling if content can scroll
+                }
             }, { passive: false });
 
             contentArea.addEventListener('touchend', () => {
