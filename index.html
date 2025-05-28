@@ -243,6 +243,15 @@
             max-width: 75%; 
             margin: 0 auto 3px auto; 
         }
+        .about-me h4 { /* New style for subtitles in About Me */
+            color: var(--secondary-color);
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: clamp(10px, 2.8vw, 14px);
+            text-align: center; /* Ensure new h4 elements are centered */
+            width: 100%; /* Take full width for centering */
+        }
         .about-me ul {
             list-style: none; /* Remove default bullets as we're centering */
             padding: 0; /* Remove default padding */
@@ -649,9 +658,7 @@
                     <div class="experience-item">
                         <h4>Cybersecurity & Network Operations Specialist (in a simulated setting)</h4>
                         <ul>
-                            <li>Experience in network design, implementation, and security using PacketTracer since 2017.</li>
-                            <li>Proficient in advanced switch and router configurations, OSI model, subnetting, IPv4/IPv6, ICMP, TCP/UDP, VLAN segmentation, and network troubleshooting.</li>
-                            <li>Experienced with pfSense firewalls for robust security policies.</li>
+                            <li>Practice in advanced switch and router configurations, OSI model, subnetting, IPv4/IPv6, TCP/UDP, VLAN segmentation, and networking troubleshooting.</li>
                         </ul>
                     </div>
                     <div class="experience-item">
@@ -662,18 +669,16 @@
                             <li>Expertise includes vulnerability response, malware protection, firewall configuration, ACLs, URL blocking, forensic drive image analysis, and encryption.</li>
                             <li>Skilled in user account policies, social engineering, and phishing tactics.</li>
                             <li>Experienced in detecting DNS tunneling, DDOS attacks, open port scanning, DHCP attacks, and SQL injection.</li>
-                            <li>Proficient in Wireshark, Ettercap, Burp Suite, honeypots, OSINT, Kibana ELK Stack, and Hunters Security.</li>
+                            <li>Extensive practice in Wireshark, Ettercap, Burp Suite, Nmap, Metasploit, honeypots, firewalls and OSINT.</li>
                         </ul>
                     </div>
                     <div class="experience-item">
                         <h4>IT & Systems Administrator</h4>
                         <ul>
-                            <li>Expertise in managing Linux, Windows, and macOS environments.</li>
-                            <li>Proficient in VMware and VirtualBox for optimal resource allocation.</li>
-                            <li>Experienced in Access, Excel, and Oracle Cloud.</li>
-                            <li>Strong foundation in HTML and CSS.</li>
-                            <li>Programming skills in C++, Visual Basic, and Python.</li>
-                            <li>Confident in identifying and resolving complex technical issues.</li>
+                            <li>Expertise in managing Linux environments, macOS, and Windows (user security policies configuration).</li>
+                            <li>Practice in VMware and VirtualBox.</li>
+                            <li>Experience in Excel, Word, and Access.</li>
+                            <li>Extensive Photoshop and video editing abilities.</li>
                         </ul>
                     </div>
                 </section>
@@ -683,37 +688,33 @@
                     <h2>About Me</h2>
                 </div>
                 <section class="section-content about-me">
-                    <p>
-                        <strong>Location History:</strong>
-                        <ul>
-                            <li>Born in Burnsville, Minnesota</li>
-                            <li>Raised in Morristown, Minnesota</li>
-                            <li>Moved to Faribault, Minnesota in 2015</li>
-                            <li>Moved to Casper, Wyoming in 2017</li>
-                            <li>Currently a student at Casper College, pursuing an associate's degree in Computer Security</li>
-                        </ul>
-                    </p>
+                    <h4 style="color: var(--secondary-color);">Location History:</h4>
+                    <ul>
+                        <li>Born in Burnsville, Minnesota</li>
+                        <li>Raised in Morristown, Minnesota</li>
+                        <li>Moved to Faribault, Minnesota in 2015</li>
+                        <li>Moved to Casper, Wyoming in 2017</li>
+                        <li><span style="color: var(--secondary-color);">Currently a student at Casper College, pursuing an associate's degree in Computer Security</span></li>
+                    </ul>
                     <p>
                         My attraction to this field stems from my experience as the go-to IT support for family and friends. I genuinely enjoy helping others resolve their technical issues and find the troubleshooting process to be rewarding. My family has been a constant source of encouragement, wholeheartedly supporting my interests.
                     </p>
                     <p>
                         I'm a highly motivated aspiring cybersecurity enthusiast with a lifelong passion for technology. From building my first gaming rig at 14, to mastering network configurations, my passion for the digital world is unwavering.
                     </p>
-                    <p>
-                        My strengths include:
-                        <ul>
-                            <li>Possessing a solid understanding of operating systems, network security, and proactive threat detection.</li>
-                            <li>Background in creative software and analytical troubleshooting providing a unique and valuable perspective to the cybersecurity landscape.</li>
-                            <li>Eager to contribute a dynamic approach to protecting digital assets and infrastructure.</li>
-                            <li>Seeking to leverage my proven work ethic and IT passion into a dedicated IT role.</li>
-                        </ul>
-                    </p>
+                    <h4 style="color: var(--secondary-color);">My strengths include:</h4>
+                    <ul>
+                        <li>Possessing a solid understanding of operating systems, network security, and proactive threat detection.</li>
+                        <li>Background in creative software and analytical troubleshooting providing a unique and valuable perspective to the cybersecurity landscape.</li>
+                        <li>Eager to contribute a dynamic approach to protecting digital assets and infrastructure.</li>
+                        <li>Seeking to leverage my proven work ethic and IT passion into a dedicated IT role.</li>
+                    </ul>
+                    <h4 style="color: var(--secondary-color);">*</h4>
                     <p>
                         While the majority of my knowledge is self-taught, driven by curiosity and desire to learn, I owe significant credit to my family (Mom: Jen, Dad: Brad, Brother: Riley), my Kelly Walsh CCNA teacher, Duane Reimer, and my Casper College CCNA instructor, Jeffrey Brewster, for their invaluable contributions. I am currently preparing to take the CCNA exam upon completion of my CCNA prep course at Casper College.
                     </p>
-                    <p>
-                        In regards to AI: In my opinion, AI is a powerful tool with vast potential for automating tasks and enhancing various processes. I believe it is crucial to learn how to effectively utilize these tools while maintaining an awareness of their distinction from human-generated content. (In fact, this website was built using contributions from Gemini 2.0).
-                    </p>
+                    <h4 style="color: var(--secondary-color);">AI</h4>
+                    <p>In my opinion, AI is a powerful tool with vast potential for automating tasks and enhancing various processes. I believe it is crucial to learn how to effectively utilize these tools while maintaining an awareness of their distinction from human-generated content. (In fact, this website was built using contributions from Gemini 2.0).</p>
                 </section>
             </div>
             <div class="face face-3 hobbies-pc-evolution">
