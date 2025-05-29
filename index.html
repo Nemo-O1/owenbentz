@@ -1121,8 +1121,12 @@
                 return;
             }
 
-            // Check if the click target is inside the cube container or any interactive element within it
-            // This prevents cube rotation when clicking on content/links inside the cube itself
+            // NEW CHECK: If the click target is inside the modal, do not rotate the cube.
+            if (e.target.closest('#imageModal')) {
+                return;
+            }
+
+            // Original check for clicks inside the cube itself
             if (e.target.closest('#resume-cube')) {
                 return; // Do not rotate if clicked inside the cube
             }
@@ -1267,7 +1271,7 @@
             updateSectionContentTop(); // Initial calculation of content top
         };
 
-        // --- Image Modal Logic (remains unchanged) ---
+        // --- Image Modal Logic ---
         const modal = document.getElementById("imageModal");
         const modalImage = document.getElementById("modalImage");
         const closeButton = document.getElementsByClassName("close-button")[0];
@@ -1275,20 +1279,27 @@
 
         // Add click listener to each PC evolution image to open the modal
         pcImages.forEach(img => {
-            img.onclick = function() {
+            img.onclick = function(event) { // Pass event object
                 modal.style.display = "flex"; // Show the modal
                 modalImage.src = this.src; // Set modal image source to clicked image
+                event.stopPropagation(); // Prevent the click from bubbling up to document.body and causing cube rotation
             }
         });
+
+        // When the modal image itself is clicked, close the modal AND stop propagation
+        modalImage.onclick = function(event) {
+            event.stopPropagation(); // Prevent the click from bubbling up to document.body and causing cube rotation
+            modal.style.display = "none"; // Close the modal when the image itself is clicked
+        }
 
         // Close the modal when the close button is clicked
         closeButton.onclick = function() {
             modal.style.display = "none"; // Hide the modal
         }
 
-        // Close the modal when clicking outside the image content (on the modal overlay)
+        // Close the modal when clicking outside the image content (on the modal overlay itself)
         modal.onclick = function(event) {
-            if (event.target == modal) {
+            if (event.target == modal) { // This checks if the clicked element is the modal backdrop, not the image or close button
                 modal.style.display = "none"; // Hide the modal
             }
         }
