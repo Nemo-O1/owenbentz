@@ -453,7 +453,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
+            overflow: hidden; /* Prevent scrolling inside modal */
             background-color: var(--modal-bg);
             align-items: center;
             justify-content: center;
@@ -484,6 +484,35 @@
         .close-button:hover {
             color: var(--modal-close-hover);
         }
+
+        /* Modal navigation arrows */
+        .modal-nav-arrow {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 50px;
+            color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+            user-select: none; /* Prevent text selection */
+            transition: 0.3s;
+            z-index: 1001; /* Above modal content */
+            padding: 10px;
+        }
+        .modal-nav-arrow:hover {
+            color: var(--primary-color); /* Orange on hover */
+            text-shadow: 0 0 10px var(--primary-color); /* Subtle glow on hover */
+        }
+        .modal-nav-arrow.left {
+            left: 20px;
+        }
+        .modal-nav-arrow.right {
+            right: 20px;
+        }
+        .modal-nav-arrow.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
 
         /* Navigation dots at the top of the screen */
         .nav-dots {
@@ -612,6 +641,13 @@
             }
             .pc-evolution-images-grid img {
                 height: 25px; 
+            }
+
+            /* Modal navigation arrows for mobile */
+            .modal-nav-arrow {
+                font-size: 30px; /* Smaller arrows for mobile */
+                left: 10px; /* Closer to edges */
+                right: 10px;
             }
         }
     </style>
@@ -759,15 +795,14 @@
                         </div>
                         <div class="collapsible-content" id="pcEvolutionContent"> 
                             <div class="pc-evolution-images-grid">
+                                <!-- Removed setup1.jpeg and setup6.jpeg -->
                                 <img src="images/setup9.jpeg" alt="PC Image 9" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                                 <img src="images/setup8.jpeg" alt="PC Image 8" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                                 <img src="images/setup7.jpeg" alt="PC Image 7" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup6.jpeg" alt="PC Image 6" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                                 <img src="images/setup5.jpeg" alt="PC Image 5" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                                 <img src="images/setup4.jpeg" alt="PC Image 4" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                                 <img src="images/setup3.jpeg" alt="PC Image 3" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                                 <img src="images/setup2.jpeg" alt="PC Image 2" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup1.jpeg" alt="PC Image 1" onerror="this.onerror=null;this.src='https://placehold.co/150x50/222/FFF?text=Image+Error';">
                             </div>
                         </div>
                     </div>
@@ -787,7 +822,9 @@
 
     <div id="imageModal" class="modal">
         <span class="close-button">&times;</span>
+        <span class="modal-nav-arrow left" id="prevImage">&lt;</span>
         <img class="modal-content" id="modalImage">
+        <span class="modal-nav-arrow right" id="nextImage">&gt;</span>
     </div>
 
     <script>
@@ -1271,18 +1308,53 @@
             updateSectionContentTop(); // Initial calculation of content top
         };
 
-        // --- Image Modal Logic ---
+        // --- Image Modal Logic with Navigation ---
         const modal = document.getElementById("imageModal");
         const modalImage = document.getElementById("modalImage");
         const closeButton = document.getElementsByClassName("close-button")[0];
-        const pcImages = document.querySelectorAll(".pc-evolution-images-grid img");
+        const prevImageBtn = document.getElementById("prevImage");
+        const nextImageBtn = document.getElementById("nextImage");
+        const pcImagesContainer = document.querySelector(".pc-evolution-images-grid");
+
+        let currentImageIndex = 0;
+        let imageSources = []; // To store all image sources from the grid
+
+        // Function to update modal image and navigation button states
+        function updateModalImage() {
+            modalImage.src = imageSources[currentImageIndex];
+            prevImageBtn.classList.toggle('disabled', currentImageIndex === 0);
+            nextImageBtn.classList.toggle('disabled', currentImageIndex === imageSources.length - 1);
+        }
 
         // Add click listener to each PC evolution image to open the modal
-        pcImages.forEach(img => {
-            img.onclick = function(event) { // Pass event object
+        // This dynamically collects images on click, useful if images are added/removed
+        pcImagesContainer.addEventListener('click', function(event) {
+            const clickedImg = event.target.closest('img');
+            if (clickedImg) {
+                // Populate imageSources array and find current index
+                imageSources = Array.from(pcImagesContainer.querySelectorAll('img')).map(img => img.src);
+                currentImageIndex = imageSources.indexOf(clickedImg.src);
+                
                 modal.style.display = "flex"; // Show the modal
-                modalImage.src = this.src; // Set modal image source to clicked image
+                updateModalImage(); // Set modal image and button states
                 event.stopPropagation(); // Prevent the click from bubbling up to document.body and causing cube rotation
+            }
+        });
+
+        // Navigation for modal images
+        prevImageBtn.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent modal from closing
+            if (currentImageIndex > 0) {
+                currentImageIndex--;
+                updateModalImage();
+            }
+        });
+
+        nextImageBtn.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent modal from closing
+            if (currentImageIndex < imageSources.length - 1) {
+                currentImageIndex++;
+                updateModalImage();
             }
         });
 
