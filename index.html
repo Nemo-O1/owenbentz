@@ -32,6 +32,7 @@
             /* Responsive sizing variables for the cube container */
             --cube-width: min(85vw, 750px);
             --cube-height: min(85vh, 750px);
+            --cube-apothem: calc(var(--cube-width) * 0.85); /* Distance from center to face for 3D positioning */
             --transition-duration: 0.5s; /* Standard transition duration for cube rotation */
 
             /* Padding variables for absolute positioning of elements within faces */
@@ -116,10 +117,10 @@
         }
 
         /* Positioning for each face to form an octagonal prism (4 sides visible) */
-        .face:nth-child(1) { transform: rotateY(0deg) translateZ(calc(var(--cube-width) * 0.85)); }
-        .face:nth-child(2) { transform: rotateY(90deg) translateZ(calc(var(--cube-width) * 0.85)); }
-        .face:nth-child(3) { transform: rotateY(180deg) translateZ(calc(var(--cube-width) * 0.85)); }
-        .face:nth-child(4) { transform: rotateY(270deg) translateZ(calc(var(--cube-width) * 0.85)); }
+        .face:nth-child(1) { transform: rotateY(0deg) translateZ(var(--cube-apothem)); }
+        .face:nth-child(2) { transform: rotateY(90deg) translateZ(var(--cube-apothem)); }
+        .face:nth-child(3) { transform: rotateY(180deg) translateZ(var(--cube-apothem)); }
+        .face:nth-child(4) { transform: rotateY(270deg) translateZ(var(--cube-apothem)); }
 
         /* Absolute positioned header within each face */
         .face-header {
@@ -191,6 +192,7 @@
 
         /* Specific styles for contact information */
         .contact-info p {
+            font-family: 'Roboto Mono', monospace; /* Changed to Roboto Mono for better 0/O distinction */
             font-size: clamp(9px, 2.5vw, 12px); 
             display: flex;
             align-items: center;
@@ -694,7 +696,7 @@
                     <div class="experience-item">
                         <h4>Cybersecurity & Network Operations Specialist (in a simulated setting)</h4>
                         <ul>
-                            <li>Practice in advanced switch and router configurations, OSI model, subnetting, IPv4/IPv6, TCP/UDP, VLAN segmentation, and networking troubleshooting.</li>
+                            <li>Educated in advanced switch and router configurations, OSI model, subnetting, IPv4/IPv6, TCP/UDP, VLAN segmentation, and networking troubleshooting.</li>
                         </ul>
                     </div>
                     <div class="experience-item">
@@ -710,7 +712,7 @@
                         <h4>IT & Systems Administrator</h4>
                         <ul>
                             <li>Proficient in managing Linux environments, macOS, and Windows (user security policies configuration).</li>
-                            <li>Practice in VMware and VirtualBox.</li>
+                            <li>Abundant use of VMware and VirtualBox.</li>
                             <li>Accomplished in Excel, Word, and Access.</li>
                             <li>Substantial Photoshop and video editing abilities.</li>
                         </ul>
@@ -731,7 +733,8 @@
                         <li><span style="color: var(--secondary-color);">Currently a student at Casper College, pursuing an associate's degree in Computer Security</span></li>
                     </ul>
                     <p>
-                        My attraction to this field stems from my experience as the go-to IT support for family and friends. I genuinely enjoy helping others resolve their technical issues and find the troubleshooting process to be rewarding. My family has been a constant source of encouragement, wholeheartedly supporting my interests.
+                        My attraction to this field stems not only from my experience as the go-to IT support for family and friends, but also from just enjoying troubleshooting. Getting side tracked with something technical, refusing to let it beat me, and then digging in to try to solve it. I genuinely 
+enjoy helping others resolve their technical issues and find the troubleshooting process to be rewarding. 
                     </p>
                     <p>
                         I'm a highly motivated aspiring cybersecurity enthusiast with a lifelong passion for technology. From building my first gaming rig at 14, to mastering network configurations, my passion for the digital world is unwavering.
@@ -745,10 +748,10 @@
                     </ul>
                     <h4 style="color: var(--secondary-color);">*</h4>
                     <p>
-                        While the majority of my knowledge is self-taught, driven by curiosity and desire to learn, I owe significant credit to my family (Mom: Jen, Dad: Brad, Brother: Riley), my Kelly Walsh CCNA teacher, Duane Reimer, and my Casper College CCNA instructor, Jeffrey Brewster, for their invaluable contributions. I am currently preparing to take the CCNA exam upon completion of my CCNA prep course at Casper College.
+                        While the majority of my knowledge is self-taught, driven by curiosity and desire to learn, my family has been a constant source of encouragement, wholeheartedly supporting my interests. I also owe significant credit to both my Kelly Walsh CCNA teacher, Duane Reimer, and my Casper College CCNA instructor, Jeffrey Brewster, for their invaluable contributions. I am currently preparing to take the CCNA exam upon completion of my CCNA prep course at Casper College.
                     </p>
                     <h4 style="color: var(--secondary-color);">AI</h4>
-                    <p>In my opinion, AI is a powerful tool with vast potential for automating tasks and enhancing various processes. I believe it is crucial to learn how to effectively utilize these tools while maintaining an awareness of their distinction from human-generated content. (In fact, this website was built using contributions from Gemini 2.0).</p>
+                    <p>In my opinion, AI is a powerful tool with vast potential for automating tasks and enhancing various processes. I believe it is crucial to learn how to effectively utilize these tools while maintaining an awareness of their distinction from human-generated content. (In fact, this website was built using contributions from Gemini 2.0). Cybersecurity starts by making sure your friends and family are protected. Unlike other fields, AI is accelerating cybersecurity. With the advancements of technology, it'll be critical for EVERYONE to have at least a basic understanding of cybersecurity.</p>
                 </section>
             </div>
             <div class="face face-3 hobbies-pc-evolution">
@@ -926,11 +929,6 @@
         const swipeThreshold = 50; // Minimum horizontal distance for a recognized swipe
         const swipeVerticalTolerance = 30; // Maximum vertical deviation for a horizontal swipe
 
-        // Function to detect if the device is mobile based on user agent
-        function isMobileDevice() {
-            return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
-
         // Define the initial Y rotation offset for each face to form the octagonal prism
         // Each face is rotated 90 degrees relative to the previous one
         const faceYOffsets = {
@@ -953,11 +951,9 @@
 
         // Function to set the initial 3D positions of each face to form the octagonal prism
         function setFacePositions() {
-            const cubeWidth = resumeCube.offsetWidth;
             // The apothem is the distance from the center to the midpoint of a side.
-            // For a regular octagon, apothem = side / (2 * tan(PI/8)). Here, 0.85 is an approximation
-            // to visually position the faces correctly for a 4-sided prism within the cube container.
-            const apothem = cubeWidth * 0.85; 
+            // Using the CSS variable --cube-apothem directly.
+            const apothem = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--cube-apothem'));
 
             faces.forEach(face => {
                 const faceName = Array.from(face.classList).find(cls => cls.startsWith('face-'));
@@ -972,12 +968,12 @@
         // Function to dynamically update the top position of .section-content
         // This ensures content starts below the header, adapting to header height changes.
         function updateSectionContentTop() {
+            // Calculate contentGap once, based on current window width
+            const contentGap = window.innerWidth <= 768 ? 
+                               parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--content-gap-mobile')) : 
+                               parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--content-gap-desktop'));
+                               
             faceHeaders.forEach((header, index) => {
-                // Get the appropriate content gap based on device type
-                const contentGap = window.innerWidth <= 768 ? 
-                                   parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--content-gap-mobile')) : 
-                                   parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--content-gap-desktop'));
-                
                 const headerBottom = header.offsetTop + header.offsetHeight; // Calculate the bottom edge of the header
                 const sectionContent = sectionContents[index]; // Get the corresponding content area
                 
