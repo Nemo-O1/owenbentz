@@ -363,8 +363,6 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             margin-bottom: 8px; 
-            /* Ensure pointer-events are always active on the header */
-            pointer-events: auto; 
         }
 
         .collapsible-header:hover {
@@ -396,8 +394,6 @@
             transition: max-height 0.4s ease-out;
             padding: 0 10px;
             box-sizing: border-box;
-            /* Ensure content inside is clickable too */
-            pointer-events: auto; 
         }
 
         .collapsible-content.active {
@@ -423,8 +419,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease;
             cursor: pointer;
-            /* Ensure images are clickable */
-            pointer-events: auto; 
         }
         .pc-evolution-images-grid img:hover {
             transform: scale(1.05);
@@ -435,8 +429,6 @@
             color: var(--primary-color);
             text-decoration: none;
             transition: color 0.3s ease;
-            /* Ensure links are clickable */
-            pointer-events: auto; 
         }
         a:hover {
             color: var(--hover-orange);
@@ -449,8 +441,6 @@
             width: 50px; 
             height: auto;
             flex-shrink: 0;
-            /* Ensure logo is clickable */
-            pointer-events: auto; 
         }
 
         /* Modal overlay for image display */
@@ -466,8 +456,6 @@
             background-color: var(--modal-bg);
             align-items: center;
             justify-content: center;
-            /* Ensure modal itself has pointer events */
-            pointer-events: auto; 
         }
         .modal-content {
             margin: auto;
@@ -477,8 +465,6 @@
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.7);
             animation: zoom 0.6s; /* Zoom in animation */
-            /* Ensure modal content is clickable */
-            pointer-events: auto; 
         }
         @keyframes zoom {
             from { transform: scale(0.1); }
@@ -493,8 +479,6 @@
             font-weight: bold;
             transition: 0.3s;
             cursor: pointer;
-            /* Ensure close button is clickable */
-            pointer-events: auto; 
         }
         .close-button:hover {
             color: var(--modal-close-hover);
@@ -512,8 +496,6 @@
             transition: 0.3s;
             z-index: 1001; /* Above modal content */
             padding: 10px;
-            /* Ensure arrows are clickable */
-            pointer-events: auto; 
         }
         .modal-nav-arrow:hover {
             color: var(--primary-color); /* Orange on hover */
@@ -528,8 +510,6 @@
         .modal-nav-arrow.disabled {
             opacity: 0.3;
             cursor: not-allowed;
-            /* Disabled arrows should still not block events if visually present */
-            pointer-events: auto; 
         }
 
 
@@ -542,8 +522,6 @@
             display: flex;
             gap: 10px;
             z-index: 101; /* Ensure dots are above the cube */
-            /* Ensure the dots container allows clicks */
-            pointer-events: auto; 
         }
         .dot {
             width: 12px;
@@ -553,8 +531,6 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            /* Ensure dots are clickable */
-            pointer-events: auto; 
         }
         .dot.active {
             background-color: var(--primary-color);
@@ -681,12 +657,12 @@
         <div class="cube" id="resume-cube">
             <div class="face face-0 intro-objective">
                 <div class="face-header">
-                    <img id="logo-image" src="images/01-logo3.png" alt="01 Logo" onerror="this.onerror=null;this.src='https://placehold.co/150x50/222/FFF?text=Logo+Error';">
+                    <img id="logo-image" src="images/01-logo3.png" alt="01 Logo" onerror="this.onerror=null;this.src='https://placehold.co/150x50/222/FFF?text=Logo+Error';" class="js-interactive-element">
                     <h1>Owen James Engebretson Bentz</h1>
                 </div>
                 <section class="section-content contact-info">
-                    <p><i class="fas fa-globe"></i> <strong>URL:</strong> <a href="https://owenbentz.com/">https://owenbentz.com/</a></p>
-                    <p><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:owenbentz01@gmail.com">owenbentz01@gmail.com</a></p>
+                    <p><i class="fas fa-globe"></i> <strong>URL:</strong> <a href="https://owenbentz.com/" class="js-interactive-element">https://owenbentz.com/</a></p>
+                    <p><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:owenbentz01@gmail.com" class="js-interactive-element">owenbentz01@gmail.com</a></p>
                     <p><i class="fas fa-phone"></i> <strong>Phone:</strong> 612-701-4335</p>
                     <p><i class="fas fa-calendar-alt"></i> <strong>DoB:</strong> 01-24-2003</p>
                     
@@ -780,7 +756,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                 </div>
                 <section class="section-content hobbies">
                     <div class="collapsible-container" id="mainHobbiesCollapsible">
-                        <div class="collapsible-header" id="mainHobbiesHeader">
+                        <div class="collapsible-header js-interactive-element" id="mainHobbiesHeader">
                             <h3>My Hobbies</h3>
                             <i class="fas fa-chevron-right collapsible-icon" id="mainHobbiesIcon"></i>
                         </div>
@@ -812,20 +788,20 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                     </div>
 
                     <div class="collapsible-container" id="pcEvolutionCollapsible">
-                        <div class="collapsible-header" id="pcEvolutionHeader">
+                        <div class="collapsible-header js-interactive-element" id="pcEvolutionHeader">
                             <h3>PC Evolution Timeline Images</h3>
                             <i class="fas fa-chevron-right collapsible-icon" id="pcEvolutionIcon"></i>
                         </div>
                         <div class="collapsible-content" id="pcEvolutionContent"> 
                             <div class="pc-evolution-images-grid">
                                 <!-- Removed setup1.jpeg and setup6.jpeg -->
-                                <img src="images/setup9.jpeg" alt="PC Image 9" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup8.jpeg" alt="PC Image 8" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup7.jpeg" alt="PC Image 7" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup5.jpeg" alt="PC Image 5" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup4.jpeg" alt="PC Image 4" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup3.jpeg" alt="PC Image 3" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup2.jpeg" alt="PC Image 2" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup9.jpeg" alt="PC Image 9" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';" class="js-interactive-element">
+                                <img src="images/setup8.jpeg" alt="PC Image 8" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';" class="js-interactive-element">
+                                <img src="images/setup7.jpeg" alt="PC Image 7" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';" class="js-interactive-element">
+                                <img src="images/setup5.jpeg" alt="PC Image 5" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';" class="js-interactive-element">
+                                <img src="images/setup4.jpeg" alt="PC Image 4" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';" class="js-interactive-element">
+                                <img src="images/setup3.jpeg" alt="PC Image 3" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';" class="js-interactive-element">
+                                <img src="images/setup2.jpeg" alt="PC Image 2" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';" class="js-interactive-element">
                             </div>
                         </div>
                     </div>
@@ -835,19 +811,19 @@ enjoy helping others resolve their technical issues and find the troubleshooting
     </div>
 
     <div class="nav-dots" id="nav-dots">
-        <div class="dot active" data-face="0"></div>
-        <div class="dot" data-face="1"></div>
-        <div class="dot" data-face="2"></div>
-        <div class="dot" data-face="3"></div>
+        <div class="dot active js-interactive-element" data-face="0"></div>
+        <div class="dot js-interactive-element" data-face="1"></div>
+        <div class="dot js-interactive-element" data-face="2"></div>
+        <div class="dot js-interactive-element" data-face="3"></div>
     </div>
 
     <p class="disclaimer">References available upon request.</p>
 
     <div id="imageModal" class="modal">
-        <span class="close-button">&times;</span>
-        <span class="modal-nav-arrow left" id="prevImage">&lt;</span>
-        <img class="modal-content" id="modalImage">
-        <span class="modal-nav-arrow right" id="nextImage">&gt;</span>
+        <span class="close-button js-interactive-element">&times;</span>
+        <span class="modal-nav-arrow left js-interactive-element" id="prevImage">&lt;</span>
+        <img class="modal-content js-interactive-element" id="modalImage">
+        <span class="modal-nav-arrow right js-interactive-element" id="nextImage">&gt;</span>
     </div>
 
     <script>
@@ -1112,6 +1088,13 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         // Touch events for mobile devices (on the cube itself) - Handles both drag and swipe
         resumeCube.addEventListener('touchstart', (e) => {
+            // Check if the touched element is an interactive element.
+            if (e.target.closest('.js-interactive-element')) {
+                // If so, let the interactive element handle the touch and prevent cube rotation.
+                // Do not set isDragging, which prevents cube touchmove/touchend from acting.
+                return; 
+            }
+
             isDragging = true; // Indicate a touch interaction has started
             startX = e.touches[0].clientX; // Store initial X for continuous drag calculation
             initialTouchX = e.touches[0].clientX; // Store initial X for swipe direction detection
@@ -1141,8 +1124,13 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         }, { passive: false }); // passive: false is crucial to allow preventDefault
 
         resumeCube.addEventListener('touchend', (e) => {
+            if (!isDragging) return; // Only process if dragging was active
+
             isDragging = false; // End of touch interaction
             resumeCube.style.transition = 'transform 0.5s ease-out'; // Re-enable CSS transition for smooth snap
+
+            // If an interactive element was clicked during this touch, we don't want to rotate the cube.
+            // This is handled by the initial touchstart check, so we don't need a specific check here.
 
             const finalTouchX = e.changedTouches[0].clientX; // Get final touch position
             const finalTouchY = e.changedTouches[0].clientY; // Get final touch position
@@ -1158,7 +1146,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                     goToFace(activeFaceIndex + 1); // Rotate cube right (to show next face)
                 }
             } else {
-                // If not a distinct swipe, snap to the nearest face (this handles regular drags/taps)
+                // If not a distinct swipe (i.e., a short drag or tap on non-interactive area), snap to the nearest face
                 snapCubeToNearestFace();
             }
             hasDragged = false; // Reset hasDragged when touch ends
@@ -1167,7 +1155,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
             initialTouchY = 0;
         }, { passive: true }); // passive: true as we don't need to preventDefault in touchend itself
 
-        // NEW: Click event for cube rotation, attached directly to the cube container
+        // Click event for cube rotation, attached directly to the cube container
         cubeContainer.addEventListener('click', (e) => {
             // If a drag/swipe just occurred on the cube, ignore this click to prevent double-triggering
             if (hasDragged) {
@@ -1175,24 +1163,10 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                 return;
             }
 
-            // Check if the clicked element or any of its ancestors are interactive
-            // This prevents cube rotation when clicking on functional elements
-            const interactiveElements = [
-                '.collapsible-header', // Your dropdown headers
-                'a',                   // Any links
-                'button',              // Any buttons
-                'img',                 // PC evolution images
-                '.dot',                // Navigation dots
-                '.modal-content',      // Image modal content
-                '.close-button',       // Modal close button
-                '.modal-nav-arrow'     // Modal navigation arrows
-            ];
-
-            // If the clicked target is within any of these interactive elements, do NOT rotate the cube
-            for (const selector of interactiveElements) {
-                if (e.target.closest(selector)) {
-                    return; // An interactive element was clicked, so stop here
-                }
+            // *** CRITICAL CHANGE: Check if the clicked element or any of its ancestors are interactive ***
+            // If so, immediately return to prevent cube rotation.
+            if (e.target.closest('.js-interactive-element')) {
+                return; 
             }
 
             // If we reach here, it means a non-interactive part of the cube container was clicked.
@@ -1242,7 +1216,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         // Navigation dots functionality to jump to a specific face
         dots.forEach((dot, index) => {
             dot.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent the click from bubbling up to document.body (though less critical now)
+                e.stopPropagation(); // Prevent the click from bubbling up to cubeContainer
                 goToFace(index); // Navigate to the corresponding face
             });
         });
@@ -1312,8 +1286,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const mainHobbiesIcon = document.getElementById('mainHobbiesIcon');
 
         mainHobbiesHeader.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent click from bubbling up
-            // No setTimeout(0) needed here as the cube click handler is now more specific
+            event.stopPropagation(); // Prevent click from bubbling up to cubeContainer
             mainHobbiesContent.classList.toggle('active'); // Toggle 'active' class for content visibility
             mainHobbiesIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
         });
@@ -1324,8 +1297,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const pcEvolutionIcon = document.getElementById('pcEvolutionIcon');
 
         pcEvolutionHeader.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent click from bubbling up
-            // No setTimeout(0) needed here as the cube click handler is now more specific
+            event.stopPropagation(); // Prevent click from bubbling up to cubeContainer
             pcEvolutionContent.classList.toggle('active'); // Toggle 'active' class for content visibility
             pcEvolutionIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
         });
@@ -1364,7 +1336,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         pcImagesContainer.addEventListener('click', function(event) {
             const clickedImg = event.target.closest('img');
             if (clickedImg) {
-                event.stopPropagation(); // Prevent the click from bubbling up to document.body
+                event.stopPropagation(); // Prevent the click from bubbling up to cubeContainer
                 // Populate imageSources array and find current index
                 imageSources = Array.from(pcImagesContainer.querySelectorAll('img')).map(img => img.src);
                 currentImageIndex = imageSources.indexOf(clickedImg.src);
@@ -1376,7 +1348,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         // Navigation for modal images
         prevImageBtn.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent modal from closing
+            event.stopPropagation(); // Prevent modal from closing (and bubbling to cubeContainer)
             if (currentImageIndex > 0) {
                 currentImageIndex--;
                 updateModalImage();
@@ -1384,7 +1356,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         });
 
         nextImageBtn.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent modal from closing
+            event.stopPropagation(); // Prevent modal from closing (and bubbling to cubeContainer)
             if (currentImageIndex < imageSources.length - 1) {
                 currentImageIndex++;
                 updateModalImage();
@@ -1393,7 +1365,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         // When the modal image itself is clicked, close the modal AND stop propagation
         modalImage.onclick = function(event) {
-            event.stopPropagation(); // Prevent the click from bubbling up to document.body and causing cube rotation
+            event.stopPropagation(); // Prevent the click from bubbling up to cubeContainer
             modal.style.display = "none"; // Close the modal when the image itself is clicked
         }
 
