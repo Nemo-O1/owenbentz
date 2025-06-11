@@ -37,15 +37,12 @@
 
             /* Padding variables for absolute positioning of elements within faces */
             --face-side-padding-desktop: 35px; /* Horizontal padding for desktop */
-            --face-side-padding-mobile: 20px; /* Horizontal padding for mobile */
             --face-top-padding-desktop: 120px; /* Controls header's top position from face edge (to clear dots) */
-            --face-top-padding-mobile: 120px; /* Controls header's top position from face edge (to clear dots) */
             --face-bottom-padding-desktop: 80px; /* Space at the bottom of the face, below content */
-            --face-bottom-padding-mobile: 80px; /* Space at the bottom of the face, below content */
             
             /* Specific gap between the bottom of the header and the top of the content area */
             --content-gap-desktop: 10px; 
-            --content-gap-mobile: 10px; 
+            --content-gap-mobile: 10px; /* New: Mobile-specific content gap */
         }
 
         /* Universal box-sizing for consistent layout */
@@ -366,6 +363,8 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             margin-bottom: 8px; 
+            /* Ensure pointer-events are always active on the header */
+            pointer-events: auto; 
         }
 
         .collapsible-header:hover {
@@ -397,6 +396,8 @@
             transition: max-height 0.4s ease-out;
             padding: 0 10px;
             box-sizing: border-box;
+            /* Ensure content inside is clickable too */
+            pointer-events: auto; 
         }
 
         .collapsible-content.active {
@@ -422,6 +423,8 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease;
             cursor: pointer;
+            /* Ensure images are clickable */
+            pointer-events: auto; 
         }
         .pc-evolution-images-grid img:hover {
             transform: scale(1.05);
@@ -432,6 +435,8 @@
             color: var(--primary-color);
             text-decoration: none;
             transition: color 0.3s ease;
+            /* Ensure links are clickable */
+            pointer-events: auto; 
         }
         a:hover {
             color: var(--hover-orange);
@@ -444,6 +449,8 @@
             width: 50px; 
             height: auto;
             flex-shrink: 0;
+            /* Ensure logo is clickable */
+            pointer-events: auto; 
         }
 
         /* Modal overlay for image display */
@@ -459,6 +466,8 @@
             background-color: var(--modal-bg);
             align-items: center;
             justify-content: center;
+            /* Ensure modal itself has pointer events */
+            pointer-events: auto; 
         }
         .modal-content {
             margin: auto;
@@ -468,6 +477,8 @@
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.7);
             animation: zoom 0.6s; /* Zoom in animation */
+            /* Ensure modal content is clickable */
+            pointer-events: auto; 
         }
         @keyframes zoom {
             from { transform: scale(0.1); }
@@ -482,6 +493,8 @@
             font-weight: bold;
             transition: 0.3s;
             cursor: pointer;
+            /* Ensure close button is clickable */
+            pointer-events: auto; 
         }
         .close-button:hover {
             color: var(--modal-close-hover);
@@ -499,6 +512,8 @@
             transition: 0.3s;
             z-index: 1001; /* Above modal content */
             padding: 10px;
+            /* Ensure arrows are clickable */
+            pointer-events: auto; 
         }
         .modal-nav-arrow:hover {
             color: var(--primary-color); /* Orange on hover */
@@ -513,6 +528,8 @@
         .modal-nav-arrow.disabled {
             opacity: 0.3;
             cursor: not-allowed;
+            /* Disabled arrows should still not block events if visually present */
+            pointer-events: auto; 
         }
 
 
@@ -525,6 +542,8 @@
             display: flex;
             gap: 10px;
             z-index: 101; /* Ensure dots are above the cube */
+            /* Ensure the dots container allows clicks */
+            pointer-events: auto; 
         }
         .dot {
             width: 12px;
@@ -534,6 +553,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            /* Ensure dots are clickable */
+            pointer-events: auto; 
         }
         .dot.active {
             background-color: var(--primary-color);
@@ -561,22 +582,21 @@
             :root {
                 --cube-width: 95vw;
                 --cube-height: 95vh;
-                --face-side-padding-mobile: 20px;
-                --face-top-padding-mobile: 120px; 
-                --face-bottom-padding-mobile: 80px; 
-                --content-gap-mobile: 10px; 
+                --face-side-padding-desktop: 20px; /* Adjusted from mobile variable */
+                --face-top-padding-desktop: 120px; 
+                --face-bottom-padding-desktop: 80px; 
             }
 
             .face-header {
                 min-height: 0; 
                 padding-top: 0; 
-                left: var(--face-side-padding-mobile);
-                width: calc(100% - (2 * var(--face-side-padding-mobile)));
+                left: var(--face-side-padding-desktop);
+                width: calc(100% - (2 * var(--face-side-padding-desktop)));
             }
             .section-content {
-                left: var(--face-side-padding-mobile);
-                right: var(--face-side-padding-mobile);
-                bottom: var(--face-bottom-padding-mobile);
+                left: var(--face-side-padding-desktop);
+                right: var(--face-side-padding-desktop);
+                bottom: var(--face-bottom-padding-desktop);
             }
             
             /* Adjust clamp values for mobile for better control */
@@ -905,6 +925,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         // --- CSS 3D Octagonal Prism Rotation Logic ---
         const resumeCube = document.getElementById('resume-cube');
+        const cubeContainer = document.getElementById('cube-container'); // Get the cube container
         const dots = document.querySelectorAll('.dot');
         const faces = document.querySelectorAll('.face');
         const sectionContents = document.querySelectorAll('.section-content'); /* Get all scrollable content areas */
@@ -918,9 +939,6 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const dragRotationSpeed = 0.4; // Increased sensitivity for touch drag for smoother feel
         const transitionInterpolation = 0.1; // Smoothness of interpolation for cube rotation
         let hasDragged = false; // Flag to distinguish a tap from a drag/swipe
-
-        // NEW: Global flag to indicate if an interactive element has handled a click
-        let interactionHappenedOnInteractiveElement = false;
 
         // Keyboard control variables
         let keysPressed = {}; // Stores currently pressed keys for continuous input
@@ -1149,42 +1167,44 @@ enjoy helping others resolve their technical issues and find the troubleshooting
             initialTouchY = 0;
         }, { passive: true }); // passive: true as we don't need to preventDefault in touchend itself
 
-        // Click event for left/right navigation on the document body (for clicks outside the cube)
-        document.body.addEventListener('click', (e) => {
+        // NEW: Click event for cube rotation, attached directly to the cube container
+        cubeContainer.addEventListener('click', (e) => {
             // If a drag/swipe just occurred on the cube, ignore this click to prevent double-triggering
             if (hasDragged) {
                 hasDragged = false; // Reset the flag
                 return;
             }
 
-            // NEW: If an interactive element inside the cube or modal just handled a click, do not rotate the cube.
-            if (interactionHappenedOnInteractiveElement) {
-                // The flag should be reset by the element's own handler.
-                // We'll reset it here too as a fallback for robustness.
-                interactionHappenedOnInteractiveElement = false; 
-                return;
+            // Check if the clicked element or any of its ancestors are interactive
+            // This prevents cube rotation when clicking on functional elements
+            const interactiveElements = [
+                '.collapsible-header', // Your dropdown headers
+                'a',                   // Any links
+                'button',              // Any buttons
+                'img',                 // PC evolution images
+                '.dot',                // Navigation dots
+                '.modal-content',      // Image modal content
+                '.close-button',       // Modal close button
+                '.modal-nav-arrow'     // Modal navigation arrows
+            ];
+
+            // If the clicked target is within any of these interactive elements, do NOT rotate the cube
+            for (const selector of interactiveElements) {
+                if (e.target.closest(selector)) {
+                    return; // An interactive element was clicked, so stop here
+                }
             }
 
-            // Original check for clicks inside the cube itself - removed specific checks for sub-elements
-            // as the global flag handles this.
-            if (e.target.closest('#resume-cube')) {
-                // If the click is on the cube, but not explicitly handled by an interactive element,
-                // then perform the cube rotation logic.
-                 const clickX = e.clientX; // X position relative to the viewport
-                 if (clickX < window.innerWidth / 2) {
-                     goToFace(activeFaceIndex - 1);
-                 } else {
-                     goToFace(activeFaceIndex + 1);
-                 }
-                return; // Stop processing if clicked inside the cube
-            }
+            // If we reach here, it means a non-interactive part of the cube container was clicked.
+            // Perform cube rotation based on click position.
+            const clickX = e.clientX; // X position relative to the viewport
+            const cubeRect = cubeContainer.getBoundingClientRect(); // Get cube container position
 
-            // Finally, if the click is outside the cube entirely, then allow body-wide rotation based on half-screen.
-            const clickX = e.clientX;
-            if (clickX < window.innerWidth / 2) {
-                goToFace(activeFaceIndex - 1);
+            // Determine if click is on left or right half of the cube container
+            if (clickX < (cubeRect.left + cubeRect.width / 2)) {
+                goToFace(activeFaceIndex - 1); // Clicked left half, rotate left
             } else {
-                goToFace(activeFaceIndex + 1);
+                goToFace(activeFaceIndex + 1); // Clicked right half, rotate right
             }
         });
 
@@ -1221,11 +1241,9 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         // Navigation dots functionality to jump to a specific face
         dots.forEach((dot, index) => {
-            dot.addEventListener('click', (e) => { // Passed event 'e'
-                e.stopPropagation(); // Prevent the click from bubbling up to document.body and causing double rotation
-                interactionHappenedOnInteractiveElement = true; // Set the flag
+            dot.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent the click from bubbling up to document.body (though less critical now)
                 goToFace(index); // Navigate to the corresponding face
-                setTimeout(() => { interactionHappenedOnInteractiveElement = false; }, 0); // Reset flag
             });
         });
 
@@ -1295,12 +1313,9 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         mainHobbiesHeader.addEventListener('click', (event) => {
             event.stopPropagation(); // Prevent click from bubbling up
-            interactionHappenedOnInteractiveElement = true; // Set the flag
-            setTimeout(() => { // Defer the toggle to the next event loop
-                mainHobbiesContent.classList.toggle('active'); // Toggle 'active' class for content visibility
-                mainHobbiesIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
-                interactionHappenedOnInteractiveElement = false; // Reset flag after toggle
-            }, 0); // Execute immediately after current script block
+            // No setTimeout(0) needed here as the cube click handler is now more specific
+            mainHobbiesContent.classList.toggle('active'); // Toggle 'active' class for content visibility
+            mainHobbiesIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
         });
 
         // --- Collapsible PC Evolution Images Logic ---
@@ -1310,12 +1325,9 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         pcEvolutionHeader.addEventListener('click', (event) => {
             event.stopPropagation(); // Prevent click from bubbling up
-            interactionHappenedOnInteractiveElement = true; // Set the flag
-            setTimeout(() => { // Defer the toggle to the next event loop
-                pcEvolutionContent.classList.toggle('active'); // Toggle 'active' class for content visibility
-                pcEvolutionIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
-                interactionHappenedOnInteractiveElement = false; // Reset flag after toggle
-            }, 0); // Execute immediately after current script block
+            // No setTimeout(0) needed here as the cube click handler is now more specific
+            pcEvolutionContent.classList.toggle('active'); // Toggle 'active' class for content visibility
+            pcEvolutionIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
         });
 
 
@@ -1353,14 +1365,12 @@ enjoy helping others resolve their technical issues and find the troubleshooting
             const clickedImg = event.target.closest('img');
             if (clickedImg) {
                 event.stopPropagation(); // Prevent the click from bubbling up to document.body
-                interactionHappenedOnInteractiveElement = true; // Set the flag
                 // Populate imageSources array and find current index
                 imageSources = Array.from(pcImagesContainer.querySelectorAll('img')).map(img => img.src);
                 currentImageIndex = imageSources.indexOf(clickedImg.src);
                 
                 modal.style.display = "flex"; // Show the modal
                 updateModalImage(); // Set modal image and button states
-                setTimeout(() => { interactionHappenedOnInteractiveElement = false; }, 0); // Reset flag
             }
         });
 
