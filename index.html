@@ -1278,7 +1278,8 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const mainHobbiesContent = document.getElementById('mainHobbiesContent');
         const mainHobbiesIcon = document.getElementById('mainHobbiesIcon');
 
-        mainHobbiesHeader.addEventListener('click', () => {
+        mainHobbiesHeader.addEventListener('click', (event) => { // Added 'event' parameter
+            event.stopPropagation(); // Prevent click from bubbling to document.body
             mainHobbiesContent.classList.toggle('active'); // Toggle 'active' class for content visibility
             mainHobbiesIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
         });
@@ -1288,7 +1289,8 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const pcEvolutionContent = document.getElementById('pcEvolutionContent');
         const pcEvolutionIcon = document.getElementById('pcEvolutionIcon');
 
-        pcEvolutionHeader.addEventListener('click', () => {
+        pcEvolutionHeader.addEventListener('click', (event) => { // Added 'event' parameter
+            event.stopPropagation(); // Prevent click from bubbling to document.body
             pcEvolutionContent.classList.toggle('active'); // Toggle 'active' class for content visibility
             pcEvolutionIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
         });
