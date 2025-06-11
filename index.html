@@ -665,7 +665,7 @@
                     <h1>Owen James Engebretson Bentz</h1>
                 </div>
                 <section class="section-content contact-info">
-                    <p><i class="fas fa-globe"></i> <strong>URL:</strong> <a href="https://owenbentz.com/">https://owenbentz.com/</a></p>
+                    <p><i class="fas fa-globe"></i> <strong>URL:</strong> <a href="https://owenbentz.org/">https://owenbentz.com/</a></p>
                     <p><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:owenbentz01@gmail.com">owenbentz01@gmail.com</a></p>
                     <p><i class="fas fa-phone"></i> <strong>Phone:</strong> 612-701-4335</p>
                     <p><i class="fas fa-calendar-alt"></i> <strong>DoB:</strong> 01-24-2003</p>
@@ -1154,8 +1154,15 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                 return;
             }
 
-            // NEW CHECK: If the click target is inside the modal, do not rotate the cube.
+            // If the click target is inside the modal, do not rotate the cube.
             if (e.target.closest('#imageModal')) {
+                return;
+            }
+
+            // NEW ADDITION: If the click target is part of a collapsible header, do not rotate the cube.
+            // This is crucial because collapsible headers are *inside* the cube, and their own
+            // stopPropagation() might not prevent the *body* listener from firing in all browsers.
+            if (e.target.closest('.collapsible-header')) {
                 return;
             }
 
