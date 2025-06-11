@@ -37,12 +37,15 @@
 
             /* Padding variables for absolute positioning of elements within faces */
             --face-side-padding-desktop: 35px; /* Horizontal padding for desktop */
+            --face-side-padding-mobile: 20px; /* Horizontal padding for mobile */
             --face-top-padding-desktop: 120px; /* Controls header's top position from face edge (to clear dots) */
+            --face-top-padding-mobile: 120px; /* Controls header's top position from face edge (to clear dots) */
             --face-bottom-padding-desktop: 80px; /* Space at the bottom of the face, below content */
+            --face-bottom-padding-mobile: 80px; /* Space at the bottom of the face, below content */
             
             /* Specific gap between the bottom of the header and the top of the content area */
             --content-gap-desktop: 10px; 
-            --content-gap-mobile: 10px; /* New: Mobile-specific content gap */
+            --content-gap-mobile: 10px; 
         }
 
         /* Universal box-sizing for consistent layout */
@@ -558,21 +561,22 @@
             :root {
                 --cube-width: 95vw;
                 --cube-height: 95vh;
-                --face-side-padding-desktop: 20px; /* Adjusted from mobile variable */
-                --face-top-padding-desktop: 120px; 
-                --face-bottom-padding-desktop: 80px; 
+                --face-side-padding-mobile: 20px;
+                --face-top-padding-mobile: 120px; 
+                --face-bottom-padding-mobile: 80px; 
+                --content-gap-mobile: 10px; 
             }
 
             .face-header {
                 min-height: 0; 
                 padding-top: 0; 
-                left: var(--face-side-padding-desktop);
-                width: calc(100% - (2 * var(--face-side-padding-desktop)));
+                left: var(--face-side-padding-mobile);
+                width: calc(100% - (2 * var(--face-side-padding-mobile)));
             }
             .section-content {
-                left: var(--face-side-padding-desktop);
-                right: var(--face-side-padding-desktop);
-                bottom: var(--face-bottom-padding-desktop);
+                left: var(--face-side-padding-mobile);
+                right: var(--face-side-padding-mobile);
+                bottom: var(--face-bottom-padding-mobile);
             }
             
             /* Adjust clamp values for mobile for better control */
@@ -657,12 +661,12 @@
         <div class="cube" id="resume-cube">
             <div class="face face-0 intro-objective">
                 <div class="face-header">
-                    <img id="logo-image" src="images/01-logo3.png" alt="01 Logo" onerror="this.onerror=null;this.src='https://placehold.co/150x50/222/FFF?text=Logo+Error';" class="js-interactive-element">
+                    <img id="logo-image" src="images/01-logo3.png" alt="01 Logo" onerror="this.onerror=null;this.src='https://placehold.co/150x50/222/FFF?text=Logo+Error';">
                     <h1>Owen James Engebretson Bentz</h1>
                 </div>
                 <section class="section-content contact-info">
-                    <p><i class="fas fa-globe"></i> <strong>URL:</strong> <a href="https://owenbentz.com/" class="js-interactive-element">https://owenbentz.com/</a></p>
-                    <p><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:owenbentz01@gmail.com" class="js-interactive-element">owenbentz01@gmail.com</a></p>
+                    <p><i class="fas fa-globe"></i> <strong>URL:</strong> <a href="https://owenbentz.com/">https://owenbentz.com/</a></p>
+                    <p><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:owenbentz01@gmail.com">owenbentz01@gmail.com</a></p>
                     <p><i class="fas fa-phone"></i> <strong>Phone:</strong> 612-701-4335</p>
                     <p><i class="fas fa-calendar-alt"></i> <strong>DoB:</strong> 01-24-2003</p>
                     
@@ -756,7 +760,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                 </div>
                 <section class="section-content hobbies">
                     <div class="collapsible-container" id="mainHobbiesCollapsible">
-                        <div class="collapsible-header js-interactive-element" id="mainHobbiesHeader">
+                        <div class="collapsible-header" id="mainHobbiesHeader">
                             <h3>My Hobbies</h3>
                             <i class="fas fa-chevron-right collapsible-icon" id="mainHobbiesIcon"></i>
                         </div>
@@ -788,20 +792,20 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                     </div>
 
                     <div class="collapsible-container" id="pcEvolutionCollapsible">
-                        <div class="collapsible-header js-interactive-element" id="pcEvolutionHeader">
+                        <div class="collapsible-header" id="pcEvolutionHeader">
                             <h3>PC Evolution Timeline Images</h3>
                             <i class="fas fa-chevron-right collapsible-icon" id="pcEvolutionIcon"></i>
                         </div>
                         <div class="collapsible-content" id="pcEvolutionContent"> 
                             <div class="pc-evolution-images-grid">
                                 <!-- Removed setup1.jpeg and setup6.jpeg -->
-                                <img src="images/setup9.jpeg" alt="PC Image 9" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';" class="js-interactive-element">
-                                <img src="images/setup8.jpeg" alt="PC Image 8" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';" class="js-interactive-element">
-                                <img src="images/setup7.jpeg" alt="PC Image 7" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';" class="js-interactive-element">
-                                <img src="images/setup5.jpeg" alt="PC Image 5" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';" class="js-interactive-element">
-                                <img src="images/setup4.jpeg" alt="PC Image 4" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';" class="js-interactive-element">
-                                <img src="images/setup3.jpeg" alt="PC Image 3" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';" class="js-interactive-element">
-                                <img src="images/setup2.jpeg" alt="PC Image 2" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';" class="js-interactive-element">
+                                <img src="images/setup9.jpeg" alt="PC Image 9" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup8.jpeg" alt="PC Image 8" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup7.jpeg" alt="PC Image 7" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup5.jpeg" alt="PC Image 5" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup4.jpeg" alt="PC Image 4" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup3.jpeg" alt="PC Image 3" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup2.jpeg" alt="PC Image 2" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                             </div>
                         </div>
                     </div>
@@ -811,19 +815,19 @@ enjoy helping others resolve their technical issues and find the troubleshooting
     </div>
 
     <div class="nav-dots" id="nav-dots">
-        <div class="dot active js-interactive-element" data-face="0"></div>
-        <div class="dot js-interactive-element" data-face="1"></div>
-        <div class="dot js-interactive-element" data-face="2"></div>
-        <div class="dot js-interactive-element" data-face="3"></div>
+        <div class="dot active" data-face="0"></div>
+        <div class="dot" data-face="1"></div>
+        <div class="dot" data-face="2"></div>
+        <div class="dot" data-face="3"></div>
     </div>
 
     <p class="disclaimer">References available upon request.</p>
 
     <div id="imageModal" class="modal">
-        <span class="close-button js-interactive-element">&times;</span>
-        <span class="modal-nav-arrow left js-interactive-element" id="prevImage">&lt;</span>
-        <img class="modal-content js-interactive-element" id="modalImage">
-        <span class="modal-nav-arrow right js-interactive-element" id="nextImage">&gt;</span>
+        <span class="close-button">&times;</span>
+        <span class="modal-nav-arrow left" id="prevImage">&lt;</span>
+        <img class="modal-content" id="modalImage">
+        <span class="modal-nav-arrow right" id="nextImage">&gt;</span>
     </div>
 
     <script>
@@ -901,7 +905,6 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         // --- CSS 3D Octagonal Prism Rotation Logic ---
         const resumeCube = document.getElementById('resume-cube');
-        const cubeContainer = document.getElementById('cube-container'); // Get the cube container
         const dots = document.querySelectorAll('.dot');
         const faces = document.querySelectorAll('.face');
         const sectionContents = document.querySelectorAll('.section-content'); /* Get all scrollable content areas */
@@ -1088,13 +1091,6 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         // Touch events for mobile devices (on the cube itself) - Handles both drag and swipe
         resumeCube.addEventListener('touchstart', (e) => {
-            // Check if the touched element is an interactive element.
-            if (e.target.closest('.js-interactive-element')) {
-                // If so, let the interactive element handle the touch and prevent cube rotation.
-                // Do not set isDragging, which prevents cube touchmove/touchend from acting.
-                return; 
-            }
-
             isDragging = true; // Indicate a touch interaction has started
             startX = e.touches[0].clientX; // Store initial X for continuous drag calculation
             initialTouchX = e.touches[0].clientX; // Store initial X for swipe direction detection
@@ -1124,13 +1120,8 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         }, { passive: false }); // passive: false is crucial to allow preventDefault
 
         resumeCube.addEventListener('touchend', (e) => {
-            if (!isDragging) return; // Only process if dragging was active
-
             isDragging = false; // End of touch interaction
             resumeCube.style.transition = 'transform 0.5s ease-out'; // Re-enable CSS transition for smooth snap
-
-            // If an interactive element was clicked during this touch, we don't want to rotate the cube.
-            // This is handled by the initial touchstart check, so we don't need a specific check here.
 
             const finalTouchX = e.changedTouches[0].clientX; // Get final touch position
             const finalTouchY = e.changedTouches[0].clientY; // Get final touch position
@@ -1146,7 +1137,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                     goToFace(activeFaceIndex + 1); // Rotate cube right (to show next face)
                 }
             } else {
-                // If not a distinct swipe (i.e., a short drag or tap on non-interactive area), snap to the nearest face
+                // If not a distinct swipe, snap to the nearest face (this handles regular drags/taps)
                 snapCubeToNearestFace();
             }
             hasDragged = false; // Reset hasDragged when touch ends
@@ -1155,30 +1146,27 @@ enjoy helping others resolve their technical issues and find the troubleshooting
             initialTouchY = 0;
         }, { passive: true }); // passive: true as we don't need to preventDefault in touchend itself
 
-        // Click event for cube rotation, attached directly to the cube container
-        cubeContainer.addEventListener('click', (e) => {
+        // Click event for left/right navigation on the document body (for clicks outside the cube)
+        document.body.addEventListener('click', (e) => {
             // If a drag/swipe just occurred on the cube, ignore this click to prevent double-triggering
             if (hasDragged) {
                 hasDragged = false; // Reset the flag
                 return;
             }
 
-            // *** CRITICAL CHANGE: Check if the clicked element or any of its ancestors are interactive ***
-            // If so, immediately return to prevent cube rotation.
-            if (e.target.closest('.js-interactive-element')) {
-                return; 
+            // NEW: Do NOT rotate if the click target is inside the resume cube or the modal
+            if (e.target.closest('#resume-cube') || e.target.closest('#imageModal')) {
+                return; // Do not rotate if clicked inside the cube or modal
             }
 
-            // If we reach here, it means a non-interactive part of the cube container was clicked.
-            // Perform cube rotation based on click position.
             const clickX = e.clientX; // X position relative to the viewport
-            const cubeRect = cubeContainer.getBoundingClientRect(); // Get cube container position
 
-            // Determine if click is on left or right half of the cube container
-            if (clickX < (cubeRect.left + cubeRect.width / 2)) {
-                goToFace(activeFaceIndex - 1); // Clicked left half, rotate left
+            if (clickX < window.innerWidth / 2) {
+                // Click on the left half of the window (outside the cube)
+                goToFace(activeFaceIndex - 1);
             } else {
-                goToFace(activeFaceIndex + 1); // Clicked right half, rotate right
+                // Click on the right half of the window (outside the cube)
+                goToFace(activeFaceIndex + 1);
             }
         });
 
@@ -1215,8 +1203,8 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         // Navigation dots functionality to jump to a specific face
         dots.forEach((dot, index) => {
-            dot.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent the click from bubbling up to cubeContainer
+            dot.addEventListener('click', (e) => { 
+                e.stopPropagation(); // Prevent the click from bubbling up to document.body and causing double rotation
                 goToFace(index); // Navigate to the corresponding face
             });
         });
@@ -1247,7 +1235,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                 // Calculate new scroll position, clamping it between 0 and max scroll height
                 const newScrollTop = contentArea.scrollTop + e.deltaY;
                 contentArea.scrollTop = Math.max(0, Math.min(newScrollTop, contentArea.scrollHeight - contentArea.clientHeight));
-            });
+            }, { passive: false }); // Ensure preventDefault works
 
             // Touch scrolling specific to content areas (vertical drag)
             contentArea.addEventListener('touchstart', (e) => {
@@ -1285,8 +1273,9 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const mainHobbiesContent = document.getElementById('mainHobbiesContent');
         const mainHobbiesIcon = document.getElementById('mainHobbiesIcon');
 
-        mainHobbiesHeader.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent click from bubbling up to cubeContainer
+        mainHobbiesHeader.addEventListener('click', (event) => { 
+            event.stopPropagation(); // Prevent click from bubbling to document.body
+            event.stopImmediatePropagation(); // Crucial for Chrome: stop other handlers on the same element
             mainHobbiesContent.classList.toggle('active'); // Toggle 'active' class for content visibility
             mainHobbiesIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
         });
@@ -1296,8 +1285,9 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const pcEvolutionContent = document.getElementById('pcEvolutionContent');
         const pcEvolutionIcon = document.getElementById('pcEvolutionIcon');
 
-        pcEvolutionHeader.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent click from bubbling up to cubeContainer
+        pcEvolutionHeader.addEventListener('click', (event) => { 
+            event.stopPropagation(); // Prevent click from bubbling to document.body
+            event.stopImmediatePropagation(); // Crucial for Chrome: stop other handlers on the same element
             pcEvolutionContent.classList.toggle('active'); // Toggle 'active' class for content visibility
             pcEvolutionIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
         });
@@ -1336,19 +1326,19 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         pcImagesContainer.addEventListener('click', function(event) {
             const clickedImg = event.target.closest('img');
             if (clickedImg) {
-                event.stopPropagation(); // Prevent the click from bubbling up to cubeContainer
                 // Populate imageSources array and find current index
                 imageSources = Array.from(pcImagesContainer.querySelectorAll('img')).map(img => img.src);
                 currentImageIndex = imageSources.indexOf(clickedImg.src);
                 
                 modal.style.display = "flex"; // Show the modal
                 updateModalImage(); // Set modal image and button states
+                event.stopPropagation(); // Prevent the click from bubbling up to document.body and causing cube rotation
             }
         });
 
         // Navigation for modal images
         prevImageBtn.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent modal from closing (and bubbling to cubeContainer)
+            event.stopPropagation(); // Prevent modal from closing and bubbling to document.body
             if (currentImageIndex > 0) {
                 currentImageIndex--;
                 updateModalImage();
@@ -1356,7 +1346,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         });
 
         nextImageBtn.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent modal from closing (and bubbling to cubeContainer)
+            event.stopPropagation(); // Prevent modal from closing and bubbling to document.body
             if (currentImageIndex < imageSources.length - 1) {
                 currentImageIndex++;
                 updateModalImage();
@@ -1365,7 +1355,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         // When the modal image itself is clicked, close the modal AND stop propagation
         modalImage.onclick = function(event) {
-            event.stopPropagation(); // Prevent the click from bubbling up to cubeContainer
+            event.stopPropagation(); // Prevent the click from bubbling up to document.body and causing cube rotation
             modal.style.display = "none"; // Close the modal when the image itself is clicked
         }
 
