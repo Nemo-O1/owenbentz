@@ -919,6 +919,9 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const transitionInterpolation = 0.1; // Smoothness of interpolation for cube rotation
         let hasDragged = false; // Flag to distinguish a tap from a drag/swipe
 
+        // NEW: Global flag to indicate if an interactive element has handled a click
+        let interactionHappenedOnInteractiveElement = false;
+
         // Keyboard control variables
         let keysPressed = {}; // Stores currently pressed keys for continuous input
         const scrollAmount = 50; // Amount to scroll content by with arrow keys/W/S
@@ -1154,30 +1157,33 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                 return;
             }
 
-            // If the click target is inside the modal, do not rotate the cube.
-            if (e.target.closest('#imageModal')) {
+            // NEW: If an interactive element inside the cube or modal just handled a click, do not rotate the cube.
+            if (interactionHappenedOnInteractiveElement) {
+                // The flag should be reset by the element's own handler.
+                // We'll reset it here too as a fallback for robustness.
+                interactionHappenedOnInteractiveElement = false; 
                 return;
             }
 
-            // If the click target is part of a collapsible header, do not rotate the cube.
-            // This is crucial because collapsible headers are *inside* the cube, and their own
-            // stopPropagation() might not prevent the *body* listener from firing in all browsers.
-            if (e.target.closest('.collapsible-header')) {
-                return;
-            }
-
-            // Original check for clicks inside the cube itself
+            // Original check for clicks inside the cube itself - removed specific checks for sub-elements
+            // as the global flag handles this.
             if (e.target.closest('#resume-cube')) {
-                return; // Do not rotate if clicked inside the cube
+                // If the click is on the cube, but not explicitly handled by an interactive element,
+                // then perform the cube rotation logic.
+                 const clickX = e.clientX; // X position relative to the viewport
+                 if (clickX < window.innerWidth / 2) {
+                     goToFace(activeFaceIndex - 1);
+                 } else {
+                     goToFace(activeFaceIndex + 1);
+                 }
+                return; // Stop processing if clicked inside the cube
             }
 
-            const clickX = e.clientX; // X position relative to the viewport
-
+            // Finally, if the click is outside the cube entirely, then allow body-wide rotation based on half-screen.
+            const clickX = e.clientX;
             if (clickX < window.innerWidth / 2) {
-                // Click on the left half of the window (outside the cube)
                 goToFace(activeFaceIndex - 1);
             } else {
-                // Click on the right half of the window (outside the cube)
                 goToFace(activeFaceIndex + 1);
             }
         });
@@ -1217,7 +1223,9 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         dots.forEach((dot, index) => {
             dot.addEventListener('click', (e) => { // Passed event 'e'
                 e.stopPropagation(); // Prevent the click from bubbling up to document.body and causing double rotation
+                interactionHappenedOnInteractiveElement = true; // Set the flag
                 goToFace(index); // Navigate to the corresponding face
+                setTimeout(() => { interactionHappenedOnInteractiveElement = false; }, 0); // Reset flag
             });
         });
 
@@ -1286,10 +1294,12 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const mainHobbiesIcon = document.getElementById('mainHobbiesIcon');
 
         mainHobbiesHeader.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent click from bubbling to document.body
+            event.stopPropagation(); // Prevent click from bubbling up
+            interactionHappenedOnInteractiveElement = true; // Set the flag
             setTimeout(() => { // Defer the toggle to the next event loop
                 mainHobbiesContent.classList.toggle('active'); // Toggle 'active' class for content visibility
                 mainHobbiesIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
+                interactionHappenedOnInteractiveElement = false; // Reset flag after toggle
             }, 0); // Execute immediately after current script block
         });
 
@@ -1299,10 +1309,12 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const pcEvolutionIcon = document.getElementById('pcEvolutionIcon');
 
         pcEvolutionHeader.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent click from bubbling to document.body
+            event.stopPropagation(); // Prevent click from bubbling up
+            interactionHappenedOnInteractiveElement = true; // Set the flag
             setTimeout(() => { // Defer the toggle to the next event loop
                 pcEvolutionContent.classList.toggle('active'); // Toggle 'active' class for content visibility
                 pcEvolutionIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
+                interactionHappenedOnInteractiveElement = false; // Reset flag after toggle
             }, 0); // Execute immediately after current script block
         });
 
@@ -1340,13 +1352,15 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         pcImagesContainer.addEventListener('click', function(event) {
             const clickedImg = event.target.closest('img');
             if (clickedImg) {
+                event.stopPropagation(); // Prevent the click from bubbling up to document.body
+                interactionHappenedOnInteractiveElement = true; // Set the flag
                 // Populate imageSources array and find current index
                 imageSources = Array.from(pcImagesContainer.querySelectorAll('img')).map(img => img.src);
                 currentImageIndex = imageSources.indexOf(clickedImg.src);
                 
                 modal.style.display = "flex"; // Show the modal
                 updateModalImage(); // Set modal image and button states
-                event.stopPropagation(); // Prevent the click from bubbling up to document.body and causing cube rotation
+                setTimeout(() => { interactionHappenedOnInteractiveElement = false; }, 0); // Reset flag
             }
         });
 
