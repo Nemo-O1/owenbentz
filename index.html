@@ -344,7 +344,7 @@
             background-color: var(--hobby-bg);
             color: #fff;
             padding: 5px 8px; 
-            border-radius: 8px; 
+            border-radius: 8倍; 
             font-size: clamp(7px, 1.8vw, 9px); 
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
@@ -971,6 +971,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         // --- CSS 3D Octagonal Prism Rotation Logic ---
         const resumeCube = document.getElementById('resume-cube');
+        const cubeContainer = document.getElementById('cube-container'); // Get the container for touch events
         const dots = document.querySelectorAll('.dot');
         const faces = document.querySelectorAll('.face');
         const sectionContents = document.querySelectorAll('.section-content'); /* Get all scrollable content areas */
@@ -984,6 +985,11 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         // Keyboard control variables
         let keysPressed = {}; // Stores currently pressed keys for continuous input
         const scrollAmount = 50; // Amount to scroll content by with arrow keys/W/S
+
+        // Touch swipe variables
+        let touchStartX = 0;
+        let touchStartY = 0;
+        const swipeThreshold = 50; // Minimum pixel distance for a swipe to be registered
 
         // Define the initial Y rotation offset for each face to form the octagonal prism
         // Each face is rotated 90 degrees relative to the previous one
@@ -1164,6 +1170,42 @@ enjoy helping others resolve their technical issues and find the troubleshooting
             }
         });
 
+        // --- Touch Swipe Rotation Logic for the Cube Container ---
+        cubeContainer.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) { // Only consider single-touch gestures for cube rotation
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }
+        }, { passive: true }); // Use passive: true as we primarily read, but will preventDefault in touchmove if it's a swipe
+
+        cubeContainer.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 1) {
+                const touchCurrentX = e.touches[0].clientX;
+                const touchCurrentY = e.touches[0].clientY;
+                const deltaX = touchCurrentX - touchStartX;
+                const deltaY = touchCurrentY - touchStartY;
+
+                // Determine if it's primarily a horizontal swipe
+                if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+                    e.preventDefault(); // Prevent default scroll if it's a horizontal swipe
+                    if (deltaX > 0) { // Swiped right
+                        goToFace(activeFaceIndex - 1);
+                    } else { // Swiped left
+                        goToFace(activeFaceIndex + 1);
+                    }
+                    // Reset touchStartX to prevent multiple rotations from a single long swipe
+                    touchStartX = touchCurrentX; 
+                    touchStartY = touchCurrentY;
+                }
+            }
+        }, { passive: false }); // Needs passive: false to allow preventDefault
+
+        cubeContainer.addEventListener('touchend', (e) => {
+            // No specific action needed on touchend for cube rotation, as goToFace is called on touchmove
+            // or if it was a very short touch, the body click listener will handle it.
+        });
+
+
         // Keyboard event listeners for navigation (A/D/Arrows) and content scrolling (W/S/Arrows)
         document.addEventListener('keydown', (e) => {
             const key = e.key.toLowerCase();
@@ -1234,7 +1276,8 @@ enjoy helping others resolve their technical issues and find the troubleshooting
             // Touch scrolling specific to content areas (vertical drag)
             contentArea.addEventListener('touchstart', (e) => {
                 // Only initiate content scrolling if it's a single touch (to avoid interfering with pinch-zoom)
-                if (e.touches.length === 1) {
+                // Also check if the event target is not a link or button, to allow them to function normally.
+                if (e.touches.length === 1 && !e.target.closest('a, button, .collapsible-header')) {
                     isScrolling = true;
                     startClientY = e.touches[0].clientY; // Record initial touch Y
                     startScrollY = contentArea.scrollTop; // Record initial scroll position
@@ -1252,10 +1295,11 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
                 contentArea.scrollTop = Math.max(0, Math.min(newScrollTop, contentArea.scrollHeight - contentArea.clientHeight));
                 
-                if (willScroll) {
+                // Only prevent default if we actually scrolled the content or if it's at the boundary and we are still trying to scroll
+                if (willScroll || (contentArea.scrollTop === 0 && deltaY > 0) || (contentArea.scrollTop === contentArea.scrollHeight - contentArea.clientHeight && deltaY < 0)) {
                     e.preventDefault(); // Prevent default page scrolling if content can scroll
                 }
-            }, { passive: false }); // passive: false allows preventDefault
+            }, { passive: false }); // needs passive: false to allow preventDefault
 
             contentArea.addEventListener('touchend', () => {
                 isScrolling = false; // End of touch scroll interaction
@@ -1275,7 +1319,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
             mainHobbiesIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
         }, true);
 
-        // --- Collapsible PC Evolution Images Logic ---
+        // --- Collapsible PC Timeline Logic ---
         const pcEvolutionHeader = document.getElementById('pcEvolutionHeader');
         const pcEvolutionContent = document.getElementById('pcEvolutionContent');
         const pcEvolutionIcon = document.getElementById('pcEvolutionIcon');
