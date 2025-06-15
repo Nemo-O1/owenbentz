@@ -344,7 +344,7 @@
             background-color: var(--hobby-bg);
             color: #fff;
             padding: 5px 8px; 
-            border-radius: 8倍; 
+            border-radius: 8px; 
             font-size: clamp(7px, 1.8vw, 9px); 
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
@@ -509,16 +509,30 @@
             height: 100%;
             overflow: hidden; /* Prevent scrolling inside modal */
             background-color: var(--modal-bg);
-            align-items: center;
-            justify-content: center;
-            /* Ensure the modal receives pointer events */
+            /* Centering the content (modal-display-area) within the modal */
+            align-items: center; 
+            justify-content: center; 
             pointer-events: auto; 
         }
+
+        /* New container for the image and its navigation arrows */
+        .modal-display-area {
+            position: relative; /* Crucial for positioning arrows relative to this */
+            display: flex; /* Use flexbox to center the image */
+            align-items: center;
+            justify-content: center;
+            width: 100%; /* Take full width of modal to allow image to expand */
+            height: 100%; /* Take full height of modal */
+            max-width: 90%; /* Limit the overall area the image and arrows occupy */
+            max-height: 90%; /* Limit the overall area the image and arrows occupy */
+        }
+
+        /* Modal content (the image) */
         .modal-content {
-            margin: auto;
             display: block;
-            max-width: 90%;
-            max-height: 90%;
+            max-width: 100%; /* Fit within modal-display-area */
+            max-height: 100%; /* Fit within modal-display-area */
+            object-fit: contain; /* Ensure image scales down and fits entirely */
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.7);
             animation: zoom 0.6s; /* Zoom in animation */
@@ -537,13 +551,14 @@
             font-weight: bold;
             transition: 0.3s;
             cursor: pointer;
+            z-index: 1002; /* Ensure close button is on top */
             pointer-events: auto !important; /* Ensure close button is clickable */
         }
         .close-button:hover {
             color: var(--modal-close-hover);
         }
 
-        /* Modal navigation arrows */
+        /* Modal navigation arrows - now positioned relative to .modal-display-area */
         .modal-nav-arrow {
             cursor: pointer;
             position: absolute;
@@ -562,10 +577,12 @@
             text-shadow: 0 0 10px var(--primary-color); /* Subtle glow on hover */
         }
         .modal-nav-arrow.left {
-            left: 20px;
+            left: 0; /* Position 0px from the left edge of modal-display-area */
+            margin-left: -60px; /* Adjust to place it further outside the image's bounding box */
         }
         .modal-nav-arrow.right {
-            right: 20px;
+            right: 0; /* Position 0px from the right edge of modal-display-area */
+            margin-right: -60px; /* Adjust to place it further outside */
         }
         .modal-nav-arrow.disabled {
             opacity: 0.3;
@@ -714,8 +731,13 @@
             /* Modal navigation arrows for mobile */
             .modal-nav-arrow {
                 font-size: 30px; /* Smaller arrows for mobile */
-                left: 10px; /* Closer to edges */
-                right: 10px;
+                /* Adjust margins for mobile to ensure they are visible and tappable */
+            }
+            .modal-nav-arrow.left {
+                margin-left: -35px; /* Smaller negative margin for mobile */
+            }
+            .modal-nav-arrow.right {
+                margin-right: -35px; /* Smaller negative margin for mobile */
             }
         }
     </style>
@@ -891,9 +913,11 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
     <div id="imageModal" class="modal">
         <span class="close-button">&times;</span>
-        <span class="modal-nav-arrow left" id="prevImage">&lt;</span>
-        <img class="modal-content" id="modalImage">
-        <span class="modal-nav-arrow right" id="nextImage">&gt;</span>
+        <div class="modal-display-area">
+            <span class="modal-nav-arrow left" id="prevImage">&lt;</span>
+            <img class="modal-content" id="modalImage">
+            <span class="modal-nav-arrow right" id="nextImage">&gt;</span>
+        </div>
     </div>
 
     <script>
@@ -1176,7 +1200,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                 touchStartX = e.touches[0].clientX;
                 touchStartY = e.touches[0].clientY;
             }
-        }, { passive: true }); // Use passive: true as we primarily read, but will preventDefault in touchmove if it's a swipe
+        }, { passive: true }); // Use passive: true here initially, as we're just reading positions.
 
         cubeContainer.addEventListener('touchmove', (e) => {
             if (e.touches.length === 1) {
@@ -1362,13 +1386,18 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         }
 
         // Add click listener to each PC evolution image to open the modal
-        // This dynamically collects images on click, useful if images are added/removed
         pcImagesContainer.addEventListener('click', function(event) {
             const clickedImg = event.target.closest('img');
             if (clickedImg) {
-                // Populate imageSources array and find current index
+                // Populate imageSources array (order matches HTML)
                 imageSources = Array.from(pcImagesContainer.querySelectorAll('img')).map(img => img.src);
-                currentImageIndex = imageSources.indexOf(clickedImg.src);
+                
+                // --- THE FIX ---
+                // Get all image elements in the grid as a NodeList, then convert to array
+                const allImagesInGrid = Array.from(pcImagesContainer.querySelectorAll('img'));
+                // Find the index of the *clicked image element* within this array
+                currentImageIndex = allImagesInGrid.indexOf(clickedImg);
+                // --- END FIX ---
                 
                 modal.style.display = "flex"; // Show the modal
                 updateModalImage(); // Set modal image and button states
