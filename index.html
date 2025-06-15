@@ -569,7 +569,7 @@
             user-select: none; /* Prevent text selection */
             transition: 0.3s;
             z-index: 1001; /* Above modal content */
-            padding: 10px;
+            padding: 10px; /* Base padding */
             pointer-events: auto !important; /* Ensure arrows are clickable */
         }
         .modal-nav-arrow:hover {
@@ -577,12 +577,10 @@
             text-shadow: 0 0 10px var(--primary-color); /* Subtle glow on hover */
         }
         .modal-nav-arrow.left {
-            left: 0; /* Position 0px from the left edge of modal-display-area */
-            margin-left: -60px; /* Adjust to place it further outside the image's bounding box */
+            left: 0; /* Align directly to the edge of modal-display-area */
         }
         .modal-nav-arrow.right {
-            right: 0; /* Position 0px from the right edge of modal-display-area */
-            margin-right: -60px; /* Adjust to place it further outside */
+            right: 0; /* Align directly to the edge of modal-display-area */
         }
         .modal-nav-arrow.disabled {
             opacity: 0.3;
@@ -728,16 +726,22 @@
                 height: 25px; 
             }
 
-            /* Modal navigation arrows for mobile */
+            /* Modal navigation arrows for mobile - ADJUSTED HERE */
             .modal-nav-arrow {
-                font-size: 30px; /* Smaller arrows for mobile */
-                /* Adjust margins for mobile to ensure they are visible and tappable */
+                font-size: 40px; /* Make arrows slightly larger on mobile for visibility */
+                padding: 10px; /* Ensure sufficient padding for touch */
+                /* Remove any specific margins that were pushing them off-screen */
+                margin: 0; 
             }
             .modal-nav-arrow.left {
-                margin-left: -35px; /* Smaller negative margin for mobile */
+                left: 0; /* Align directly to the left edge of modal-display-area */
+                background: rgba(0,0,0,0.3); /* Add a slight background for better contrast */
+                border-radius: 0 8px 8px 0; /* Rounded on the side away from the edge */
             }
             .modal-nav-arrow.right {
-                margin-right: -35px; /* Smaller negative margin for mobile */
+                right: 0; /* Align directly to the right edge of modal-display-area */
+                background: rgba(0,0,0,0.3); /* Add a slight background for better contrast */
+                border-radius: 8px 0 0 8px; /* Rounded on the side away from the edge */
             }
         }
     </style>
@@ -1392,12 +1396,10 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                 // Populate imageSources array (order matches HTML)
                 imageSources = Array.from(pcImagesContainer.querySelectorAll('img')).map(img => img.src);
                 
-                // --- THE FIX ---
                 // Get all image elements in the grid as a NodeList, then convert to array
                 const allImagesInGrid = Array.from(pcImagesContainer.querySelectorAll('img'));
                 // Find the index of the *clicked image element* within this array
                 currentImageIndex = allImagesInGrid.indexOf(clickedImg);
-                // --- END FIX ---
                 
                 modal.style.display = "flex"; // Show the modal
                 updateModalImage(); // Set modal image and button states
