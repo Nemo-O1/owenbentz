@@ -7,7 +7,7 @@
     <meta name="description" content="Owen Bentz is a highly motivated cybersecurity student seeking real-world experience. Explore his resume, projects, and interests in IT and network security.">
     <meta name="keywords" content="Owen Bentz, cybersecurity, student, resume, IT, network security, computer science, ethical hacking, certifications, C++, Visual Basic, Python, Linux, Windows, macOS, Three.js, web development, Cloudflare Pages">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.ico" type="x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -20,7 +20,6 @@
             --secondary-color: #FF8A65; /* Secondary accent color */
             --background-dark: #1a1a1a; /* Dark background for the body */
             --background-content: rgba(26, 26, 26, 0.9); /* Slightly transparent dark background for content faces */
-            --section-bg: rgba(35, 35, 35, 0.8); /* Background for collapsible sections (currently unused directly) */
             --text-color: #eee; /* Light text color for general content */
             --light-text-color: #ddd; /* Slightly lighter text color for subtle elements */
             --hover-orange: #E64A19; /* Darker orange for hover effects */
@@ -37,14 +36,16 @@
 
             /* Padding variables for absolute positioning of elements within faces */
             --face-side-padding-desktop: 35px; /* Horizontal padding for desktop */
-            --face-side-padding-mobile: 20px; /* Horizontal padding for mobile */
             --face-top-padding-desktop: 120px; /* Controls header's top position from face edge (to clear dots) */
-            --face-top-padding-mobile: 120px; /* Controls header's top position from face edge (to clear dots) */
             --face-bottom-padding-desktop: 80px; /* Space at the bottom of the face, below content */
-            --face-bottom-padding-mobile: 80px; /* Space at the bottom of the face, below content */
             
             /* Specific gap between the bottom of the header and the top of the content area */
             --content-gap-desktop: 10px; 
+            
+            /* Mobile specific overrides */
+            --face-side-padding-mobile: 20px; 
+            --face-top-padding-mobile: 120px; 
+            --face-bottom-padding-mobile: 80px; 
             --content-gap-mobile: 10px; 
         }
 
@@ -66,6 +67,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            /* Allow body to receive pointer events for outside-of-cube rotation */
+            pointer-events: auto; 
         }
 
         /* Three.js scene container for background animation */
@@ -76,6 +79,7 @@
             width: 100%;
             height: 100%;
             z-index: -1; /* Place behind other content */
+            pointer-events: none; /* It's a background, shouldn't block clicks */
         }
 
         /* Main container for the 3D cube */
@@ -90,6 +94,8 @@
             align-items: center;
             overflow: hidden; /* Hide any overflow from the cube */
             margin: auto; /* Center the container */
+            /* Ensure the cube container receives pointer events */
+            pointer-events: auto; 
         }
 
         /* The 3D cube element itself */
@@ -112,8 +118,10 @@
             border-radius: 12px; /* Rounded corners */
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Soft shadow */
             -webkit-overflow-scrolling: touch; /* Improves scrolling on iOS */
-            overflow: hidden; /* Ensure content within face stays contained */
+            /* overflow: hidden; -- REMOVED: This was causing text selection issues in Chromium */
             will-change: transform; /* Optimize for animation */
+            pointer-events: auto !important; /* Ensure faces are clickable */
+            z-index: 5; /* Explicit z-index for faces */
         }
 
         /* Positioning for each face to form an octagonal prism (4 sides visible) */
@@ -132,7 +140,7 @@
             min-height: 0; /* Override default min-height to allow content to dictate height */
             text-align: center;
             padding-top: 0; /* Removed internal padding to reduce gap below titles */
-            z-index: 2; /* Ensure header is above scrollable content */
+            z-index: 7; /* Ensure header is above scrollable content but below section-content (conceptually) */
             box-sizing: border-box;
             will-change: height, top; /* Optimize for animation */
         }
@@ -142,6 +150,11 @@
         .face-header h2,
         .face-header h3 {
             margin-bottom: 0; 
+            -webkit-user-select: text !important; /* Ensure text selection is enabled */
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+            pointer-events: auto !important; /* Ensure these are interactive */
         }
 
         /* Absolute positioned scrollable content area within each face */
@@ -165,6 +178,13 @@
             will-change: transform, scroll-position; /* Optimize for animation */
             
             padding-bottom: 100px; /* Added padding-bottom to ensure content pushes scrollHeight correctly */
+            pointer-events: auto !important; /* Ensure content areas are clickable/scrollable */
+            -webkit-user-select: text !important; /* Enable text selection for WebKit browsers */
+            -moz-user-select: text !important;    /* Enable text selection for Mozilla browsers */
+            -ms-user-select: text !important;     /* Enable text selection for IE/Edge */
+            user-select: text !important;         /* Standard property */
+            z-index: 10; /* Ensure content is on top for selection */
+            touch-action: auto; /* Allow default pan/zoom on touch devices within this area */
         }
 
         /* General typography styles */
@@ -177,17 +197,17 @@
             flex-shrink: 0; /* Prevent shrinking in flex containers */
         }
 
-        /* Increased font sizes for better readability across devices */
-        h1 { font-size: clamp(14px, 4vw, 22px); }
-        h2 { font-size: clamp(12px, 3.5vw, 18px); }
-        h3 { font-size: clamp(10px, 2.8vw, 14px); margin-top: 5px; }
-
         p, li {
             word-wrap: break-word; /* Break long words */
             overflow-wrap: break-word; /* Break long words */
             white-space: normal; /* Allow normal text wrapping */
             width: 100%;
             display: block;
+            -webkit-user-select: text !important; /* Ensure text selection is enabled */
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+            pointer-events: auto !important; /* Ensure these are interactive */
         }
 
         /* Specific styles for contact information */
@@ -304,8 +324,6 @@
             line-height: 1.3; 
             margin-bottom: 1px; 
             color: var(--text-color);
-            /* To visually center bullets, we might need more advanced CSS,
-               but for now, centering the text within the li is the direct request. */
         }
 
         /* Styles for the Hobbies and PC Evolution Face */
@@ -330,11 +348,13 @@
             font-size: clamp(7px, 1.8vw, 9px); 
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 4px; 
             cursor: pointer;
             text-align: center;
+            pointer-events: auto !important; /* Ensure these are interactive */
+            -webkit-user-select: text !important; /* Enable text selection */
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
         }
         .hobbies-list li:hover {
             background-color: var(--primary-color);
@@ -354,6 +374,11 @@
             max-width: 75%; 
             margin-left: auto; 
             margin-right: auto; 
+            pointer-events: auto !important; /* Ensure collapsible containers are clickable */
+            -webkit-user-select: text !important; /* Enable text selection */
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
         }
 
         .collapsible-header {
@@ -366,6 +391,11 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             margin-bottom: 8px; 
+            pointer-events: auto !important; /* Ensure collapsible headers are clickable */
+            -webkit-user-select: text !important; /* Enable text selection */
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
         }
 
         .collapsible-header:hover {
@@ -385,6 +415,7 @@
             color: var(--secondary-color);
             transition: transform 0.3s ease;
             font-size: clamp(11px, 3vw, 15px); 
+            pointer-events: auto !important; /* Ensure icon is clickable */
         }
 
         .collapsible-icon.rotated {
@@ -397,6 +428,11 @@
             transition: max-height 0.4s ease-out;
             padding: 0 10px;
             box-sizing: border-box;
+            pointer-events: auto !important; /* Ensure content inside collapsible is interactive */
+            -webkit-user-select: text !important; /* Enable text selection */
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
         }
 
         .collapsible-content.active {
@@ -412,6 +448,7 @@
             justify-items: center;
             max-width: 75%; 
             margin: 8px auto 0 auto; 
+            pointer-events: auto !important; /* Ensure image grid is interactive */
         }
         .pc-evolution-images-grid img {
             width: 100%;
@@ -422,6 +459,11 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease;
             cursor: pointer;
+            pointer-events: auto !important; /* Ensure images are clickable */
+            -webkit-user-select: none; /* Images typically not selectable */
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         .pc-evolution-images-grid img:hover {
             transform: scale(1.05);
@@ -432,6 +474,11 @@
             color: var(--primary-color);
             text-decoration: none;
             transition: color 0.3s ease;
+            pointer-events: auto !important; /* Ensure links are interactive */
+            -webkit-user-select: text !important; /* Enable text selection */
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
         }
         a:hover {
             color: var(--hover-orange);
@@ -444,6 +491,11 @@
             width: 50px; 
             height: auto;
             flex-shrink: 0;
+            pointer-events: none; /* Logo shouldn't be clickable or selectable */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         /* Modal overlay for image display */
@@ -459,6 +511,8 @@
             background-color: var(--modal-bg);
             align-items: center;
             justify-content: center;
+            /* Ensure the modal receives pointer events */
+            pointer-events: auto; 
         }
         .modal-content {
             margin: auto;
@@ -468,6 +522,7 @@
             border-radius: 8px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.7);
             animation: zoom 0.6s; /* Zoom in animation */
+            pointer-events: auto !important; /* Ensure modal content is interactive */
         }
         @keyframes zoom {
             from { transform: scale(0.1); }
@@ -482,6 +537,7 @@
             font-weight: bold;
             transition: 0.3s;
             cursor: pointer;
+            pointer-events: auto !important; /* Ensure close button is clickable */
         }
         .close-button:hover {
             color: var(--modal-close-hover);
@@ -499,6 +555,7 @@
             transition: 0.3s;
             z-index: 1001; /* Above modal content */
             padding: 10px;
+            pointer-events: auto !important; /* Ensure arrows are clickable */
         }
         .modal-nav-arrow:hover {
             color: var(--primary-color); /* Orange on hover */
@@ -513,6 +570,7 @@
         .modal-nav-arrow.disabled {
             opacity: 0.3;
             cursor: not-allowed;
+            pointer-events: none !important; /* Disable clicks on disabled arrows */
         }
 
 
@@ -525,6 +583,8 @@
             display: flex;
             gap: 10px;
             z-index: 101; /* Ensure dots are above the cube */
+            /* Ensure dots receive pointer events */
+            pointer-events: auto; 
         }
         .dot {
             width: 12px;
@@ -534,6 +594,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            pointer-events: auto !important; /* Ensure dots are clickable */
         }
         .dot.active {
             background-color: var(--primary-color);
@@ -554,6 +615,11 @@
             color: var(--light-text-color);
             font-size: clamp(10px, 2.5vw, 16px); 
             z-index: 100;
+            pointer-events: none; /* Should not be interactive */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         /* Mobile optimization for smaller screens */
@@ -756,7 +822,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
             </div>
             <div class="face face-3 hobbies-pc-evolution">
                 <div class="face-header">
-                    <h2>Hobbies & Interests</h2>
+                    <h2>Hobbies</h2>
                 </div>
                 <section class="section-content hobbies">
                     <div class="collapsible-container" id="mainHobbiesCollapsible">
@@ -793,7 +859,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
                     <div class="collapsible-container" id="pcEvolutionCollapsible">
                         <div class="collapsible-header" id="pcEvolutionHeader">
-                            <h3>PC Evolution Timeline Images</h3>
+                            <h3>PC Timeline</h3>
                             <i class="fas fa-chevron-right collapsible-icon" id="pcEvolutionIcon"></i>
                         </div>
                         <div class="collapsible-content" id="pcEvolutionContent"> 
@@ -911,23 +977,13 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const faceHeaders = document.querySelectorAll('.face-header'); /* Get all face headers */
 
         // Variables for cube rotation and interaction
-        let isDragging = false; // Flag to track if touch-based drag/swipe is active
-        let startX; // Stores initial X position for touch drag calculation
         let currentRotateY = 0; // Current Y rotation of the entire prism (continuous value)
         let targetRotateY = 0;  // Target Y rotation for smooth animation (snaps to nearest face)
-        const dragRotationSpeed = 0.4; // Increased sensitivity for touch drag for smoother feel
         const transitionInterpolation = 0.1; // Smoothness of interpolation for cube rotation
-        let hasDragged = false; // Flag to distinguish a tap from a drag/swipe
 
         // Keyboard control variables
         let keysPressed = {}; // Stores currently pressed keys for continuous input
         const scrollAmount = 50; // Amount to scroll content by with arrow keys/W/S
-
-        // Touch variables for swipe detection on the cube
-        let initialTouchX = 0; // Initial X touch position for swipe direction
-        let initialTouchY = 0; // Initial Y touch position for swipe direction
-        const swipeThreshold = 50; // Minimum horizontal distance for a recognized swipe
-        const swipeVerticalTolerance = 30; // Maximum vertical deviation for a horizontal swipe
 
         // Define the initial Y rotation offset for each face to form the octagonal prism
         // Each face is rotated 90 degrees relative to the previous one
@@ -1089,74 +1145,12 @@ enjoy helping others resolve their technical issues and find the troubleshooting
             updateActiveDot(); // Update the navigation dots
         }
 
-        // Touch events for mobile devices (on the cube itself) - Handles both drag and swipe
-        resumeCube.addEventListener('touchstart', (e) => {
-            isDragging = true; // Indicate a touch interaction has started
-            startX = e.touches[0].clientX; // Store initial X for continuous drag calculation
-            initialTouchX = e.touches[0].clientX; // Store initial X for swipe direction detection
-            initialTouchY = e.touches[0].clientY; // Store initial Y for swipe direction detection
-            hasDragged = false; // Reset flag to differentiate between tap and drag/swipe
-            resumeCube.style.transition = 'none'; // Disable CSS transition for immediate response during drag
-        }, { passive: false }); // passive: false is crucial to allow preventDefault for scrolling
-
-        resumeCube.addEventListener('touchmove', (e) => {
-            if (!isDragging) return; // Only proceed if a touch interaction is active
-            hasDragged = true; // Set flag to indicate movement occurred (not just a tap)
-
-            const currentTouchX = e.touches[0].clientX;
-            const currentTouchY = e.touches[0].clientY;
-
-            const diffX = currentTouchX - initialTouchX; // Total horizontal movement from start
-            const diffY = currentTouchY - initialTouchY; // Total vertical movement from start
-
-            // Prioritize horizontal movement for cube rotation and prevent vertical page scroll
-            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 5) { // Small threshold to start preventing default
-                const dragAngle = (currentTouchX - startX) * dragRotationSpeed;
-                currentRotateY = targetRotateY + dragAngle;
-                applyCubeRotation();
-                e.preventDefault(); // Prevent default page scrolling/swiping
-            }
-            startX = currentTouchX; // Update startX for the next drag calculation step
-        }, { passive: false }); // passive: false is crucial to allow preventDefault
-
-        resumeCube.addEventListener('touchend', (e) => {
-            isDragging = false; // End of touch interaction
-            resumeCube.style.transition = 'transform 0.5s ease-out'; // Re-enable CSS transition for smooth snap
-
-            const finalTouchX = e.changedTouches[0].clientX; // Get final touch position
-            const finalTouchY = e.changedTouches[0].clientY; // Get final touch position
-
-            const diffX = finalTouchX - initialTouchX; // Total X movement from touchstart to touchend
-            const diffY = finalTouchY - initialTouchY; // Total Y movement from touchstart to touchend
-
-            // Check if it was a distinct horizontal swipe (significant horizontal movement, minimal vertical)
-            if (Math.abs(diffX) > swipeThreshold && Math.abs(diffY) < swipeVerticalTolerance) {
-                if (diffX > 0) { // Swiped right (finger moved right)
-                    goToFace(activeFaceIndex - 1); // Rotate cube left (to show previous face)
-                } else { // Swiped left (finger moved left)
-                    goToFace(activeFaceIndex + 1); // Rotate cube right (to show next face)
-                }
-            } else {
-                // If not a distinct swipe, snap to the nearest face (this handles regular drags/taps)
-                snapCubeToNearestFace();
-            }
-            hasDragged = false; // Reset hasDragged when touch ends
-            // Reset initial touch coordinates for next interaction
-            initialTouchX = 0;
-            initialTouchY = 0;
-        }, { passive: true }); // passive: true as we don't need to preventDefault in touchend itself
-
         // Click event for left/right navigation on the document body (for clicks outside the cube)
         document.body.addEventListener('click', (e) => {
-            // If a drag/swipe just occurred on the cube, ignore this click to prevent double-triggering
-            if (hasDragged) {
-                hasDragged = false; // Reset the flag
-                return;
-            }
-
-            // NEW: Do NOT rotate if the click target is inside the resume cube or the modal
-            if (e.target.closest('#resume-cube') || e.target.closest('#imageModal')) {
-                return; // Do not rotate if clicked inside the cube or modal
+            // Check if the clicked element is within the cube-container, modal, or nav-dots.
+            // If it is, we explicitly do NOT want to rotate the cube.
+            if (e.target.closest('#cube-container') || e.target.closest('#imageModal') || e.target.closest('#nav-dots')) {
+                return; // Do nothing if click is inside these areas
             }
 
             const clickX = e.clientX; // X position relative to the viewport
@@ -1273,24 +1267,26 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const mainHobbiesContent = document.getElementById('mainHobbiesContent');
         const mainHobbiesIcon = document.getElementById('mainHobbiesIcon');
 
+        // Attach listener in the capturing phase to ensure it runs before body click listener
         mainHobbiesHeader.addEventListener('click', (event) => { 
-            event.stopPropagation(); // Prevent click from bubbling to document.body
-            event.stopImmediatePropagation(); // Crucial for Chrome: stop other handlers on the same element
+            event.stopPropagation(); // Prevent click from bubbling further up
+            event.stopImmediatePropagation(); // Crucial: stop any other listeners on *this specific element*
             mainHobbiesContent.classList.toggle('active'); // Toggle 'active' class for content visibility
             mainHobbiesIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
-        });
+        }, true);
 
         // --- Collapsible PC Evolution Images Logic ---
         const pcEvolutionHeader = document.getElementById('pcEvolutionHeader');
         const pcEvolutionContent = document.getElementById('pcEvolutionContent');
         const pcEvolutionIcon = document.getElementById('pcEvolutionIcon');
 
+        // Attach listener in the capturing phase to ensure it runs before body click listener
         pcEvolutionHeader.addEventListener('click', (event) => { 
-            event.stopPropagation(); // Prevent click from bubbling to document.body
-            event.stopImmediatePropagation(); // Crucial for Chrome: stop other handlers on the same element
+            event.stopPropagation(); // Prevent click from bubbling further up
+            event.stopImmediatePropagation(); // Crucial: stop any other listeners on *this specific element*
             pcEvolutionContent.classList.toggle('active'); // Toggle 'active' class for content visibility
             pcEvolutionIcon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation
-        });
+        }, true);
 
 
         // --- Event Listeners and Initializations (runs once when the window loads) ---
