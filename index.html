@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Owen Bentz - Cybersecurity Student</title>
-    <!-- SEO Meta Tags: Provide concise and relevant information for search engines -->
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Owen Bentz is a highly motivated cybersecurity student seeking real-world experience. Explore his resume, projects, and interests in IT and network security.">
     <meta name="keywords" content="Owen Bentz, cybersecurity, student, resume, IT, network security, computer science, ethical hacking, certifications, C++, Visual Basic, Python, Linux, Windows, macOS, Three.js, web development, Cloudflare Pages">
     
-    <!-- Favicon links for browser tabs and shortcuts -->
+    <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="/favicon.ico" type="x-icon">
     
-    <!-- Google Fonts: Inter for general text, Roboto Mono for technical/code-like text -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -24,135 +24,89 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js?v=1.1"></script>
     
     <style>
-        /* * CSS Styling for the Interactive 3D Cube Resume
-         * ---------------------------------------------
-         * This section defines the visual appearance and responsive behavior
-         * of the resume. It uses CSS variables for easy theming and media queries
-         * for adaptability across different screen sizes.
-         */
-
-        /* Root CSS variables for consistent theming and easy adjustments */
+        /* CSS variables for consistent theming and responsive sizing */
         :root {
-            --primary-color: #FF5722; /* Main accent color (Orange) */
-            --secondary-color: #FF8A65; /* Secondary accent color (Lighter Orange) */
-            --background-dark: #1a1a1a; /* Dark background for the body */
-            --background-content: rgba(26, 26, 26, 0.9); /* Slightly transparent dark background for cube faces */
-            --text-color: #eee; /* Light text color for general content */
-            --light-text-color: #ddd; /* Slightly lighter text color for subtle elements */
-            --hover-orange: #E64A19; /* Darker orange for hover effects on interactive elements */
-            --hobby-bg: #444; /* Background for individual hobby/skill tags */
-            --modal-bg: rgba(0,0,0,0.9); /* Dark, semi-transparent background for modal overlays */
-            --modal-close-color: #f1f1f1; /* Color for modal close button */
-            --modal-close-hover: #bbb; /* Hover color for modal close button */
+            --primary-color: #FF5722;
+            --secondary-color: #FF8A65;
+            --background-dark: #1a1a1a;
+            --background-content: rgba(26, 26, 26, 0.9);
+            --text-color: #eee;
+            --light-text-color: #ddd;
+            --hover-orange: #E64A19;
+            --hobby-bg: #444;
+            --modal-bg: rgba(0,0,0,0.9);
+            --modal-close-color: #f1f1f1;
+            --modal-close-hover: #bbb;
             
-            /* Responsive sizing variables for the cube container.
-             * `min()` ensures it doesn't get too large on very wide screens.
-             * These are desktop-first values, overridden for mobile below.
-             */
             --cube-width: min(85vw, 750px);
             --cube-height: min(85vh, 750px);
-            
-            /* Calculated distance from the center of the cube to the face's surface.
-             * This is crucial for correct 3D positioning of the faces.
-             */
             --cube-apothem: calc(var(--cube-width) * 0.85); 
-            --transition-duration: 0.5s; /* Standard transition duration for cube rotation */
+            --transition-duration: 0.5s;
 
-            /* Padding variables for absolute positioning of elements within faces (Desktop) */
-            --face-side-padding-desktop: 35px; /* Horizontal padding for desktop faces */
-            --face-top-padding-desktop: 120px; /* Controls header's top position from face edge (to clear navigation dots) */
-            --face-bottom-padding-desktop: 80px; /* Space at the bottom of the face, below content */
-            
-            /* Specific gap between the bottom of the header and the top of the scrollable content area (Desktop) */
+            --face-side-padding-desktop: 35px;
+            --face-top-padding-desktop: 120px;
+            --face-bottom-padding-desktop: 80px;
             --content-gap-desktop: 10px; 
             
-            /* Mobile specific overrides for padding and content gap */
             --face-side-padding-mobile: 20px; 
             --face-top-padding-mobile: 120px; 
             --face-bottom-padding-mobile: 80px; 
             --content-gap-mobile: 10px; 
         }
 
-        /* Universal box-sizing for consistent layout calculation */
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
-        /* Full height for html and body, centered content, no scrollbars for the main window */
         html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif; /* Apply primary font globally */
+            height: 100%; margin: 0; padding: 0;
+            font-family: 'Inter', sans-serif;
             background-color: var(--background-dark);
             color: var(--text-color);
-            overflow: hidden; /* Prevent body scrollbars, as content within the cube has custom scrolling */
-            display: flex; /* Use flexbox to center the cube container */
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            /* Allow body to receive pointer events for outside-of-cube rotation.
-             * This enables clicking on the left/right halves of the screen to rotate the cube.
-             */
-            pointer-events: auto; 
+            overflow: hidden; /* Prevent main scrollbars */
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            pointer-events: auto; /* Allow body to receive clicks */
         }
 
-        /* Three.js scene container for background animation */
+        /* Three.js background scene container */
         #scene-container {
-            position: fixed; /* Fixed to the viewport */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; /* Place behind all other content */
-            pointer-events: none; /* Crucial: This element is purely decorative and should not block clicks on elements above it */
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
         }
 
         /* Main container for the 3D cube */
         .cube-container {
-            width: var(--cube-width);
-            height: var(--cube-height);
-            perspective: 2200px; /* Defines the strength of the 3D perspective effect */
-            position: relative; /* Needed for z-index and containing the cube */
-            z-index: 1; /* Place above Three.js background */
-            display: flex; /* Use flexbox to center the .cube within itself */
-            justify-content: center;
-            align-items: center;
-            overflow: hidden; /* Ensures cube faces don't visually "leak" outside this container */
-            margin: auto; /* Centers the container in the viewport */
-            /* Ensure the cube container receives pointer events for touch swipes */
-            pointer-events: auto; 
+            width: var(--cube-width); height: var(--cube-height);
+            perspective: 2200px; /* 3D depth effect */
+            position: relative; z-index: 1;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; margin: auto;
+            pointer-events: auto; /* Allow touch swipes */
         }
 
-        /* The 3D cube element itself, where faces are transformed */
+        /* The 3D cube element */
         .cube {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             position: relative;
-            transform-style: preserve-3d; /* Allows child elements to be positioned in 3D space */
-            transition: transform var(--transition-duration) ease-out; /* Smooth rotation transition */
-            will-change: transform; /* Hint to browser for performance optimization during animation */
+            transform-style: preserve-3d;
+            transition: transform var(--transition-duration) ease-out;
+            will-change: transform;
         }
 
         /* Individual faces of the cube */
         .face {
-            position: absolute; /* Allows 3D positioning */
-            width: 100%;
-            height: 100%;
+            position: absolute;
+            width: 100%; height: 100%;
             background-color: var(--background-content);
-            border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle white border */
-            border-radius: 12px; /* Rounded corners for modern look */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Soft shadow for depth */
-            -webkit-overflow-scrolling: touch; /* Improves scrolling performance on iOS */
-            /* `overflow: hidden;` was intentionally removed here to fix text selection issues in Chromium browsers */
-            will-change: transform; /* Optimize for animation */
-            /* `pointer-events: auto !important;` ensures faces are fully interactive, overriding any inherited `pointer-events: none;` */
-            pointer-events: auto !important; 
-            z-index: 5; /* Explicit z-index for faces, ensuring they are above the background */
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+            -webkit-overflow-scrolling: touch;
+            will-change: transform;
+            pointer-events: auto !important;
+            z-index: 5;
         }
 
-        /* Positioning for each face to form an octagonal prism (4 visible sides) */
-        /* Each face is rotated and translated away from the center to form the cube */
+        /* Positioning for each face to form an octagonal prism */
         .face:nth-child(1) { transform: rotateY(0deg) translateZ(var(--cube-apothem)); }
         .face:nth-child(2) { transform: rotateY(90deg) translateZ(var(--cube-apothem)); }
         .face:nth-child(3) { transform: rotateY(180deg) translateZ(var(--cube-apothem)); }
@@ -161,630 +115,282 @@
         /* Absolute positioned header within each face */
         .face-header {
             position: absolute;
-            top: var(--face-top-padding-desktop); /* Position from the top edge of the face, accounting for nav dots */
-            left: var(--face-side-padding-desktop);
-            width: calc(100% - (2 * var(--face-side-padding-desktop))); /* Full width minus side padding */
-            height: auto; /* Height determined by its content */
-            min-height: 0; /* Override default min-height for flexible content */
-            text-align: center;
-            padding-top: 0; /* Removed internal padding to reduce vertical space below titles */
-            z-index: 7; /* Ensure header is above scrollable content, but below dynamic section-content layering */
-            box-sizing: border-box; /* Include padding in element's total width and height */
-            will-change: height, top; /* Optimize for animation/dynamic positioning */
+            top: var(--face-top-padding-desktop); left: var(--face-side-padding-desktop);
+            width: calc(100% - (2 * var(--face-side-padding-desktop)));
+            height: auto; min-height: 0;
+            text-align: center; padding-top: 0;
+            z-index: 7; box-sizing: border-box;
+            will-change: height, top;
         }
 
-        /* Ensure no margin below headings within the header to control spacing precisely */
-        .face-header h1,
-        .face-header h2,
-        .face-header h3 {
+        .face-header h1, .face-header h2, .face-header h3 {
             margin-bottom: 0; 
-            /* Ensure text selection is enabled and pointer events work within headers */
-            -webkit-user-select: text !important; 
-            -moz-user-select: text !important;
-            -ms-user-select: text !important;
             user-select: text !important;
-            pointer-events: auto !important; 
+            pointer-events: auto !important;
         }
 
-        /* Absolute positioned scrollable content area within each face */
+        /* Absolute positioned scrollable content area */
         .section-content {
             position: absolute;
-            /* `top` will be calculated dynamically in JavaScript based on header's actual height + content-gap */
-            left: var(--face-side-padding-desktop);
-            right: var(--face-side-padding-desktop);
-            bottom: var(--face-bottom-padding-desktop); /* Position from the bottom edge of the face */
-            
-            width: auto; /* Allows left/right to define width */
-            height: auto; /* Height determined by available space between header and bottom padding */
-
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start; /* Align content to the top */
-            align-items: center; /* Center items horizontally */
-
-            overflow-y: hidden; /* Set to hidden as we're using custom JavaScript scrolling for better control */
+            left: var(--face-side-padding-desktop); right: var(--face-side-padding-desktop);
+            bottom: var(--face-bottom-padding-desktop);
+            width: auto; height: auto;
+            display: flex; flex-direction: column; justify-content: flex-start; align-items: center;
+            overflow-y: hidden; /* Custom JS scrolling */
             box-sizing: border-box;
-            will-change: transform, scroll-position; /* Optimize for scrolling performance */
-            
-            padding-bottom: 100px; /* Added padding-bottom to ensure content pushes scrollHeight correctly, allowing for full scroll to bottom */
-            /* Ensure content areas are clickable/scrollable and text is selectable */
+            will-change: transform, scroll-position;
+            padding-bottom: 100px;
             pointer-events: auto !important; 
-            -webkit-user-select: text !important; 
-            -moz-user-select: text !important;    
-            -ms-user-select: text !important;     
-            user-select: text !important;         
-            z-index: 10; /* Ensure content is on top for selection and interaction */
-            touch-action: auto; /* Allows default pan/zoom behavior on touch devices within this scrollable area */
+            user-select: text !important;
+            z-index: 10;
+            touch-action: auto;
         }
 
-        /* General typography styles for headings and paragraphs */
+        /* General typography */
         h1, h2, h3 {
-            color: var(--primary-color); /* Apply primary accent color */
-            text-align: center;
-            font-weight: 600;
-            margin-bottom: 5px; /* Default margin for headings outside .face-header */
-            width: 100%; /* Take full width for centering */
-            flex-shrink: 0; /* Prevent shrinking in flex containers */
+            color: var(--primary-color);
+            text-align: center; font-weight: 600;
+            margin-bottom: 5px; width: 100%; flex-shrink: 0;
         }
 
         p, li {
-            word-wrap: break-word; /* Ensures long words break and wrap to the next line */
-            overflow-wrap: break-word; /* Modern equivalent of word-wrap */
-            white-space: normal; /* Allow normal text wrapping */
-            width: 100%; /* Take full width of parent container */
-            display: block;
-            /* Ensure text selection and pointer events are enabled for paragraphs and list items */
-            -webkit-user-select: text !important; 
-            -moz-user-select: text !important;
-            -ms-user-select: text !important;
+            word-wrap: break-word; overflow-wrap: break-word; white-space: normal;
+            width: 100%; display: block;
             user-select: text !important;
-            pointer-events: auto !important; 
+            pointer-events: auto !important;
         }
 
-        /* Specific styles for contact information section */
+        /* Contact info specific styles */
         .contact-info p {
-            font-family: 'Roboto Mono', monospace; /* Use monospaced font for a distinct, technical feel */
-            font-size: clamp(9px, 2.5vw, 12px); /* Responsive font size */
-            display: flex; /* Use flexbox for icon and text alignment */
-            align-items: center;
-            gap: 2px; /* Small gap between icon and text */
-            line-height: 1.2; 
-            margin-bottom: 2px;
-            color: var(--light-text-color);
-            text-align: center;
-            max-width: 78%; /* Limit width for better readability */
-            margin: 0 auto 2px auto; /* Center block horizontally */
+            font-family: 'Roboto Mono', monospace; font-size: clamp(9px, 2.5vw, 12px);
+            display: flex; align-items: center; gap: 2px;
+            line-height: 1.2; margin-bottom: 2px;
+            color: var(--light-text-color); text-align: center;
+            max-width: 78%; margin: 0 auto 2px auto;
         }
         .contact-info p i {
-            color: var(--secondary-color); /* Apply secondary accent color to icons */
-            font-size: clamp(11px, 3vw, 14px); /* Responsive icon size */
+            color: var(--secondary-color); font-size: clamp(11px, 3vw, 14px);
         }
 
-        /* Styles for the intro/objective face */
-        .intro-objective .section-content {
-            padding-top: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .intro-objective .objective-text-container {
-            margin-top: 10px;
-            width: 100%;
-            text-align: center;
-        }
-        .intro-objective .objective-text-container h2 {
-            margin-bottom: 5px;
-        }
+        /* Intro/Objective face styles */
+        .intro-objective .section-content { padding-top: 8px; flex-direction: column; align-items: center; }
+        .intro-objective .objective-text-container { margin-top: 10px; width: 100%; text-align: center; }
+        .intro-objective .objective-text-container h2 { margin-bottom: 5px; }
         .intro-objective .objective-text-container p {
-            font-family: 'Roboto Mono', monospace; /* Distinct font for objective text */
-            font-size: clamp(8px, 2.2vw, 11px); 
-            line-height: 1.3; 
-            text-align: center;
-            max-width: 60%; /* Limit width for better readability */
-            margin: 0 auto;
+            font-family: 'Roboto Mono', monospace; font-size: clamp(8px, 2.2vw, 11px); 
+            line-height: 1.3; text-align: center; max-width: 60%; margin: 0 auto;
         }
 
-        /* Styles for the About Me face */
-        .about-me .section-content {
-            padding-top: 5px;
-        }
+        /* About Me face styles */
+        .about-me .section-content { padding-top: 5px; }
         .about-me p { 
-            font-size: clamp(10px, 2.5vw, 12px); 
-            line-height: 1.4; 
-            margin-bottom: 3px; 
-            text-align: center;
-            max-width: 75%; 
-            margin: 0 auto 3px auto; 
+            font-size: clamp(10px, 2.5vw, 12px); line-height: 1.4; margin-bottom: 3px; 
+            text-align: center; max-width: 75%; margin: 0 auto 3px auto; 
         }
-        .about-me h4 { /* Styling for subtitles within About Me */
-            color: var(--secondary-color);
-            margin-top: 10px;
-            margin-bottom: 5px;
-            font-weight: 500;
-            font-size: clamp(10px, 2.8vw, 14px);
-            text-align: center; 
-            width: 100%; 
+        .about-me h4 { 
+            color: var(--secondary-color); margin-top: 10px; margin-bottom: 5px;
+            font-weight: 500; font-size: clamp(10px, 2.8vw, 14px);
+            text-align: center; width: 100%; 
         }
         .about-me ul {
-            list-style: none; /* Remove default bullets as we're centering */
-            padding: 0; /* Remove default padding */
-            margin: 0 auto; /* Center the ul block */
-            text-align: center; /* Center text within li elements */
-            width: fit-content; /* Allow ul to shrink to content width for centering */
-            max-width: 75%; 
+            list-style: none; padding: 0; margin: 0 auto; text-align: center;
+            width: fit-content; max-width: 75%; 
         }
         .about-me ul li {
-            margin-bottom: 1px; 
-            font-size: clamp(10px, 2.5vw, 12px); 
-            line-height: 1.4;
+            margin-bottom: 1px; font-size: clamp(10px, 2.5vw, 12px); line-height: 1.4;
             color: var(--text-color); 
         }
 
-        /* Styles for the Experience face */
-        .experience .section-content {
-            padding-top: 5px;
-        }
-        .experience-item {
-            margin-bottom: 5px; 
-            width: 100%;
-            text-align: center;
-        }
+        /* Experience face styles */
+        .experience .section-content { padding-top: 5px; }
+        .experience-item { margin-bottom: 5px; width: 100%; text-align: center; }
         .experience-item h4 {
-            color: var(--secondary-color);
-            margin-bottom: 0;
-            font-weight: 500;
+            color: var(--secondary-color); margin-bottom: 0; font-weight: 500;
             font-size: clamp(9px, 2.5vw, 11px); 
         }
         .experience-item p {
-            font-size: clamp(9px, 2.2vw, 10px); 
-            line-height: 1.3; 
-            margin-bottom: 0;
-            max-width: 75%; 
-            margin: 0 auto;
+            font-size: clamp(9px, 2.2vw, 10px); line-height: 1.3; margin-bottom: 0;
+            max-width: 75%; margin: 0 auto;
         }
         .experience-item ul {
-            list-style: disc; /* Keep disc bullets for list items */
-            padding-left: 0; /* Remove default padding for centering the block */
-            margin: 0 auto; /* Center the ul block */
-            text-align: center; /* Center text within li elements */
-            width: fit-content; /* Allow ul to shrink to content width for centering */
-            max-width: 75%; 
+            list-style: disc; padding-left: 0; margin: 0 auto; text-align: center;
+            width: fit-content; max-width: 75%; 
         }
         .experience-item ul li {
-            font-size: clamp(9px, 2.2vw, 10px); 
-            line-height: 1.3; 
-            margin-bottom: 1px; 
+            font-size: clamp(9px, 2.2vw, 10px); line-height: 1.3; margin-bottom: 1px;
             color: var(--text-color);
         }
 
-        /* Styles for the Projects and PC Evolution Face */
-        .hobbies-pc-evolution .section-content { /* Class name remains for consistency but content is 'Projects' */
-            padding-top: 5px;
-        }
+        /* Projects (Hobbies & PC Evolution) face styles */
+        .hobbies-pc-evolution .section-content { padding-top: 5px; }
         .hobbies-list ul {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            flex-wrap: wrap; /* Allows tags to wrap to next line */
-            gap: 3px; /* Small gap between tags */
-            justify-content: center; 
-            max-width: 75%; 
-            margin: 0 auto 15px auto; 
+            list-style: none; padding: 0; display: flex; flex-wrap: wrap;
+            gap: 3px; justify-content: center; max-width: 75%; margin: 0 auto 15px auto; 
         }
         .hobbies-list li {
-            background-color: var(--hobby-bg);
-            color: #fff;
-            padding: 5px 8px; 
-            border-radius: 8px; 
-            font-size: clamp(7px, 1.8vw, 9px); 
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            text-align: center;
-            /* Ensure these interactive list items are clickable and selectable */
-            pointer-events: auto !important; 
-            -webkit-user-select: text !important; 
-            -moz-user-select: text !important;
-            -ms-user-select: text !important;
-            user-select: text !important;
+            background-color: var(--hobby-bg); color: #fff; padding: 5px 8px; 
+            border-radius: 8px; font-size: clamp(7px, 1.8vw, 9px); 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); transition: all 0.3s ease;
+            cursor: pointer; text-align: center;
+            pointer-events: auto !important; user-select: text !important;
         }
         .hobbies-list li:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-2px) scale(1.02);
+            background-color: var(--primary-color); transform: translateY(-2px) scale(1.02);
             box-shadow: 0 3px 6px rgba(255, 87, 34, 0.4);
         }
-        .hobbies-list li i {
-            color: var(--secondary-color);
-        }
+        .hobbies-list li i { color: var(--secondary-color); }
 
-        /* Styles for collapsible containers (e.g., My Hobbies, PC Timeline) */
+        /* Collapsible containers */
         .collapsible-container {
-            width: 100%; 
-            margin-top: 15px; 
-            padding: 0 10px;
-            box-sizing: border-box;
-            max-width: 75%; 
-            margin-left: auto; 
-            margin-right: auto; 
-            /* Ensure collapsible containers are clickable/interactive */
-            pointer-events: auto !important; 
-            -webkit-user-select: text !important; 
-            -moz-user-select: text !important;
-            -ms-user-select: text !important;
-            user-select: text !important;
+            width: 100%; margin-top: 15px; padding: 0 10px; box-sizing: border-box;
+            max-width: 75%; margin-left: auto; margin-right: auto;
+            pointer-events: auto !important; user-select: text !important;
         }
-
         .collapsible-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px 0; 
-            background-color: rgba(68, 68, 68, 0.5);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-bottom: 8px; 
-            /* Ensure collapsible headers are clickable/interactive */
-            pointer-events: auto !important; 
-            -webkit-user-select: text !important; 
-            -moz-user-select: text !important;
-            -ms-user-select: text !important;
-            user-select: text !important;
+            display: flex; justify-content: center; align-items: center;
+            padding: 10px 0; background-color: rgba(68, 68, 68, 0.5);
+            border-radius: 8px; cursor: pointer; transition: background-color 0.3s ease;
+            margin-bottom: 8px;
+            pointer-events: auto !important; user-select: text !important;
         }
-
-        .collapsible-header:hover {
-            background-color: rgba(68, 68, 68, 0.8);
-        }
-
+        .collapsible-header:hover { background-color: rgba(68, 68, 68, 0.8); }
         .collapsible-header h3 {
-            margin: 0;
-            color: var(--secondary-color);
-            flex-grow: 1; /* Allows header text to take available space */
-            text-align: center;
+            margin: 0; color: var(--secondary-color); flex-grow: 1; text-align: center;
             font-size: clamp(10px, 2.8vw, 14px); 
         }
-
         .collapsible-icon {
-            margin-left: 10px;
-            color: var(--secondary-color);
-            transition: transform 0.3s ease; /* Smooth rotation animation */
-            font-size: clamp(11px, 3vw, 15px); 
-            pointer-events: auto !important; 
+            margin-left: 10px; color: var(--secondary-color); transition: transform 0.3s ease;
+            font-size: clamp(11px, 3vw, 15px); pointer-events: auto !important; 
         }
-
-        .collapsible-icon.rotated {
-            transform: rotate(90deg); /* Rotates icon when content is expanded */
-        }
-
+        .collapsible-icon.rotated { transform: rotate(90deg); }
         .collapsible-content {
-            max-height: 0; /* Initially hidden */
-            overflow: hidden;
-            transition: max-height 0.4s ease-out; /* Smooth expansion/collapse */
-            padding: 0 10px;
-            box-sizing: border-box;
-            /* Ensure content inside collapsible is interactive */
-            pointer-events: auto !important; 
-            -webkit-user-select: text !important; 
-            -moz-user-select: text !important;
-            -ms-user-select: text !important;
-            user-select: text !important;
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out;
+            padding: 0 10px; box-sizing: border-box;
+            pointer-events: auto !important; user-select: text !important;
         }
+        .collapsible-content.active { max-height: 2000px; }
 
-        .collapsible-content.active {
-            max-height: 2000px; /* Sufficiently large value to allow full content display during transition */
-        }
-
-        /* Styles for PC evolution images grid */
+        /* PC evolution images grid */
         .pc-evolution-images-grid {
-            display: grid;
-            /* Responsive grid: auto-fit creates columns based on available space, minmax sets min/max width */
-            grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); 
-            gap: 5px; 
-            margin-top: 8px; 
-            justify-items: center; /* Centers grid items horizontally */
-            max-width: 75%; 
-            margin: 8px auto 0 auto; 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); 
+            gap: 5px; margin-top: 8px; justify-items: center;
+            max-width: 75%; margin: 8px auto 0 auto; 
             pointer-events: auto !important; 
         }
         .pc-evolution-images-grid img {
-            width: 100%;
-            height: clamp(25px, 6vw, 40px); /* Responsive height */
-            object-fit: cover; /* Ensures image covers the area, potentially cropping */
-            max-width: 80px; 
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
-            cursor: pointer;
-            pointer-events: auto !important; 
-            user-select: none; /* Prevent image dragging/selection */
-            -webkit-user-select: none; 
-            -moz-user-select: none;
-            -ms-user-select: none;
+            width: 100%; height: clamp(25px, 6vw, 40px); object-fit: cover;
+            max-width: 80px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease; cursor: pointer;
+            pointer-events: auto !important; user-select: none;
         }
-        .pc-evolution-images-grid img:hover {
-            transform: scale(1.05); /* Slight zoom on hover */
-        }
+        .pc-evolution-images-grid img:hover { transform: scale(1.05); }
 
         /* Link styling */
         a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.3s ease; /* Smooth color transition on hover */
-            pointer-events: auto !important; 
-            -webkit-user-select: text !important; 
-            -moz-user-select: text !important;
-            -ms-user-select: text !important;
-            user-select: text !important;
+            color: var(--primary-color); text-decoration: none; transition: color 0.3s ease;
+            pointer-events: auto !important; user-select: text !important;
         }
-        a:hover {
-            color: var(--hover-orange); /* Change color on hover */
-        }
+        a:hover { color: var(--hover-orange); }
 
-        /* Logo image styling */
+        /* Logo image */
         #logo-image {
-            display: block;
-            margin: 0 auto 10px auto; /* Centers the logo and adds bottom margin */
-            width: 50px; 
-            height: auto;
-            flex-shrink: 0;
-            pointer-events: none; /* Logo shouldn't be clickable or selectable */
-            user-select: none; 
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
+            display: block; margin: 0 auto 10px auto; width: 50px; height: auto;
+            flex-shrink: 0; pointer-events: none; user-select: none;
         }
 
-        /* Modal overlay for image display (when a PC timeline image is clicked) */
+        /* Image Modal */
         .modal {
-            display: none; /* Hidden by default, shown via JS */
-            position: fixed;
-            z-index: 1000; /* High z-index to be on top of everything */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden; /* Prevent scrolling inside the modal */
-            background-color: var(--modal-bg); /* Semi-transparent black backdrop */
-            /* Use flexbox to center the content (modal-display-area) within the modal */
-            align-items: center; 
-            justify-content: center; 
-            pointer-events: auto; /* Ensure the modal backdrop can be clicked to close */
+            display: none; /* Hidden by default; JavaScript will set to flex when opened */
+            position: fixed; z-index: 1000;
+            left: 0; top: 0; width: 100%; height: 100%; overflow: hidden;
+            background-color: var(--modal-bg);
+            align-items: center; justify-content: center; /* These will apply when display is set to flex by JS */
+            pointer-events: auto;
         }
-
-        /* Container for the modal image and its navigation arrows */
         .modal-display-area {
-            position: relative; /* Crucial for positioning arrows relative to this */
-            display: flex; /* Use flexbox to center the image */
-            align-items: center;
-            justify-content: center;
-            width: 100%; /* Take full width of modal to allow image to expand */
-            height: 100%; /* Take full height of modal */
-            max-width: 90%; /* Limit the overall area the image and arrows occupy */
-            max-height: 90%; /* Limit the overall area the image and arrows occupy */
+            position: relative; display: flex; align-items: center; justify-content: center;
+            width: 100%; height: 100%; max-width: 90%; max-height: 90%;
         }
-
-        /* Modal content (the enlarged image) */
         .modal-content {
-            display: block;
-            max-width: 100%; /* Fit within modal-display-area */
-            max-height: 100%; /* Fit within modal-display-area */
-            object-fit: contain; /* Ensures image scales down and fits entirely within its container */
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.7);
-            animation: zoom 0.6s; /* Zoom in animation when modal opens */
-            pointer-events: auto !important; 
+            display: block; max-width: 100%; max-height: 100%; object-fit: contain;
+            border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.7); animation: zoom 0.6s;
+            pointer-events: auto !important;
         }
-        @keyframes zoom {
-            from { transform: scale(0.1); }
-            to { transform: scale(1); }
-        }
-
-        /* Close button for the modal */
+        @keyframes zoom { from { transform: scale(0.1); } to { transform: scale(1); } }
         .close-button {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: var(--modal-close-color);
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-            cursor: pointer;
-            z-index: 1002; /* Ensure close button is on top of everything */
-            pointer-events: auto !important; 
+            position: absolute; top: 15px; right: 35px;
+            color: var(--modal-close-color); font-size: 40px; font-weight: bold;
+            transition: 0.3s; cursor: pointer; z-index: 1002;
+            pointer-events: auto !important;
         }
-        .close-button:hover {
-            color: var(--modal-close-hover);
-        }
+        .close-button:hover { color: var(--modal-close-hover); }
 
-        /* Modal navigation arrows (left/right) for browsing images */
+        /* Modal navigation arrows */
         .modal-nav-arrow {
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 50px;
-            color: rgba(255, 255, 255, 0.8); /* Semi-transparent white for arrows */
-            user-select: none; /* Prevent text selection/dragging of arrows */
-            transition: 0.3s;
-            z-index: 1001; /* Above modal content */
-            padding: 10px; /* Base padding for click/touch area */
-            pointer-events: auto !important; 
+            cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%);
+            font-size: 50px; color: rgba(255, 255, 255, 0.8); user-select: none; transition: 0.3s;
+            z-index: 1001; padding: 10px; pointer-events: auto !important;
         }
-        .modal-nav-arrow:hover {
-            color: var(--primary-color); /* Orange on hover */
-            text-shadow: 0 0 10px var(--primary-color); /* Subtle glow on hover */
-        }
-        .modal-nav-arrow.left {
-            left: 0; /* Align directly to the edge of modal-display-area */
-        }
-        .modal-nav-arrow.right {
-            right: 0; /* Align directly to the edge of modal-display-area */
-        }
-        /* Style for disabled navigation arrows (at start/end of image list) */
-        .modal-nav-arrow.disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            pointer-events: none !important; /* Disable clicks on disabled arrows */
-        }
+        .modal-nav-arrow:hover { color: var(--primary-color); text-shadow: 0 0 10px var(--primary-color); }
+        .modal-nav-arrow.left { left: 0; }
+        .modal-nav-arrow.right { right: 0; }
+        .modal-nav-arrow.disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none !important; }
 
-        /* Navigation dots at the top of the screen to indicate current cube face */
+        /* Navigation dots */
         .nav-dots {
-            position: fixed;
-            top: 20px; 
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px; /* Space between dots */
-            z-index: 101; /* Ensure dots are above the cube */
-            pointer-events: auto; /* Ensure dots receive pointer events */
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 10px; z-index: 101; pointer-events: auto;
         }
         .dot {
-            width: 12px;
-            height: 12px;
-            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
-            border-radius: 50%; /* Makes them circular */
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
-            pointer-events: auto !important; 
+            width: 12px; height: 12px; background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%; cursor: pointer; transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2); pointer-events: auto !important;
         }
-        .dot.active {
-            background-color: var(--primary-color); /* Active dot is orange */
-            transform: scale(1.2); /* Slightly larger when active */
-        }
-        .dot:hover { 
-            background-color: var(--hover-orange);
-            transform: scale(1.3); /* Even larger on hover */
-        }
+        .dot.active { background-color: var(--primary-color); transform: scale(1.2); }
+        .dot:hover { background-color: var(--hover-orange); transform: scale(1.3); }
 
-        /* Disclaimer text at the bottom of the screen */
+        /* Disclaimer text */
         .disclaimer {
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            color: var(--light-text-color);
-            font-size: clamp(10px, 2.5vw, 16px); 
-            z-index: 100; /* Above cube, below nav dots/modal */
-            pointer-events: none; /* Should not be interactive */
-            user-select: none; 
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
+            text-align: center; color: var(--light-text-color);
+            font-size: clamp(10px, 2.5vw, 16px); z-index: 100;
+            pointer-events: none; user-select: none;
         }
 
-        /* * Mobile Optimization (Max-width 768px breakpoint)
-         * ------------------------------------------------
-         * Adjusts layouts, font sizes, and element dimensions for smaller screens
-         * to ensure responsiveness and improved usability on mobile devices.
-         */
+        /* Mobile optimization */
         @media (max-width: 768px) {
             :root {
-                /* Adjusted cube size to reveal more background animation on mobile */
-                --cube-width: 80vw; /* Reduced from 85vw */
-                --cube-height: 80vh; /* Reduced from 85vh */
-                --face-side-padding-mobile: 20px;
-                --face-top-padding-mobile: 120px; 
-                --face-bottom-padding-mobile: 80px; 
-                --content-gap-mobile: 10px; 
+                --cube-width: 80vw; --cube-height: 80vh;
+                --face-side-padding-mobile: 20px; --face-top-padding-mobile: 120px; 
+                --face-bottom-padding-mobile: 80px; --content-gap-mobile: 10px; 
             }
-
             .face-header {
-                min-height: 0; 
-                padding-top: 0; 
+                min-height: 0; padding-top: 0;
                 left: var(--face-side-padding-mobile);
                 width: calc(100% - (2 * var(--face-side-padding-mobile)));
             }
             .section-content {
-                left: var(--face-side-padding-mobile);
-                right: var(--face-side-padding-mobile);
+                left: var(--face-side-padding-mobile); right: var(--face-side-padding-mobile);
                 bottom: var(--face-bottom-padding-mobile);
             }
-            
-            /* Adjust clamp values for mobile for tighter control on font sizes */
-            h1 { font-size: 14px; }
-            h2 { font-size: 12px; }
-            h3 { font-size: 10px; margin-top: 1px;}
-
-            .contact-info p {
-                font-size: 9px;
-                gap: 1px;
-                max-width: 82%; 
-            }
-            .contact-info p i {
-                font-size: 11px;
-            }
-
-            .intro-objective .objective-text-container p {
-                font-size: 8px;
-                max-width: 70%; 
-            }
-
-            .about-me p, .about-me ul {
-                font-size: 10px;
-                max-width: 85%; 
-            }
-            .about-me ul {
-                padding-left: 3px;
-            }
-
-            .experience-item h4 {
-                font-size: 9px;
-            }
-            .experience-item p {
-                font-size: 9px;
-                max-width: 85%; 
-            }
-            .experience-item ul {
-                padding-left: 2px;
-                max-width: 85%; 
-            }
-            .experience-item ul li {
-                font-size: 9px;
-            }
-
-            .hobbies-list li {
-                font-size: 7px;
-                padding: 3px 5px; 
-                border-radius: 5px; 
-                gap: 2px; 
-            }
-
-            .hobbies-list ul {
-                max-width: 85%; 
-            }
-
-            .collapsible-container {
-                max-width: 85%; 
-            }
-
-            .pc-evolution-images-grid {
-                grid-template-columns: repeat(auto-fit, minmax(25px, 1fr)); 
-                gap: 2px; 
-                max-width: 85%; 
-            }
-            .pc-evolution-images-grid img {
-                height: 25px; 
-            }
-
-            /* Modal navigation arrows for mobile: slightly larger for touch targets */
-            .modal-nav-arrow {
-                font-size: 40px; 
-                padding: 10px; 
-                margin: 0; 
-            }
-            /* Add subtle background and border-radius to arrows for better contrast on mobile */
-            .modal-nav-arrow.left {
-                left: 0; 
-                background: rgba(0,0,0,0.3); 
-                border-radius: 0 8px 8px 0; 
-            }
-            .modal-nav-arrow.right {
-                right: 0; 
-                background: rgba(0,0,0,0.3); 
-                border-radius: 8px 0 0 8px; 
-            }
+            h1 { font-size: 14px; } h2 { font-size: 12px; } h3 { font-size: 10px; margin-top: 1px;}
+            .contact-info p { font-size: 9px; gap: 1px; max-width: 82%; }
+            .contact-info p i { font-size: 11px; }
+            .intro-objective .objective-text-container p { font-size: 8px; max-width: 70%; }
+            .about-me p, .about-me ul { font-size: 10px; max-width: 85%; }
+            .about-me ul { padding-left: 3px; }
+            .experience-item h4 { font-size: 9px; }
+            .experience-item p { font-size: 9px; max-width: 85%; }
+            .experience-item ul { padding-left: 2px; max-width: 85%; }
+            .experience-item ul li { font-size: 9px; }
+            .hobbies-list li { font-size: 7px; padding: 3px 5px; border-radius: 5px; gap: 2px; }
+            .hobbies-list ul { max-width: 85%; }
+            .collapsible-container { max-width: 85%; }
+            .pc-evolution-images-grid { grid-template-columns: repeat(auto-fit, minmax(25px, 1fr)); gap: 2px; max-width: 85%; }
+            .pc-evolution-images-grid img { height: 25px; }
+            .modal-nav-arrow { font-size: 40px; padding: 10px; margin: 0; }
+            .modal-nav-arrow.left { left: 0; background: rgba(0,0,0,0.3); border-radius: 0 8px 8px 0; }
+            .modal-nav-arrow.right { right: 0; background: rgba(0,0,0,0.3); border-radius: 8px 0 0 8px; }
         }
     </style>
 </head>
@@ -807,7 +413,6 @@
                     
                     <div class="objective-text-container">
                         <h2>Objective</h2>
-                        <!-- Text for typing effect, initially full text, then cleared and re-typed by JS -->
                         <p id="objective-text">Highly motivated aspiring cybersecurity student seeking to leverage my skills and passion in a real-world, relevant job setting.</p>
                     </div>
                 </section>
@@ -855,7 +460,6 @@
                             <li>Substantial Photoshop and video editing abilities.</li>
                         </ul>
                     </div>
-                    <!-- Certifications Section: Placeholder for future certifications -->
                     <div class="experience-item">
                         <h4>Certifications</h4>
                         <p>{Currently working towards CCNA}</p>
@@ -869,7 +473,7 @@
                     <h2>About Me</h2>
                 </div>
                 <section class="section-content about-me">
-                    <h4 style="color: var(--secondary-color);">Location History:</h4>
+                    <h4>Location History:</h4>
                     <ul>
                         <li>Born in Burnsville, Minnesota</li>
                         <li>Raised in Morristown, Minnesota</li>
@@ -884,26 +488,26 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                     <p>
                         I'm a highly motivated aspiring cybersecurity enthusiast with a lifelong passion for technology. From building my first gaming rig at 14, to mastering network configurations, my passion for the digital world is unwavering.
                     </p>
-                    <h4 style="color: var(--secondary-color);">My strengths include:</h4>
+                    <h4>My strengths include:</h4>
                     <ul>
                         <li>Possessing a solid understanding of operating systems, network security, and proactive threat detection.</li>
                         <li>Background in creative software and analytical troubleshooting providing a unique and valuable perspective to the cybersecurity landscape.</li>
                         <li>Eager to contribute a dynamic approach to protecting digital assets and infrastructure.</li>
                         <li>Seeking to leverage my proven work ethic and IT passion into a dedicated IT role.</li>
                     </ul>
-                    <h4 style="color: var(--secondary-color);">*</h4>
+                    <h4>*</h4>
                     <p>
                         While the majority of my knowledge is self-taught, driven by curiosity and desire to learn, my family has been a constant source of encouragement, wholeheartedly supporting my interests. I also owe significant credit to both my Kelly Walsh CISCO teacher, Duane Reimer, and my Casper College CCNA instructor, Jeffrey Brewster, for their invaluable contributions. I am currently preparing to take the CCNA exam upon completion of my CCNA prep course at Casper College.
                     </p>
-                    <h4 style="color: var(--secondary-color);">AI</h4>
+                    <h4>AI</h4>
                     <p>In my opinion, AI is a powerful tool with vast potential for automating tasks and enhancing various processes. I believe it is crucial to learn how to effectively utilize these tools while maintaining an awareness of their distinction from human-generated content. (In fact, this website was built using contributions from Gemini 2.0). Effective cybersecurity execution starts by making sure your friends and family are protected. Unlike other fields, AI is accelerating cybersecurity. With the advancements of technology, EVERYONE should have at least a basic understanding of cybersecurity.</p>
                 </section>
             </div>
 
-            <!-- Face 3: Projects & PC Evolution (Previously Hobbies) -->
+            <!-- Face 3: Projects & PC Evolution -->
             <div class="face face-3 hobbies-pc-evolution">
                 <div class="face-header">
-                    <h2>Projects</h2> <!-- Changed from Hobbies to Projects as per user request -->
+                    <h2>Projects</h2>
                 </div>
                 <section class="section-content hobbies">
                     <!-- Collapsible section for 'My Hobbies' -->
@@ -947,14 +551,13 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                         </div>
                         <div class="collapsible-content" id="pcEvolutionContent"> 
                             <div class="pc-evolution-images-grid">
-                                <!-- PC Evolution Images: Note - setup1.jpeg and setup6.jpeg were previously removed -->
-                                <img src="images/setup9.jpeg" alt="PC Setup 9" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup8.jpeg" alt="PC Setup 8" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup7.jpeg" alt="PC Setup 7" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup5.jpeg" alt="PC Setup 5" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup4.jpeg" alt="PC Setup 4" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup3.jpeg" alt="PC Setup 3" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
-                                <img src="images/setup2.jpeg" alt="PC Setup 2" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup9.jpeg" alt="PC Image 9" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup8.jpeg" alt="PC Image 8" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup7.jpeg" alt="PC Image 7" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup5.jpeg" alt="PC Image 5" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup4.jpeg" alt="PC Image 4" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup3.jpeg" alt="PC Image 3" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
+                                <img src="images/setup2.jpeg" alt="PC Image 2" onerror="this.onerror=null;this.src='https://placehold.co/250x150/222/FFF?text=Image+Error';">
                             </div>
                         </div>
                     </div>
@@ -984,476 +587,310 @@ enjoy helping others resolve their technical issues and find the troubleshooting
     </div>
 
     <script>
-        /*
-         * JavaScript for 3D Cube Resume Functionality
-         * ---------------------------------------------
-         * This script handles the Three.js background animation,
-         * 3D cube rotation (via mouse clicks, keyboard, and touch gestures),
-         * content scrolling, typing effect, and image modal display.
-         */
-
         // --- Three.js Background Animation Setup ---
-        const scene = new THREE.Scene(); // Create a new Three.js scene
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // Perspective camera
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // WebGL renderer with anti-aliasing and transparent background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         
-        renderer.setSize(window.innerWidth, window.innerHeight); // Set renderer size to full window
-        const sceneContainer = document.getElementById('scene-container'); // Get the DOM element for the Three.js canvas
-        sceneContainer.appendChild(renderer.domElement); // Add the renderer's canvas to the DOM
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        const sceneContainer = document.getElementById('scene-container');
+        sceneContainer.appendChild(renderer.domElement);
 
-        // Add lights to the scene for visual effect
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3); // Soft ambient light
-        scene.add(ambientLight);
+        // Ensure the Three.js canvas itself does not block pointer events
+        renderer.domElement.style.pointerEvents = 'none'; 
+        renderer.domElement.style.zIndex = '-2'; 
 
-        const pointLight1 = new THREE.PointLight(0xFF5722, 0.7); // Bright orange point light
-        pointLight1.position.set(5, 5, 5); // Position the light
+        // Add lights to the scene
+        scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+        const pointLight1 = new THREE.PointLight(0xFF5722, 0.7);
+        pointLight1.position.set(5, 5, 5);
         scene.add(pointLight1);
-
-        const pointLight2 = new THREE.PointLight(0xFF8A65, 0.5); // Lighter orange point light
-        pointLight2.position.set(-5, -5, -5); // Position the light
+        const pointLight2 = new THREE.PointLight(0xFF8A65, 0.5);
+        pointLight2.position.set(-5, -5, -5);
         scene.add(pointLight2);
 
-        // Particle System for Glowing Data Points (background effect)
-        const particlesGeometry = new THREE.BufferGeometry(); // Geometry to hold particle data
-        const particlesCount = 2000; // Number of particles in the system
+        // Particle System for background effect
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 2000;
+        const posArray = new Float32Array(particlesCount * 3);
+        const colorArray = new Float32Array(particlesCount * 3);
 
-        const posArray = new Float32Array(particlesCount * 3); // Array for XYZ coordinates (x, y, z per particle)
-        const colorArray = new Float32Array(particlesCount * 3); // Array for RGB colors (r, g, b per particle)
-
-        // Populate particle positions and colors randomly within a large cube
         for (let i = 0; i < particlesCount * 3; i += 3) {
-            posArray[i] = (Math.random() - 0.5) * 50; // x-coordinate (from -25 to 25)
-            posArray[i + 1] = (Math.random() - 0.5) * 50; // y-coordinate
-            posArray[i + 2] = (Math.random() - 0.5) * 50; // z-coordinate
-
-            // Random colors for particles (shades of orange/red for thematic consistency)
-            colorArray[i] = 0.8 + Math.random() * 0.2; // Red component (0.8 to 1.0)
-            colorArray[i + 1] = 0.3 + Math.random() * 0.3; // Green component (0.3 to 0.6)
-            colorArray[i + 2] = 0.1 + Math.random() * 0.2; // Blue component (0.1 to 0.3)
+            posArray[i] = (Math.random() - 0.5) * 50;
+            posArray[i + 1] = (Math.random() - 0.5) * 50;
+            posArray[i + 2] = (Math.random() - 0.5) * 50;
+            colorArray[i] = 0.8 + Math.random() * 0.2;
+            colorArray[i + 1] = 0.3 + Math.random() * 0.3;
+            colorArray[i + 2] = 0.1 + Math.random() * 0.2;
         }
 
-        // Assign position and color attributes to the geometry
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
         particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
 
         const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.1, // Size of individual particles
-            vertexColors: true, // Enable per-vertex colors
-            blending: THREE.AdditiveBlending, /* Use additive blending for a glowing effect */
-            transparent: true, // Allow transparency
-            sizeAttenuation: true // Particles closer to camera appear larger
+            size: 0.1, vertexColors: true, blending: THREE.AdditiveBlending, transparent: true, sizeAttenuation: true
         });
+        const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particles);
+        camera.position.z = 10;
 
-        const particles = new THREE.Points(particlesGeometry, particlesMaterial); // Create the particle system
-        scene.add(particles); // Add particles to the scene
-
-        camera.position.z = 10; // Position the camera back to view the particles
-
-        // Animation loop for Three.js scene (renders frame by frame)
+        // Animation loop for Three.js scene
         function animate() {
-            requestAnimationFrame(animate); // Request the next animation frame
-            particles.rotation.y += 0.0005; // Rotate particles slowly on Y-axis
-            particles.rotation.x += 0.0002; // Rotate particles even slower on X-axis
-            renderer.render(scene, camera); // Render the scene from the camera's perspective
+            requestAnimationFrame(animate);
+            particles.rotation.y += 0.0005;
+            particles.rotation.x += 0.0002;
+            renderer.render(scene, camera);
         }
 
-        // Handle window resizing to keep Three.js scene responsive
+        // Handle window resizing for responsiveness
         window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight; // Update camera aspect ratio
-            camera.updateProjectionMatrix(); // Recalculate projection matrix for new aspect ratio
-            renderer.setSize(window.innerWidth, window.innerHeight); // Resize renderer output
-            setFacePositions(); // Recalculate CSS 3D face positions on resize to maintain correct cube shape
-            updateSectionContentTop(); // Recalculate content top positions as header heights might change responsively
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            setFacePositions();
+            updateSectionContentTop();
         });
 
-        // --- CSS 3D Cube Rotation Logic ---
-        const resumeCube = document.getElementById('resume-cube'); // The actual 3D cube element
-        const cubeContainer = document.getElementById('cube-container'); // The container holding the cube, used for touch events
-        const dots = document.querySelectorAll('.dot'); // Navigation dots
-        const faces = document.querySelectorAll('.face'); // All cube face elements
-        const sectionContents = document.querySelectorAll('.section-content'); /* All scrollable content areas */
-        const faceHeaders = document.querySelectorAll('.face-header'); /* All face header elements */
+        // --- CSS 3D Octagonal Prism Rotation Logic ---
+        const resumeCube = document.getElementById('resume-cube');
+        const cubeContainer = document.getElementById('cube-container');
+        const dots = document.querySelectorAll('.dot');
+        const faces = document.querySelectorAll('.face');
+        const sectionContents = document.querySelectorAll('.section-content');
+        const faceHeaders = document.querySelectorAll('.face-header');
 
-        // Variables for cube rotation and smooth interpolation
-        let currentRotateY = 0; // Current actual Y rotation of the entire cube (continuous value)
-        let targetRotateY = 0;  // Target Y rotation for smooth animation (snaps to nearest face)
-        const transitionInterpolation = 0.1; // Smoothness factor (0 to 1, higher is faster)
+        let currentRotateY = 0;
+        let targetRotateY = 0;
+        const transitionInterpolation = 0.1;
 
-        // Keyboard control variables
-        let keysPressed = {}; // Stores currently pressed keys for continuous input simulation
-        const scrollAmount = 50; // Amount to scroll content by with arrow keys/W/S
+        let keysPressed = {};
+        const scrollAmount = 50;
 
-        // Touch swipe variables
-        let touchStartX = 0; // Initial X coordinate of touch
-        let touchStartY = 0; // Initial Y coordinate of touch
-        const swipeThreshold = 50; // Minimum pixel distance for a swipe to be registered
+        let touchStartX = 0;
+        let touchStartY = 0;
+        const swipeThreshold = 50;
 
-        // Define the initial Y rotation offset for each face to form the octagonal prism
-        // This makes `face-0` visible when the cube's `rotateY` is 0.
-        const faceYOffsets = {
-            'face-0': 0,
-            'face-1': 90,
-            'face-2': 180,
-            'face-3': 270
-        };
+        const faceYOffsets = { 'face-0': 0, 'face-1': 90, 'face-2': 180, 'face-3': 270 };
+        const cubeTargetRotations = [ { y: 0 }, { y: -90 }, { y: -180 }, { y: -270 } ];
+        let activeFaceIndex = 0;
 
-        // This array stores the target Y rotations for the *entire cube*
-        // to bring each specific face to the front. These values are negative
-        // because rotating the cube itself (rather than the faces) counter-clockwise
-        // brings the next face into view.
-        const cubeTargetRotations = [
-            { y: 0 },     // 0: face-0 (Intro/Objective)
-            { y: -90 },   // 1: face-1 (Experience)
-            { y: -180 },  // 2: face-2 (About Me)
-            { y: -270 }    // 3: face-3 (Projects & PC Evolution)
-        ];
-
-        let activeFaceIndex = 0; // Keep track of the currently active face (starts at 0)
-
-        // Function to set the initial 3D positions of each face to form the octagonal prism
+        // Set initial 3D positions of cube faces
         function setFacePositions() {
-            // The apothem is the distance from the center to the midpoint of a side.
-            // It's fetched from the CSS variable to ensure consistency.
             const apothem = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--cube-apothem'));
-
             faces.forEach(face => {
-                // Find the specific face class (e.g., 'face-0', 'face-1')
                 const faceName = Array.from(face.classList).find(cls => cls.startsWith('face-'));
                 if (faceName) {
-                    // Apply the fixed rotation and translation for each face to form the octagon
                     face.style.transform = `rotateY(${faceYOffsets[faceName]}deg) translateZ(${apothem}px)`;
-                    face.style.transformOrigin = 'center center'; // Ensure rotation is around its center point
+                    face.style.transformOrigin = 'center center';
                 }
             });
         }
 
-        // Function to dynamically update the top position of `.section-content`
-        // This ensures content starts precisely below the header, adapting to header height changes
-        // caused by responsive text or content.
+        // Dynamically update content top position based on header height
         function updateSectionContentTop() {
-            // Determine the content gap based on current window width (mobile vs. desktop)
             const contentGap = window.innerWidth <= 768 ? 
                                parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--content-gap-mobile')) : 
                                parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--content-gap-desktop'));
                                
             faceHeaders.forEach((header, index) => {
-                // Calculate the absolute bottom position of the header
                 const headerBottom = header.offsetTop + header.offsetHeight; 
-                const sectionContent = sectionContents[index]; // Get the corresponding content area for this face
-                
+                const sectionContent = sectionContents[index];
                 if (sectionContent) {
-                    // Set the top of the content area to be immediately below the header, plus the defined gap
                     sectionContent.style.top = `${headerBottom + contentGap}px`;
                 }
             });
         }
 
-        // Applies the current rotation value to the cube element's transform property
+        // Apply current rotation to the cube
         function applyCubeRotation() {
             resumeCube.style.transform = `rotateY(${currentRotateY}deg)`;
         }
 
-        // Navigates the cube to display a specific face by its index
+        // Navigate to a specific cube face by index
         function goToFace(index) {
-            // Calculate the new index, ensuring it wraps around (e.g., from face 0 back to face 3, or vice versa)
-            const newIndex = (index + cubeTargetRotations.length * 100) % cubeTargetRotations.length;
-            activeFaceIndex = newIndex; // Update the globally tracked active face index
-
-            // Get the desired Y rotation value for the target face from our predefined array
+            activeFaceIndex = (index + cubeTargetRotations.length * 100) % cubeTargetRotations.length;
             const desiredFaceRotation = cubeTargetRotations[activeFaceIndex].y;
-
-            // Normalize the current Y rotation to a 0-359 degree range to find the shortest path
             let normalizedCurrentY = currentRotateY % 360;
-            if (normalizedCurrentY < 0) { // Ensure positive angle
-                normalizedCurrentY += 360;
-            }
+            if (normalizedCurrentY < 0) normalizedCurrentY += 360;
 
-            // Calculate the shortest difference to rotate (clockwise or counter-clockwise)
             let diff = desiredFaceRotation - normalizedCurrentY;
-            if (diff > 180) { // If rotating clockwise more than 180, go counter-clockwise instead
-                diff -= 360;
-            } else if (diff < -180) { // If rotating counter-clockwise more than 180, go clockwise instead
-                diff += 360;
-            }
+            if (diff > 180) diff -= 360;
+            else if (diff < -180) diff += 360;
 
-            // Add this shortest difference to the actual `currentRotateY` to set the new target
-            // This ensures smooth transitions even if the cube has rotated multiple times.
             targetRotateY = currentRotateY + diff;
-            updateActiveDot(); // Update the visual state of the navigation dots
+            updateActiveDot();
         }
 
-        // Updates the visual state of the navigation dots to reflect the active face
+        // Update active navigation dot
         function updateActiveDot() {
             dots.forEach((dot, index) => {
-                dot.classList.remove('active'); // Remove 'active' class from all dots
-                // Only show dots that correspond to actual faces
+                dot.classList.remove('active');
                 if (index < cubeTargetRotations.length) {
                     dot.style.display = 'block'; 
-                    if (index === activeFaceIndex) {
-                        dot.classList.add('active'); // Add 'active' class to the current face's dot
-                    }
+                    if (index === activeFaceIndex) dot.classList.add('active');
                 } else {
-                    dot.style.display = 'none'; // Hide any unused dots
+                    dot.style.display = 'none';
                 }
             });
         }
 
-        // Smoothly interpolates the cube's rotation towards the target rotation over time
+        // Animation loop for cube rotation interpolation
         function animateRotation() {
-            requestAnimationFrame(animateRotation); // Request the next animation frame to continue the loop
+            requestAnimationFrame(animateRotation);
 
-            // Handle keyboard input for direct face transitions (A/D or Left/Right Arrows)
-            // This prevents continuous rotation if a key is held down; it acts as a single press.
+            // Keyboard input for face transitions
             if (keysPressed['arrowleft'] || keysPressed['a']) {
-                goToFace(activeFaceIndex - 1); // Go to previous face
-                delete keysPressed['arrowleft']; // Clear key state to prevent continuous rotation
-                delete keysPressed['a'];
+                goToFace(activeFaceIndex - 1);
+                delete keysPressed['arrowleft']; delete keysPressed['a'];
             } else if (keysPressed['arrowright'] || keysPressed['d']) {
-                goToFace(activeFaceIndex + 1); // Go to next face
-                delete keysPressed['arrowright']; // Clear key state
-                delete keysPressed['d'];
+                goToFace(activeFaceIndex + 1);
+                delete keysPressed['arrowright']; delete keysPressed['d'];
             }
 
-            // Interpolate current rotation towards target rotation for smooth animation
+            // Interpolate rotation
             currentRotateY += (targetRotateY - currentRotateY) * transitionInterpolation;
-
-            // Apply rotation only if there's a significant difference to avoid micro-jittering
             if (Math.abs(targetRotateY - currentRotateY) > 0.01) {
                 applyCubeRotation();
             }
         }
 
-        // Snaps the cube to the nearest cardinal face rotation based on its current continuous rotation
-        // This function is not actively used in the current interaction model, as `goToFace` sets
-        // the `targetRotateY` directly. It's kept here as a utility for potential future features
-        // where free rotation might need to snap back to a defined face.
-        function snapCubeToNearestFace() {
-            let closestTargetY = 0;
-            let minAbsDiff = Infinity;
-            let bestIndex = 0;
-
-            for (let i = 0; i < cubeTargetRotations.length; i++) {
-                let baseTarget = cubeTargetRotations[i].y;
-                // Calculate potential targets by adding multiples of 360 degrees
-                // to account for continuous rotation beyond a single 360-degree cycle.
-                let potentialTarget1 = baseTarget + Math.floor(currentRotateY / 360) * 360;
-                let potentialTarget2 = baseTarget + Math.ceil(currentRotateY / 360) * 360;
-
-                let diff1 = Math.abs(currentRotateY - potentialTarget1);
-                let diff2 = Math.abs(currentRotateY - potentialTarget2);
-
-                if (diff1 < minAbsDiff) {
-                    minAbsDiff = diff1;
-                    closestTargetY = potentialTarget1;
-                    bestIndex = i;
-                }
-                if (diff2 < minAbsDiff) {
-                    minAbsDiff = diff2;
-                    closestTargetY = potentialTarget2;
-                    bestIndex = i;
-                }
-            }
-            targetRotateY = closestTargetY; 
-            activeFaceIndex = bestIndex; 
-            updateActiveDot(); 
-        }
-
-        // Click event for left/right navigation on the document body (for clicks outside the cube)
+        // Click event for background rotation
         document.body.addEventListener('click', (e) => {
-            // IMPORTANT: Check if the clicked element is within an interactive area (cube, modal, nav dots).
-            // If it is, we explicitly do NOT want to rotate the cube to allow other interactions to work.
+            // Prevent cube rotation if click is inside cube, modal, or nav dots
             if (e.target.closest('#cube-container') || e.target.closest('#imageModal') || e.target.closest('#nav-dots')) {
-                return; // Do nothing if click is inside these specified areas
+                return;
             }
-
-            const clickX = e.clientX; // X position of the mouse click relative to the viewport
-
-            if (clickX < window.innerWidth / 2) {
-                // Click on the left half of the window (outside the cube)
-                goToFace(activeFaceIndex - 1);
-            } else {
-                // Click on the right half of the window (outside the cube)
-                goToFace(activeFaceIndex + 1);
-            }
+            // Rotate based on click position
+            const clickX = e.clientX;
+            if (clickX < window.innerWidth / 2) goToFace(activeFaceIndex - 1);
+            else goToFace(activeFaceIndex + 1);
         });
 
-        // --- Touch Swipe Rotation Logic for the Cube Container ---
+        // Touch swipe rotation for cube container
         cubeContainer.addEventListener('touchstart', (e) => {
-            // Only consider single-touch gestures for cube rotation to avoid interfering with pinch-zoom
             if (e.touches.length === 1) { 
-                touchStartX = e.touches[0].clientX; // Record initial touch X
-                touchStartY = e.touches[0].clientY; // Record initial touch Y
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
             }
-        }, { passive: true }); // Using passive: true for touchstart as we're just reading positions initially.
+        }, { passive: true });
 
         cubeContainer.addEventListener('touchmove', (e) => {
             if (e.touches.length === 1) {
-                const touchCurrentX = e.touches[0].clientX;
-                const touchCurrentY = e.touches[0].clientY;
-                const deltaX = touchCurrentX - touchStartX; // Horizontal movement
-                const deltaY = touchCurrentY - touchStartY; // Vertical movement
-
-                // Determine if it's primarily a horizontal swipe and exceeds threshold
+                const deltaX = e.touches[0].clientX - touchStartX;
+                const deltaY = e.touches[0].clientY - touchStartY;
                 if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
-                    e.preventDefault(); // Prevent default browser vertical scroll if it's a horizontal swipe
-                    if (deltaX > 0) { // Swiped right
-                        goToFace(activeFaceIndex - 1);
-                    } else { // Swiped left
-                        goToFace(activeFaceIndex + 1);
-                    }
-                    // Reset touchStartX/Y to prevent multiple cube rotations from a single long drag/swipe
-                    touchStartX = touchCurrentX; 
-                    touchStartY = touchCurrentY;
+                    e.preventDefault();
+                    if (deltaX > 0) goToFace(activeFaceIndex - 1);
+                    else goToFace(activeFaceIndex + 1);
+                    touchStartX = e.touches[0].clientX; // Reset to prevent continuous rotation
+                    touchStartY = e.touches[0].clientY;
                 }
             }
-        }, { passive: false }); // `passive: false` is necessary here to allow `e.preventDefault()` to block scrolling.
+        }, { passive: false });
 
-        cubeContainer.addEventListener('touchend', (e) => {
-            // No specific action needed on touchend for cube rotation, as goToFace is called on touchmove
-            // The document.body click listener will handle very short taps/clicks that aren't registered as swipes.
-        });
-
-        // Keyboard event listeners for navigation (A/D/Arrows) and content scrolling (W/S/Arrows)
+        // Keyboard event listeners for navigation and content scrolling
         document.addEventListener('keydown', (e) => {
-            const key = e.key.toLowerCase(); // Get key pressed and convert to lowercase for case-insensitivity
-            const activeContentArea = sectionContents[activeFaceIndex]; // Get the current active scrollable content area
+            const key = e.key.toLowerCase();
+            const activeContentArea = sectionContents[activeFaceIndex];
 
-            // Cube rotation keys (Left Arrow, Right Arrow, A, D)
             if (['arrowleft', 'arrowright', 'a', 'd'].includes(key)) {
-                keysPressed[key] = true; // Mark key as pressed
-                e.preventDefault(); // Prevent default browser scroll behavior for arrow keys
-            } 
-            // Content scrolling keys (Down Arrow, S, Up Arrow, W)
-            else if (key === 'arrowdown' || key === 's') {
-                e.preventDefault(); // Prevent default page scroll
-                if (activeContentArea) {
-                    // Scroll content down by the defined amount
-                    activeContentArea.scrollTop += scrollAmount; 
-                }
+                keysPressed[key] = true;
+                e.preventDefault();
+            } else if (key === 'arrowdown' || key === 's') {
+                e.preventDefault();
+                if (activeContentArea) activeContentArea.scrollTop += scrollAmount;
             } else if (key === 'arrowup' || key === 'w') {
-                e.preventDefault(); // Prevent default page scroll
-                if (activeContentArea) {
-                    // Scroll content up by the defined amount
-                    activeContentArea.scrollTop -= scrollAmount; 
-                }
+                e.preventDefault();
+                if (activeContentArea) activeContentArea.scrollTop -= scrollAmount;
             }
         });
 
         document.addEventListener('keyup', (e) => {
             const key = e.key.toLowerCase();
-            if (['arrowleft', 'arrowright', 'a', 'd'].includes(key)) {
-                delete keysPressed[key]; // Release key state when key is lifted
-            }
+            if (['arrowleft', 'arrowright', 'a', 'd'].includes(key)) delete keysPressed[key];
         });
 
-        // Navigation dots functionality to jump to a specific face
+        // Navigation dots functionality
         dots.forEach((dot, index) => {
             dot.addEventListener('click', (e) => { 
-                // `stopPropagation()` prevents the click from bubbling up to `document.body`
-                // which would otherwise cause an unintended extra cube rotation.
-                e.stopPropagation(); 
-                goToFace(index); // Navigate to the corresponding face
+                e.stopPropagation();
+                goToFace(index);
             });
         });
 
         // --- Typing Text Effect for Objective Section ---
         const objectiveTextElement = document.getElementById('objective-text');
-        const objectiveFullText = objectiveTextElement.textContent; // Capture original text content
-        objectiveTextElement.textContent = ''; // Clear the text for the typing effect
-        let objectiveCharIndex = 0; // Index to track current character being typed
+        const objectiveFullText = objectiveTextElement.textContent;
+        objectiveTextElement.textContent = '';
+        let objectiveCharIndex = 0;
 
         function typeObjectiveText() {
             if (objectiveCharIndex < objectiveFullText.length) {
-                objectiveTextElement.textContent += objectiveFullText.charAt(objectiveCharIndex); // Add next character
+                objectiveTextElement.textContent += objectiveFullText.charAt(objectiveCharIndex);
                 objectiveCharIndex++;
-                setTimeout(typeObjectiveText, 15); /* Adjusted typing speed to 15ms for quicker appearance */
+                setTimeout(typeObjectiveText, 15);
             }
         }
 
-        // --- Manual Scrolling Logic for .section-content (Mouse Wheel & Touch) ---
+        // --- Manual Scrolling for .section-content (Mouse Wheel & Touch) ---
         sectionContents.forEach(contentArea => {
-            let isScrolling = false; // Flag to indicate if a touch scroll gesture is active
-            let startScrollY = 0; // Stores initial scroll position when touch starts
-            let startClientY = 0; // Stores initial touch Y position when touch starts
+            let isScrolling = false;
+            let startScrollY = 0;
+            let startClientY = 0;
 
-            // Mouse wheel scrolling for content areas
+            // Mouse wheel scrolling
             contentArea.addEventListener('wheel', (e) => {
-                e.preventDefault(); // Prevent default page scrolling when wheeling over content area
-                // Calculate new scroll position, clamping it between 0 and max scroll height
+                e.preventDefault();
                 const newScrollTop = contentArea.scrollTop + e.deltaY;
                 contentArea.scrollTop = Math.max(0, Math.min(newScrollTop, contentArea.scrollHeight - contentArea.clientHeight));
-            }, { passive: false }); // `passive: false` ensures `preventDefault` works
+            }, { passive: false });
 
-            // Touch scrolling specific to content areas (vertical drag)
+            // Touch scrolling
             contentArea.addEventListener('touchstart', (e) => {
-                // Only initiate content scrolling if it's a single touch and not on a clickable element
-                if (e.touches.length === 1 && !e.target.closest('a, button, .collapsible-header, img')) {
+                if (e.touches.length === 1 && !e.target.closest('a, button, .collapsible-header')) {
                     isScrolling = true;
-                    startClientY = e.touches[0].clientY; // Record initial touch Y
-                    startScrollY = contentArea.scrollTop; // Record initial scroll position
+                    startClientY = e.touches[0].clientY;
+                    startScrollY = contentArea.scrollTop;
                 }
-            }, { passive: false }); // `passive: false` allows `preventDefault`
+            }, { passive: false });
 
             contentArea.addEventListener('touchmove', (e) => {
-                if (!isScrolling) return; // Only proceed if a touch scroll is active
-                
-                const deltaY = e.touches[0].clientY - startClientY; // Calculate vertical touch movement
-                const newScrollTop = startScrollY - deltaY; // Calculate new potential scroll position
-                
-                // Check if the scroll is within bounds before preventing default document scroll
+                if (!isScrolling) return;
+                const deltaY = e.touches[0].clientY - startClientY;
+                const newScrollTop = startScrollY - deltaY;
                 const willScroll = (newScrollTop >= 0 && newScrollTop <= (contentArea.scrollHeight - contentArea.clientHeight));
-
-                // Apply the scroll, ensuring it doesn't go out of bounds
                 contentArea.scrollTop = Math.max(0, Math.min(newScrollTop, contentArea.scrollHeight - contentArea.clientHeight));
-                
-                // Only prevent default if we actually scrolled the content or if we're at a boundary
-                // and trying to scroll further in that direction. This allows "overscroll" effect at boundaries.
                 if (willScroll || (contentArea.scrollTop === 0 && deltaY > 0) || (contentArea.scrollTop === contentArea.scrollHeight - contentArea.clientHeight && deltaY < 0)) {
-                    e.preventDefault(); // Prevent default page scrolling if content can scroll
+                    e.preventDefault();
                 }
-            }, { passive: false }); // `passive: false` is required here
+            }, { passive: false });
 
-            contentArea.addEventListener('touchend', () => {
-                isScrolling = false; // End of touch scroll interaction
-            });
+            contentArea.addEventListener('touchend', () => { isScrolling = false; });
         });
 
         // --- Collapsible Sections Logic ---
+        const mainHobbiesHeader = document.getElementById('mainHobbiesHeader');
+        const mainHobbiesContent = document.getElementById('mainHobbiesContent');
+        const mainHobbiesIcon = document.getElementById('mainHobbiesIcon');
 
-        // Helper function to toggle collapsible sections
-        function setupCollapsible(headerId, contentId, iconId) {
-            const header = document.getElementById(headerId);
-            const content = document.getElementById(contentId);
-            const icon = document.getElementById(iconId);
+        mainHobbiesHeader.addEventListener('click', (event) => { 
+            event.stopPropagation(); 
+            event.stopImmediatePropagation();
+            mainHobbiesContent.classList.toggle('active');
+            mainHobbiesIcon.classList.toggle('rotated');
+        }, true);
 
-            if (header && content && icon) {
-                // Attach listener in the capturing phase (`true` as third argument) to ensure it runs
-                // before the `document.body` click listener for cube rotation.
-                header.addEventListener('click', (event) => { 
-                    event.stopPropagation(); // Prevent click from bubbling further up (e.g., to cube container)
-                    event.stopImmediatePropagation(); // Crucial: Stop any other listeners on *this specific element*
-                                                    // This prevents conflicts if multiple listeners are attached to the same element.
-                    content.classList.toggle('active'); // Toggle 'active' class for content visibility (CSS handles max-height transition)
-                    icon.classList.toggle('rotated'); // Toggle 'rotated' class for icon animation (CSS handles transform transition)
-                }, true); // Use capture phase
-            }
-        }
+        const pcEvolutionHeader = document.getElementById('pcEvolutionHeader');
+        const pcEvolutionContent = document.getElementById('pcEvolutionContent');
+        const pcEvolutionIcon = document.getElementById('pcEvolutionIcon');
 
-        // Setup for 'My Hobbies' collapsible
-        setupCollapsible('mainHobbiesHeader', 'mainHobbiesContent', 'mainHobbiesIcon');
-        // Setup for 'PC Timeline' collapsible
-        setupCollapsible('pcEvolutionHeader', 'pcEvolutionContent', 'pcEvolutionIcon');
+        pcEvolutionHeader.addEventListener('click', (event) => { 
+            event.stopPropagation(); 
+            event.stopImmediatePropagation();
+            pcEvolutionContent.classList.toggle('active');
+            pcEvolutionIcon.classList.toggle('rotated');
+        }, true);
 
-
-        // --- Event Listeners and Initializations (runs once when the window loads) ---
-        window.onload = function () {
-            setFacePositions(); // Initialize 3D positions of cube faces
-            animate(); // Start the Three.js background animation loop
-            animateRotation(); // Start the CSS cube rotation animation loop (interpolation)
-            setTimeout(typeObjectiveText, 100); // Start typing animation for objective text after a small delay
-            updateActiveDot(); // Set initial active navigation dot
-            updateSectionContentTop(); // Initial calculation of content top positions for proper layout
-        };
 
         // --- Image Modal Logic with Navigation ---
         const modal = document.getElementById("imageModal");
@@ -1462,80 +899,79 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const prevImageBtn = document.getElementById("prevImage");
         const nextImageBtn = document.getElementById("nextImage");
         const pcImagesContainer = document.querySelector(".pc-evolution-images-grid");
+        
+        let currentImageIndex = 0; 
+        // Stores the actual <img> elements, not just their srcs, for reliable indexing.
+        let imageElements = []; 
 
-        let currentImageIndex = 0;
-        // IMPORTANT FIX: imageSources now stores the actual DOM image elements.
-        // This makes `indexOf` directly comparable with `clickedImg`.
-        let imageSources = []; 
-
-        // Function to update modal image source and navigation button states (disabled/enabled)
+        // Function to update modal image and navigation button states
         function updateModalImage() {
-            modalImage.src = imageSources[currentImageIndex].src; // Access the .src property of the stored image element
-            // Disable 'Previous' button if at the first image, enable otherwise
+            modalImage.src = imageElements[currentImageIndex].src;
             prevImageBtn.classList.toggle('disabled', currentImageIndex === 0);
-            // Disable 'Next' button if at the last image, enable otherwise
-            nextImageBtn.classList.toggle('disabled', currentImageIndex === imageSources.length - 1);
+            nextImageBtn.classList.toggle('disabled', currentImageIndex === imageElements.length - 1);
         }
 
-        // Add a single click listener to the parent container for all PC evolution images (event delegation)
+        // Event delegation for opening modal on image click
         pcImagesContainer.addEventListener('click', function(event) {
-            const clickedImg = event.target.closest('img'); // Check if an image was clicked within the container
+            const clickedImg = event.target.closest('img');
             if (clickedImg) {
-                // Populate imageSources array dynamically with actual image ELEMENTS from the grid
-                imageSources = Array.from(pcImagesContainer.querySelectorAll('img')); 
+                // Find the index of the clicked image element within our stored array of elements.
+                currentImageIndex = imageElements.indexOf(clickedImg); 
                 
-                // Find the index of the clicked image element within the `imageSources` array
-                // Since imageSources now holds DOM elements, `indexOf(clickedImg)` works directly.
-                currentImageIndex = imageSources.indexOf(clickedImg); 
-                
-                // Diagnostic logs (uncomment if debugging is needed in the future)
-                // console.log('Clicked image src:', clickedImg.src);
-                // console.log('Image Sources Array (elements):', imageSources.map(img => img.src));
-                // console.log('Calculated currentImageIndex:', currentImageIndex);
-                // console.log('Image Sources Length:', imageSources.length);
-
-                modal.style.display = "flex"; // Show the modal (using flex to center content)
-                updateModalImage(); // Set modal image and update navigation button states
-                event.stopPropagation(); // Prevent the click from bubbling up to document.body and causing cube rotation
+                modal.style.display = "flex"; // Show the modal
+                updateModalImage(); // Set modal image and button states
+                event.stopPropagation(); // Prevent the click from bubbling up to document.body
             }
         });
 
-        // Navigation for modal images (Previous button)
+        // Modal navigation (Previous button)
         prevImageBtn.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent modal from closing and bubbling to document.body
-            if (currentImageIndex > 0) { // If not the first image
-                currentImageIndex--; // Decrement index
-                updateModalImage(); // Update modal
+            event.stopPropagation();
+            if (currentImageIndex > 0) {
+                currentImageIndex--;
+                updateModalImage();
             }
         });
 
-        // Navigation for modal images (Next button)
+        // Modal navigation (Next button)
         nextImageBtn.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent modal from closing and bubbling to document.body
-            if (currentImageIndex < imageSources.length - 1) { // If not the last image
-                currentImageIndex++; // Increment index
-                updateModalImage(); // Update modal
+            event.stopPropagation();
+            if (currentImageIndex < imageElements.length - 1) {
+                currentImageIndex++;
+                updateModalImage();
             }
         });
 
-        // When the modal image itself is clicked, close the modal AND stop propagation
+        // Close modal when image itself is clicked
         modalImage.onclick = function(event) {
-            event.stopPropagation(); // Prevent the click from bubbling up to document.body and causing cube rotation
-            modal.style.display = "none"; // Close the modal when the image itself is clicked
+            event.stopPropagation();
+            modal.style.display = "none";
         }
 
-        // Close the modal when the close button is clicked
+        // Close modal when close button is clicked
         closeButton.onclick = function() {
-            modal.style.display = "none"; // Hide the modal
+            modal.style.display = "none";
         }
 
-        // Close the modal when clicking outside the image content (on the modal overlay itself)
+        // Close modal when clicking outside image content
         modal.onclick = function(event) {
-            // Check if the clicked element is the modal backdrop itself (not the image or buttons within it)
-            if (event.target == modal) { 
-                modal.style.display = "none"; // Hide the modal
+            if (event.target == modal) {
+                modal.style.display = "none";
             }
         }
+
+        // --- Event Listeners and Initializations (runs once when the window loads) ---
+        window.onload = function () {
+            setFacePositions();
+            animate();
+            animateRotation();
+            setTimeout(typeObjectiveText, 100);
+            updateActiveDot();
+            updateSectionContentTop();
+
+            // Populate imageElements array once on load
+            imageElements = Array.from(pcImagesContainer.querySelectorAll('img'));
+        };
     </script>
 </body>
 </html>
