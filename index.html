@@ -408,6 +408,7 @@
                 <section class="section-content contact-info">
                     <p><i class="fas fa-globe"></i> <strong>URL:</strong> <a href="https://owenbentz.com/">https://owenbentz.com/</a></p>
                     <p><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:owenbentz01@gmail.com">owenbentz01@gmail.com</a></p>
+                    <p><i class="fab fa-linkedin"></i> <strong>LinkedIn:</strong> <a href="http://linkedin.com/in/owen-bentz-430584374">owen-bentz-430584374</a></p>
                     <p><i class="fas fa-phone"></i> <strong>Phone:</strong> 612-701-4335</p>
                     <p><i class="fas fa-calendar-alt"></i> <strong>DoB:</strong> 01-24-2003</p>
                     
@@ -511,7 +512,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                     </ul>
                     <h4>*</h4>
                     <p>
-                        While the majority of my knowledge is self-taught, driven by curiosity and desire to learn, my family has been a constant source of encouragement, wholeheartedly supporting my interests. I also owe significant credit to both my Kelly Walsh CCNA teacher, Duane Reimer, and my Casper College CCNA instructor, Jeffrey Brewster, for their invaluable contributions. I am currently preparing to take the CCNA exam upon completion of my CCNA prep course at Casper College.
+                        While the majority of my knowledge is self-taught, driven by curiosity and desire to learn, my family has been a constant source of encouragement, wholeheartedly supporting my interests. I also owe significant credit to both my Kelly Walsh CCNA instructor, Duane Reimer, and my Casper College CCNA instructor, Jeffrey Brewster, for their invaluable contributions. I am currently preparing to take the CCNA exam upon completion of my CCNA prep course at Casper College.
                     </p>
                     <h4>AI</h4>
                     <p>In my opinion, AI is a powerful tool with vast potential for automating tasks and enhancing various processes. I believe it is crucial to learn how to effectively utilize these tools while maintaining an awareness of their distinction from human-generated content. (In fact, this website was built using contributions from Gemini 2.0). Effective cybersecurity execution starts by making sure your friends and family are protected. Unlike other fields, AI is accelerating cybersecurity. With the advancements of technology, EVERYONE should have at least a basic understanding of cybersecurity.</p>
@@ -541,7 +542,6 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                                     <li><i class="fas fa-wrench"></i> Common IT Troubleshooting</li>
                                     <li><i class="fas fa-lightbulb"></i> Tech Advances (CRISPR, Neuralink, Nvidia, AI, etc.)</li>
                                     <li><i class="fas fa-microchip"></i> Hardware & Software</li>
-                                    
                                     <li><i class="fas fa-home"></i> Home Labs/Self-Hosting</li>
                                 </ul>
                             </div>
@@ -605,7 +605,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         renderer.domElement.style.pointerEvents = 'none'; 
         renderer.domElement.style.zIndex = '-2'; 
 
-        // Add lights to the scene
+        // Add lights to the scene for better visibility of particles
         scene.add(new THREE.AmbientLight(0xffffff, 0.3));
         const pointLight1 = new THREE.PointLight(0xFF5722, 0.7);
         pointLight1.position.set(5, 5, 5);
@@ -620,13 +620,14 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const posArray = new Float32Array(particlesCount * 3);
         const colorArray = new Float32Array(particlesCount * 3);
 
+        // Populate particle positions and colors randomly
         for (let i = 0; i < particlesCount * 3; i += 3) {
-            posArray[i] = (Math.random() - 0.5) * 50;
-            posArray[i + 1] = (Math.random() - 0.5) * 50;
-            posArray[i + 2] = (Math.random() - 0.5) * 50;
-            colorArray[i] = 0.8 + Math.random() * 0.2;
-            colorArray[i + 1] = 0.3 + Math.random() * 0.3;
-            colorArray[i + 2] = 0.1 + Math.random() * 0.2;
+            posArray[i] = (Math.random() - 0.5) * 50; // X position
+            posArray[i + 1] = (Math.random() - 0.5) * 50; // Y position
+            posArray[i + 2] = (Math.random() - 0.5) * 50; // Z position
+            colorArray[i] = 0.8 + Math.random() * 0.2; // Red component
+            colorArray[i + 1] = 0.3 + Math.random() * 0.3; // Green component
+            colorArray[i + 2] = 0.1 + Math.random() * 0.2; // Blue component
         }
 
         particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
@@ -642,8 +643,8 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         // Animation loop for Three.js scene
         function animate() {
             requestAnimationFrame(animate);
-            particles.rotation.y += 0.0005;
-            particles.rotation.x += 0.0002;
+            particles.rotation.y += 0.0005; // Rotate particles slowly on Y-axis
+            particles.rotation.x += 0.0002; // Rotate particles slowly on X-axis
             renderer.render(scene, camera);
         }
 
@@ -652,8 +653,8 @@ enjoy helping others resolve their technical issues and find the troubleshooting
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-            setFacePositions();
-            updateSectionContentTop();
+            setFacePositions(); // Recalculate cube face positions
+            updateSectionContentTop(); // Recalculate content top padding
         });
 
         // --- CSS 3D Octagonal Prism Rotation Logic ---
@@ -664,22 +665,24 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const sectionContents = document.querySelectorAll('.section-content');
         const faceHeaders = document.querySelectorAll('.face-header');
 
-        let currentRotateY = 0;
-        let targetRotateY = 0;
-        const transitionInterpolation = 0.1;
+        let currentRotateY = 0; // Current rotation angle of the cube
+        let targetRotateY = 0;  // Target rotation angle for smooth transitions
+        const transitionInterpolation = 0.1; // Factor for smooth rotation animation
 
-        let keysPressed = {};
-        const scrollAmount = 50;
+        let keysPressed = {}; // Object to track currently pressed keys
+        const scrollAmount = 50; // Amount to scroll content by on key press
 
-        let touchStartX = 0;
-        let touchStartY = 0;
-        const swipeThreshold = 50;
+        let touchStartX = 0; // Initial touch X position for swipe detection
+        let touchStartY = 0; // Initial touch Y position for swipe detection
+        const swipeThreshold = 50; // Minimum pixel distance for a swipe to register
 
+        // Mapping of face indices to their initial Y rotation for positioning
         const faceYOffsets = { 'face-0': 0, 'face-1': 90, 'face-2': 180, 'face-3': 270 };
+        // Target Y rotations for the cube to show each face
         const cubeTargetRotations = [ { y: 0 }, { y: -90 }, { y: -180 }, { y: -270 } ];
-        let activeFaceIndex = 0;
+        let activeFaceIndex = 0; // Index of the currently active face
 
-        // Set initial 3D positions of cube faces
+        // Set initial 3D positions of cube faces based on CSS variables
         function setFacePositions() {
             const apothem = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--cube-apothem'));
             faces.forEach(face => {
@@ -693,6 +696,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         // Dynamically update content top position based on header height
         function updateSectionContentTop() {
+            // Calculate content gap once based on screen size
             const contentGap = window.innerWidth <= 768 ? 
                                parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--content-gap-mobile')) : 
                                parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--content-gap-desktop'));
@@ -706,15 +710,18 @@ enjoy helping others resolve their technical issues and find the troubleshooting
             });
         }
 
-        // Apply current rotation to the cube
+        // Apply current rotation to the cube's transform property
         function applyCubeRotation() {
             resumeCube.style.transform = `rotateY(${currentRotateY}deg)`;
         }
 
         // Navigate to a specific cube face by index
         function goToFace(index) {
+            // Ensure index wraps around correctly for continuous rotation
             activeFaceIndex = (index + cubeTargetRotations.length * 100) % cubeTargetRotations.length;
             const desiredFaceRotation = cubeTargetRotations[activeFaceIndex].y;
+            
+            // Normalize current rotation to find the shortest path to the target
             let normalizedCurrentY = currentRotateY % 360;
             if (normalizedCurrentY < 0) normalizedCurrentY += 360;
 
@@ -722,50 +729,52 @@ enjoy helping others resolve their technical issues and find the troubleshooting
             if (diff > 180) diff -= 360;
             else if (diff < -180) diff += 360;
 
-            targetRotateY = currentRotateY + diff;
-            updateActiveDot();
+            targetRotateY = currentRotateY + diff; // Set the new target rotation
+            updateActiveDot(); // Update navigation dots
         }
 
-        // Update active navigation dot
+        // Update active navigation dot to reflect the current face
         function updateActiveDot() {
             dots.forEach((dot, index) => {
                 dot.classList.remove('active');
-                if (index < cubeTargetRotations.length) {
+                if (index < cubeTargetRotations.length) { // Only show dots for existing faces
                     dot.style.display = 'block'; 
                     if (index === activeFaceIndex) dot.classList.add('active');
                 } else {
-                    dot.style.display = 'none';
+                    dot.style.display = 'none'; // Hide extra dots if cube has fewer faces than dots
                 }
             });
         }
 
-        // Animation loop for cube rotation interpolation
+        // Animation loop for smooth cube rotation interpolation
         function animateRotation() {
             requestAnimationFrame(animateRotation);
 
-            // Keyboard input for face transitions
+            // Handle keyboard input for face transitions
             if (keysPressed['arrowleft'] || keysPressed['a']) {
                 goToFace(activeFaceIndex - 1);
-                delete keysPressed['arrowleft']; delete keysPressed['a'];
+                delete keysPressed['arrowleft']; // Clear key state to prevent continuous rotation on hold
+                delete keysPressed['a'];
             } else if (keysPressed['arrowright'] || keysPressed['d']) {
                 goToFace(activeFaceIndex + 1);
-                delete keysPressed['arrowright']; delete keysPressed['d'];
+                delete keysPressed['arrowright']; // Clear key state
+                delete keysPressed['d'];
             }
 
-            // Interpolate rotation
+            // Interpolate current rotation towards the target rotation for smooth animation
             currentRotateY += (targetRotateY - currentRotateY) * transitionInterpolation;
-            if (Math.abs(targetRotateY - currentRotateY) > 0.01) {
+            if (Math.abs(targetRotateY - currentRotateY) > 0.01) { // Only apply if difference is significant
                 applyCubeRotation();
             }
         }
 
-        // Click event for background rotation
+        // Click event for background rotation (rotates cube based on click side)
         document.body.addEventListener('click', (e) => {
             // Prevent cube rotation if click is inside cube, modal, or nav dots
             if (e.target.closest('#cube-container') || e.target.closest('#imageModal') || e.target.closest('#nav-dots')) {
                 return;
             }
-            // Rotate based on click position
+            // Rotate based on click position (left half of screen rotates left, right half rotates right)
             const clickX = e.clientX;
             if (clickX < window.innerWidth / 2) goToFace(activeFaceIndex - 1);
             else goToFace(activeFaceIndex + 1);
@@ -777,21 +786,22 @@ enjoy helping others resolve their technical issues and find the troubleshooting
                 touchStartX = e.touches[0].clientX;
                 touchStartY = e.touches[0].clientY;
             }
-        }, { passive: true });
+        }, { passive: true }); // Passive true because we might not call preventDefault here
 
         cubeContainer.addEventListener('touchmove', (e) => {
             if (e.touches.length === 1) {
                 const deltaX = e.touches[0].clientX - touchStartX;
                 const deltaY = e.touches[0].clientY - touchStartY;
+                // Check if it's primarily a horizontal swipe and exceeds threshold
                 if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
-                    e.preventDefault();
-                    if (deltaX > 0) goToFace(activeFaceIndex - 1);
-                    else goToFace(activeFaceIndex + 1);
-                    touchStartX = e.touches[0].clientX; // Reset to prevent continuous rotation
+                    e.preventDefault(); // Prevent default scroll behavior
+                    if (deltaX > 0) goToFace(activeFaceIndex - 1); // Swipe right, go to previous face
+                    else goToFace(activeFaceIndex + 1); // Swipe left, go to next face
+                    touchStartX = e.touches[0].clientX; // Reset start position to prevent rapid multi-swipes
                     touchStartY = e.touches[0].clientY;
                 }
             }
-        }, { passive: false });
+        }, { passive: false }); // Passive false because we call preventDefault
 
         // Keyboard event listeners for navigation and content scrolling
         document.addEventListener('keydown', (e) => {
@@ -799,41 +809,41 @@ enjoy helping others resolve their technical issues and find the troubleshooting
             const activeContentArea = sectionContents[activeFaceIndex];
 
             if (['arrowleft', 'arrowright', 'a', 'd'].includes(key)) {
-                keysPressed[key] = true;
-                e.preventDefault();
+                keysPressed[key] = true; // Mark key as pressed
+                e.preventDefault(); // Prevent default browser scroll/navigation
             } else if (key === 'arrowdown' || key === 's') {
                 e.preventDefault();
-                if (activeContentArea) activeContentArea.scrollTop += scrollAmount;
+                if (activeContentArea) activeContentArea.scrollTop += scrollAmount; // Scroll down
             } else if (key === 'arrowup' || key === 'w') {
                 e.preventDefault();
-                if (activeContentArea) activeContentArea.scrollTop -= scrollAmount;
+                if (activeContentArea) activeContentArea.scrollTop -= scrollAmount; // Scroll up
             }
         });
 
         document.addEventListener('keyup', (e) => {
             const key = e.key.toLowerCase();
-            if (['arrowleft', 'arrowright', 'a', 'd'].includes(key)) delete keysPressed[key];
+            if (['arrowleft', 'arrowright', 'a', 'd'].includes(key)) delete keysPressed[key]; // Clear key state on key release
         });
 
         // Navigation dots functionality
         dots.forEach((dot, index) => {
             dot.addEventListener('click', (e) => { 
-                e.stopPropagation();
-                goToFace(index);
+                e.stopPropagation(); // Prevent click from bubbling to body
+                goToFace(index); // Navigate to the corresponding face
             });
         });
 
         // --- Typing Text Effect for Objective Section ---
         const objectiveTextElement = document.getElementById('objective-text');
         const objectiveFullText = objectiveTextElement.textContent;
-        objectiveTextElement.textContent = '';
+        objectiveTextElement.textContent = ''; // Clear initial text
         let objectiveCharIndex = 0;
 
         function typeObjectiveText() {
             if (objectiveCharIndex < objectiveFullText.length) {
                 objectiveTextElement.textContent += objectiveFullText.charAt(objectiveCharIndex);
                 objectiveCharIndex++;
-                setTimeout(typeObjectiveText, 15);
+                setTimeout(typeObjectiveText, 15); // Adjust typing speed here (milliseconds per character)
             }
         }
 
@@ -845,32 +855,38 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
             // Mouse wheel scrolling
             contentArea.addEventListener('wheel', (e) => {
-                e.preventDefault();
+                e.preventDefault(); // Prevent default page scrolling
                 const newScrollTop = contentArea.scrollTop + e.deltaY;
+                // Clamp scroll position to prevent scrolling beyond content limits
                 contentArea.scrollTop = Math.max(0, Math.min(newScrollTop, contentArea.scrollHeight - contentArea.clientHeight));
             }, { passive: false });
 
             // Touch scrolling
             contentArea.addEventListener('touchstart', (e) => {
+                // Only start touch scrolling if it's a single touch and not on an interactive element
                 if (e.touches.length === 1 && !e.target.closest('a, button, .collapsible-header')) {
                     isScrolling = true;
                     startClientY = e.touches[0].clientY;
                     startScrollY = contentArea.scrollTop;
                 }
-            }, { passive: false });
+            }, { passive: false }); // Passive false because we might call preventDefault
 
             contentArea.addEventListener('touchmove', (e) => {
                 if (!isScrolling) return;
                 const deltaY = e.touches[0].clientY - startClientY;
                 const newScrollTop = startScrollY - deltaY;
+                // Check if the scroll would actually move the content
                 const willScroll = (newScrollTop >= 0 && newScrollTop <= (contentArea.scrollHeight - contentArea.clientHeight));
                 contentArea.scrollTop = Math.max(0, Math.min(newScrollTop, contentArea.scrollHeight - contentArea.clientHeight));
+                // Prevent default touch behavior only if content is actively scrolling or at its limits
                 if (willScroll || (contentArea.scrollTop === 0 && deltaY > 0) || (contentArea.scrollTop === contentArea.scrollHeight - contentArea.clientHeight && deltaY < 0)) {
                     e.preventDefault();
                 }
             }, { passive: false });
 
-            contentArea.addEventListener('touchend', () => { isScrolling = false; });
+            contentArea.addEventListener('touchend', () => { 
+                isScrolling = false; 
+            });
         });
 
         // --- Collapsible Sections Logic ---
@@ -879,11 +895,11 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         const mainHobbiesIcon = document.getElementById('mainHobbiesIcon');
 
         mainHobbiesHeader.addEventListener('click', (event) => { 
-            event.stopPropagation(); 
-            event.stopImmediatePropagation();
-            mainHobbiesContent.classList.toggle('active');
-            mainHobbiesIcon.classList.toggle('rotated');
-        }, true);
+            event.stopPropagation(); // Stop propagation to parent elements
+            event.stopImmediatePropagation(); // Stop other handlers on the same element
+            mainHobbiesContent.classList.toggle('active'); // Toggle visibility
+            mainHobbiesIcon.classList.toggle('rotated'); // Rotate icon
+        }, true); // Use capture phase to ensure this runs before other potential handlers
 
         const pcEvolutionHeader = document.getElementById('pcEvolutionHeader');
         const pcEvolutionContent = document.getElementById('pcEvolutionContent');
@@ -909,21 +925,21 @@ enjoy helping others resolve their technical issues and find the troubleshooting
         // Stores the actual <img> elements, not just their srcs, for reliable indexing.
         let imageElements = []; 
 
-        // Function to update modal image and navigation button states
+        // Function to update modal image source and navigation button states (disabled/enabled)
         function updateModalImage() {
             modalImage.src = imageElements[currentImageIndex].src;
-            prevImageBtn.classList.toggle('disabled', currentImageIndex === 0);
-            nextImageBtn.classList.toggle('disabled', currentImageIndex === imageElements.length - 1);
+            prevImageBtn.classList.toggle('disabled', currentImageIndex === 0); // Disable prev if at first image
+            nextImageBtn.classList.toggle('disabled', currentImageIndex === imageElements.length - 1); // Disable next if at last image
         }
 
-        // Event delegation for opening modal on image click
+        // Event delegation for opening modal when an image in the grid is clicked
         pcImagesContainer.addEventListener('click', function(event) {
             const clickedImg = event.target.closest('img');
             if (clickedImg) {
                 // Find the index of the clicked image element within our stored array of elements.
                 currentImageIndex = imageElements.indexOf(clickedImg); 
                 
-                modal.style.display = "flex"; // Show the modal
+                modal.style.display = "flex"; // Show the modal (using flex for centering)
                 updateModalImage(); // Set modal image and button states
                 event.stopPropagation(); // Prevent the click from bubbling up to document.body
             }
@@ -931,7 +947,7 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         // Modal navigation (Previous button)
         prevImageBtn.addEventListener('click', (event) => {
-            event.stopPropagation();
+            event.stopPropagation(); // Prevent modal from closing and bubbling to document.body
             if (currentImageIndex > 0) {
                 currentImageIndex--;
                 updateModalImage();
@@ -940,41 +956,41 @@ enjoy helping others resolve their technical issues and find the troubleshooting
 
         // Modal navigation (Next button)
         nextImageBtn.addEventListener('click', (event) => {
-            event.stopPropagation();
+            event.stopPropagation(); // Prevent modal from closing and bubbling to document.body
             if (currentImageIndex < imageElements.length - 1) {
                 currentImageIndex++;
                 updateModalImage();
             }
         });
 
-        // Close modal when image itself is clicked
+        // Close modal when the modal image itself is clicked
         modalImage.onclick = function(event) {
-            event.stopPropagation();
-            modal.style.display = "none";
+            event.stopPropagation(); // Prevent the click from bubbling up to document.body and causing cube rotation
+            modal.style.display = "none"; // Close the modal when the image itself is clicked
         }
 
-        // Close modal when close button is clicked
+        // Close modal when the close button is clicked
         closeButton.onclick = function() {
-            modal.style.display = "none";
+            modal.style.display = "none"; // Hide the modal
         }
 
-        // Close modal when clicking outside image content
+        // Close modal when clicking outside the image content (on the modal overlay itself)
         modal.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
+            if (event.target == modal) { // This checks if the clicked element is the modal backdrop, not the image or close button
+                modal.style.display = "none"; // Hide the modal
             }
         }
 
         // --- Event Listeners and Initializations (runs once when the window loads) ---
         window.onload = function () {
-            setFacePositions();
-            animate();
-            animateRotation();
-            setTimeout(typeObjectiveText, 100);
-            updateActiveDot();
-            updateSectionContentTop();
+            setFacePositions(); // Initialize cube face positions
+            animate(); // Start Three.js background animation
+            animateRotation(); // Start cube rotation animation loop
+            setTimeout(typeObjectiveText, 100); // Start typing effect for objective text
+            updateActiveDot(); // Set initial active navigation dot
+            updateSectionContentTop(); // Set initial content top padding
 
-            // Populate imageElements array once on load
+            // Populate imageElements array once on load for efficient modal handling
             imageElements = Array.from(pcImagesContainer.querySelectorAll('img'));
         };
     </script>
